@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA Test</title>
+    <!-- Incluye el script de reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt"></script>
+    <script defer src="../js/login.js"></script>
+</head>
+<body>
+<form id="myForm">
+    <input type="text" id="username" placeholder="Enter your username" required>
+    <input type="password" id="password" placeholder="Enter your password" required>
+    <button type="button" id="submitBtn">Submit</button>
+</form>
+
+<script>
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
+        if (typeof grecaptcha !== "undefined") {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt', { action: 'submit' }).then(function(token) {
+                    console.log("Token generado:", token);
+                    // Aquí podrías enviar el token al backend
+                    sendDataLogin(token)
+                });
+            });
+        } else {
+            console.error("reCAPTCHA no está cargado correctamente.");
+        }
+    });
+</script>
+
+</body>
+</html>

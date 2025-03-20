@@ -1,0 +1,24 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+<!-- no fue necesario tenerlo activos los filtros ya que está mapeado en la clase FilterLogin-->
+  <!--  <filter>
+    <filter-name>FilterLogin</filter-name>
+    <filter-class>org.example.controller.FilterLogin</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterLogin</filter-name>
+    <url-pattern>/Login</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>FilterLogin</filter-name>
+    <url-pattern>/employee</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>FilterLogin</filter-name>
+    <url-pattern>/ServletPerson</url-pattern>
+  </filter-mapping>-->
+</web-app>
