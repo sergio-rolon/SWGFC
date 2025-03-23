@@ -30,7 +30,7 @@ import org.example.config.ConfigLoader;
  *
  * @author Sergio Rolon
  */
-@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios"})
+@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios","/clientes"})
 public class FilterLogin implements Filter {
 
     private static final boolean debug = true;

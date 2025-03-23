@@ -31,6 +31,7 @@ public class UsuariosService {
     public static Usuarios updateUsuario(Usuarios usuario){
         Usuarios usuarioResult = null;
         if(UsuariosRepository.existsById(usuario.getEmail())) {
+            usuario.setIdUsuario(UsuariosRepository.findById(usuario.getEmail()).getIdUsuario());
             return usuarioResult = UsuariosRepository.save(usuario);
         }
         return usuarioResult;

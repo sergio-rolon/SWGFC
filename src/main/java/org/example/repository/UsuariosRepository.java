@@ -100,20 +100,25 @@ public class UsuariosRepository {
         if(usuario.getIdUsuario()!=0){
             //update
             try {
-                PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
+                /*PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
                         "\"email\"=?,\"nombre\"=?," +
                         "\"apellidoPaterno\"=?,\"apellidoMaterno\"=?," +
                         "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idEstatus\"=?," +
                         "\"idTipoUsuario\"=? where \"idUsuario\"=?;");
-                ps.setString(1, usuario.getEmail());
-                ps.setString(2, usuario.getNombre());
-                ps.setString(3, usuario.getApellidoPaterno());
-                ps.setString(4, usuario.getApellidoMaterno());
-                ps.setString(5, usuario.getNumeroTrabajador());
-                ps.setString(6, usuario.getContrasena());
-                ps.setInt(7, usuario.getIdEstatus());
-                ps.setInt(8, usuario.getIdTipoUsuario());
-                ps.setInt(9, usuario.getIdUsuario());
+                ps.setString(1, usuario.getEmail());*/
+                PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
+                        "\"nombre\"=?," +
+                        "\"apellidoPaterno\"=?,\"apellidoMaterno\"=?," +
+                        "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idEstatus\"=?," +
+                        "\"idTipoUsuario\"=? where \"idUsuario\"=?;");
+                ps.setString(1, usuario.getNombre());
+                ps.setString(2, usuario.getApellidoPaterno());
+                ps.setString(3, usuario.getApellidoMaterno());
+                ps.setString(4, usuario.getNumeroTrabajador());
+                ps.setString(5, usuario.getContrasena());
+                ps.setInt(6, usuario.getIdEstatus());
+                ps.setInt(7, usuario.getIdTipoUsuario());
+                ps.setInt(8, usuario.getIdUsuario());
 
                 ps.executeUpdate();
                 Conexion.endConexion(conn);
