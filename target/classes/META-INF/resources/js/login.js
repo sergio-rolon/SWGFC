@@ -2,20 +2,21 @@
 //const username = document.getElementById("username");
 //const password = document.getElementById("password");
 
-function sendDataLogin(token) {
+function sendDataLogin(token, email, contrasena) {
 
 //console.log("username "+username);
 //console.log("password "+password);
 //console.log("token "+token);
-
+ // let email = "admin@asesorenservicios.com";
+  //let contrasena = "administrador";
 
 const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
 
 const raw = JSON.stringify({
   "token": token,
-  "username": "Admin",
-  "password": "Prueba12"
+  "email": email,
+  "contrasena": contrasena
 });
 
 const requestOptions = {
@@ -24,8 +25,8 @@ const requestOptions = {
   body: raw,
   redirect: "follow"
 };
-
-fetch("https://holaworldsagaindeployed.onrender.com/api/Login", requestOptions)
+//fetch("https://holaworldsagaindeployed.onrender.com/api/Login", requestOptions)
+fetch("http://localhost:8080/api/login", requestOptions)
   .then((response) => response.json())
   .then((result) => {
   //console.log("recaptcha: "+result.recaptchaResult);

@@ -1,0 +1,214 @@
+/* Estilos generales para el navbar */
+body {
+  margin: 0;
+  background-color: #FFF9F9;
+  height: 100vh;
+}
+
+header {
+  background-color: #0056B6;
+  padding: 10px 0;
+      position: sticky;        /* Esto hace que la barra se quede pegada al hacer scroll */
+  top: 0;                  /* Posiciona la barra en la parte superior */
+  z-index: 1000; 
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 20px;
+  
+}
+
+/* Estilos para el logo */
+.logo img {
+  height: 40px;  /* Ajusta la altura del logo según lo necesites */
+  width: auto;
+}
+
+/* Estilos para los enlaces de navegación */
+.nav-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-family: 'Poppins';
+}
+
+.nav-links a:hover {
+  background-color: #555;
+}
+
+h1 {
+font-family: 'Poppins';
+text-align: center;
+font-weight: bold;
+font-size:40px;
+color:#8B7B7B;
+margin-top:40px;
+margin-bottom: 0px;
+}
+
+.contenedor {
+  display: flex;           /* Activamos flexbox */
+  justify-content: center; /* Centra el item horizontalmente */
+  align-items: center;     /* Centra el item verticalmente */  
+  height: 440px;
+}
+
+.cuadro {
+  flex: 1;                 /* Hace que ambos cuadros ocupen el mismo espacio */
+  margin: 10px;
+  padding: 20px;
+
+}
+
+.logo-main{
+  width: 565px;
+  height: 301px;
+}
+
+/* PARTE DERECHA */
+.derecha {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 609px;
+    height: 481px;
+}
+
+/* derecha versión mobile */
+@media (max-width: 600px) {
+    .izquierda {
+        display: none;
+    }
+
+    .cajaLogIn {
+        margin: 150px 0px 150px 0px;
+        width: 100%;
+    }
+
+}
+
+
+.cajaLogIn {
+    background-color: #5271FF;
+    border-radius: 20px;
+    color: #ffffff;
+    font-family: 'Montserrat';
+    font-size: 20px;
+    font-weight: 600;
+    padding: 30px 30px 10px 30px;
+    max-width: 100%;
+}
+
+
+.itemForm {
+    padding: 10px;
+    text-align: center;
+}
+.cajaLogIn h2 {
+    color: #FFFCFC;
+    text-align: center;
+    font-weight: bolder;
+    font-size: xx-large;
+    margin:10px;
+    font-family: 'Poppins';
+    font-weight: bold !important; 
+    font-size: 28px;
+}
+
+.cajaLogIn label{
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left !important;
+
+}
+
+#btnLogIn {
+    justify-content: center;
+    color: #ffffff;
+    background-color: #FFBD4A;
+    border-radius: 20px;
+    padding: 7px;
+    font-weight: bold;
+    margin-top: 0px;
+    font-family: 'Roboto';
+    font-size: 24px;
+    font-style: italic;
+    
+}
+
+#btnLogIn:hover{
+  transform: scale(1.1);
+}
+
+.cajaLogIn input {
+    flex-grow: 1;
+    border-radius: 5px;
+    background: rgb(0, 0, 0,.25);
+    border-style: solid;
+    border-width: 3px;
+    height: 30px;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+}
+
+.inputGroup img {
+    width: 35px;
+    margin-right: 10px;
+}
+
+.cajaLogIn input,
+textarea {
+    color: white;
+}
+.cajaLogIn input::placeholder{
+    font-size: 15px;
+    color:#FFBD4A;
+    
+}
+
+.pre-footer{
+  text-align: center;
+  background-color: #FFBE4A;
+  font-family: 'Poppins';
+  font-size: 25px;
+  margin: 0px 0px;
+}
+
+.footer{
+  width: 100vw;
+  text-align: center;
+  background-color: #0056B6;
+}
+
+.logo-footer{
+  margin-top: 15px;
+  width:116px;
+  height: 62px;
+}
+
+.post-footer{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 15px;
+  color: white;
+}

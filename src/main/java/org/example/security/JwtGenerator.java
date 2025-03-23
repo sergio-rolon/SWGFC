@@ -13,7 +13,9 @@ import java.util.Date;
  * @author Sergio Rolon
  */
 public class JwtGenerator {
-    public static String secret = "OneClickCarSoloQuedamos#4";
+    // For production
+    public static String secret = System.getenv("PROD_JWT_SECRET");
+    // Para pruebas en local host
 
 
 

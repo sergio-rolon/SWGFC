@@ -15,6 +15,7 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <tomcat.version>10.0.22</tomcat.version>
+    <log4j.configurationFile>log4j2.xml</log4j.configurationFile>
   </properties>
 
   <dependencies>
@@ -57,6 +58,12 @@
       <artifactId>gson</artifactId>
       <version>2.11.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.json/json -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20240303</version>
+    </dependency>
     <!--Versión legacy de JWT para ejecutar método como en bootcamp, no requiere adicionales -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
@@ -77,7 +84,27 @@
       <artifactId>postgresql</artifactId>
       <version>42.7.3</version>
     </dependency>
-
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>2.17.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.32</version>
+      </dependency>
   </dependencies>
 
   <build>

@@ -11,11 +11,9 @@ import java.net.URL;
 
 public class RecaptchaVerifier {
 
-    // Para producción cuando subamos en render
+    // For production
     private static final String secret = System.getenv("PROD_RC_PK");
-
     // Para pruebas en local host
-    //private static final String secret = "6LeOkTAqAAAAAIKprRpO3GNYL3YfOqyCwHiOA7bh";
 
     private static final String url = "https://www.google.com/recaptcha/api/siteverify";
     private static Gson gson = new Gson();

@@ -117,10 +117,9 @@ public class FilterLogin implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         String authHeader =  httpServletRequest.getHeader("Authorization");
         if (  (("POST".equals(httpServletRequest.getMethod())) &&
-                (! httpServletRequest.getRequestURI().contains("/Login") )  )
+                (! httpServletRequest.getRequestURI().contains("/login") )  )
                 ||
-                ( ("GET".equals(httpServletRequest.getMethod())) &&
-                        (! httpServletRequest.getRequestURI().contains("/Login") )  ) ||
+                ("GET".equals(httpServletRequest.getMethod())) ||
                 ("PUT".equals(httpServletRequest.getMethod())) ||
                 ("DELETE".equals(httpServletRequest.getMethod()))
         ) {

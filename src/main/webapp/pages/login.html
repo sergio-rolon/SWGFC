@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iniciar sesión</title>
+
+    <!-- Fuentes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- style -->
+    <link rel="stylesheet" href="../styles/nav_footer.css" />
+    <link rel="stylesheet" href="../styles/login.css" />
+
+    <!-- Incluye el script de reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt"></script>
+    <script defer src="../js/login.js"></script>
+
+    <!--<script src="../assets/sweetAlert2/dist/sweetalert2.all.min.js"></script>-->
+
+  </head>
+   <body>
+      <header>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="Logo" class="logo-img">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Servicios</a></li>
+        <li><a href="#">Sobre Nosotros</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1 >SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
+  <div class="contenedor">
+    <div class="cuadro">                
+          <div class="col-sm-7 derecha">
+            <div class="cajaLogIn p-auto">
+              <div class="contenidoLogIn">
+                <h2>Ingresa tu correo organizacional</h2>
+                <div
+                  class="alert alert-danger fade show"
+                  style="display: none"
+                  role="alert"
+                  id="alertValidaciones"
+                >
+                  <p id="alertValidacionesTexto"></p>
+                </div>
+
+                <form action="" id="formularioLogIn">
+                  <div class="itemForm">
+                    <div class="text-start">
+                      <label for="correo-ipt">Correo electrónico:</label> <br />
+                    </div>
+                    <div class="inputGroup">
+                      <img
+                        src="https://res.cloudinary.com/dz6zf3yio/image/upload/v1725421051/OneClickCar/cw4nzzwjirjpf8imni4p.png"
+                        alt="correoLogo"
+                      />
+                      <input
+                        type="email"
+                        id="correo-ipt"
+                        placeholder="Ejemplo: asesor@asesorenservicios.com"
+                      /><br />
+                    </div>
+                  </div>
+                  <div class="itemForm">
+                    <div class="text-start">
+                      <label for="password-ipt">Contraseña:</label><br />
+                    </div>
+                    <div class="inputGroup">
+                      <img
+                        src="https://res.cloudinary.com/duxbrimwv/image/upload/v1726193785/keyIcon_eqbgjg.svg"
+                        alt="keyLogo"
+                      />
+                      <input
+                        type="password"
+                        id="password-ipt"
+                        placeholder="********"
+                      /><br />
+                    </div>
+                  </div>
+                  <div class="itemForm text-center">
+                    <button type="submit" id="btnLogIn">Iniciar sesión</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+              </div>
+    <div class="cuadro">
+      <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" alt="Logo" class="logo-main">
+    </div>
+  </div>
+      <div>
+      <p>En caso de problemas al iniciar sesión, contacta a tu administrador o recursos humanos.</p>
+    </div>
+    <footer>
+      <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+      <div class="footer">
+        <image src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="logo" class="logo-footer"></image>
+        <p class="post-footer">Términos del sitio web | Política de privacidad | Declaración de accesibilidad | Código de conducta para usuarios</p>
+      </div>
+    </footer>
+  </main>
+      <script>
+        document.getElementById('btnLogIn').addEventListener('click', function(event) {
+          event.preventDefault();
+            // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
+            if (typeof grecaptcha !== "undefined") {
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt', { action: 'submit' }).then(function(token) {
+                        console.log("Token generado:", token);
+                        // Aquí podrías enviar el token al backend
+                          let email = document.getElementById('correo-ipt').value;
+                          let contrasena = document.getElementById('password-ipt').value;
+                        sendDataLogin(token, email, contrasena)
+                    });
+                });
+            } else {
+                console.error("reCAPTCHA no está cargado correctamente.");
+            }
+        });
+      </script>
+   </body>
+   </html>
+
