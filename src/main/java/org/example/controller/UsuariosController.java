@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.config.ConfigLoader;
 import org.example.modelo.Usuarios;
 import org.example.security.Encoder;
 import org.example.security.Validator;
@@ -15,10 +16,9 @@ import org.example.service.UsuariosService;
 import org.json.JSONObject;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.List;
+import java.util.Properties;
 
 @WebServlet(name = "Usuarios", urlPatterns = {"/usuarios/*"})
 public class UsuariosController extends HttpServlet {

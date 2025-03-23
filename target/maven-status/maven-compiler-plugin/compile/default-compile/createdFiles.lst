@@ -6,6 +6,7 @@ org\example\dto\Credentials.class
 org\example\Main.class
 org\example\controller\FilterLogin.class
 org\example\security\JwtGenerator.class
+org\example\config\ConfigLoader.class
 org\example\modelo\Usuarios.class
 org\example\security\Encoder.class
 org\example\service\UsuariosService.class

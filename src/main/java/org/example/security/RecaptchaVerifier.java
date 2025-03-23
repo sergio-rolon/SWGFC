@@ -1,6 +1,7 @@
 package org.example.security;
 
 
+import org.example.config.ConfigLoader;
 import org.example.dto.RecaptchaResponse;
 
 
@@ -11,10 +12,18 @@ import java.net.URL;
 
 public class RecaptchaVerifier {
 
-    // For production
-    private static final String secret = System.getenv("PROD_RC_PK");
-    // Para pruebas en local host
+    private static final String secret;
 
+    static{
+        ConfigLoader configLoader = ConfigLoader.getInstance();
+        if(!configLoader.isEmpty()){
+            // Para pruebas en local host
+            secret = configLoader.getProperty("recaptchaverifier.secret");
+        }else {
+            // For production
+            secret = System.getenv("PROD_RC_PK");
+        }
+    }
     private static final String url = "https://www.google.com/recaptcha/api/siteverify";
     private static Gson gson = new Gson();
 

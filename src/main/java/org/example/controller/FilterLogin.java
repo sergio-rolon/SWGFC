@@ -23,13 +23,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.config.ConfigLoader;
 
 
 /**
  *
  * @author Sergio Rolon
  */
-@WebFilter(filterName = "FilterLogin", urlPatterns = {"/Login","/employee","/ServletPerson"})
+@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios"})
 public class FilterLogin implements Filter {
 
     private static final boolean debug = true;
@@ -42,6 +43,18 @@ public class FilterLogin implements Filter {
     public FilterLogin() {
     }
 
+    private static final String secret;
+
+    static{
+        ConfigLoader configLoader = ConfigLoader.getInstance();
+        if(!configLoader.isEmpty()){
+            // Para pruebas en local host
+            secret = configLoader.getProperty("filterlogin.secret");
+        }else {
+            // For production
+            secret = System.getenv("PROD_FL_SECRET");
+        }
+    }
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -113,7 +126,7 @@ public class FilterLogin implements Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-        String secret = "OneClickCarSoloQuedamos#4";
+        //String secret = "OneClickCarSoloQuedamos#4";
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         String authHeader =  httpServletRequest.getHeader("Authorization");
         if (  (("POST".equals(httpServletRequest.getMethod())) &&
