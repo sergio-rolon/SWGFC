@@ -66,10 +66,30 @@ public class Validator {
             return "\""+campo+"\": \"success\"";
         } else {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener letras\"";
+            return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }
 
+    public static String isAlphaNum(String campo, String palabra) {
+        String palabraPattern = "^[a-zA-Z0-9]+$";
+
+        if (palabra.matches(palabraPattern)) {
+            return "\""+campo+"\": \"success\"";
+        } else {
+            validationFailed = true;
+            return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
+        }
+    }
+
+    public static String isNum(String campo, String numero) {
+        try {
+            int isNumber = Integer.parseInt(numero);
+                return "\""+campo+"\": \"success\"";
+        } catch (NumberFormatException e) {
+            validationFailed = true;
+            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
+        }
+    }
     public static String isNumTwoTypes(String campo, String numero) {
         try {
             int isNumber = Integer.parseInt(numero);

@@ -1,5 +1,7 @@
 package org.example.security;
 
+import org.example.config.ConfigLoader;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -13,11 +15,25 @@ import java.util.Base64;
 public class Encoder implements Serializable {
     private static final long serialVersionUID = 5486865543976730876L;
     // For production
-    private static final String key = System.getenv("PROD_ENCODER_KEY");
-    private static final String salt = System.getenv("PROD_ENCODER_SALT");
+    //private static final String key = System.getenv("PROD_ENCODER_KEY");
+    //private static final String salt = System.getenv("PROD_ENCODER_SALT");
 
     // Para pruebas en local host
+    private static final String key;
+    private static final String salt;
 
+    static{
+        ConfigLoader configLoader = ConfigLoader.getInstance();
+        if(!configLoader.isEmpty()){
+            // Para pruebas en local host
+            key = configLoader.getProperty("encoder.key");
+            salt =configLoader.getProperty("encoder.salt");
+        }else {
+            // For production
+            key = System.getenv("PROD_ENCODER_KEY");
+            salt = System.getenv("PROD_ENCODER_SALT");
+        }
+    }
 
     private SecretKey secretKeyTemp;
 
