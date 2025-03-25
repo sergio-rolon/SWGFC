@@ -7,16 +7,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.modelo.Usuarios;
+import org.example.repository.UsuariosRepository;
 import org.example.security.Encoder;
 import org.example.security.Validator;
 import org.example.service.UsuariosService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
-import java.util.List;
 
 @WebServlet(name = "Usuarios", urlPatterns = {"/usuarios/*"})
 public class UsuariosController extends HttpServlet {
     private Gson gson = new Gson();
+    UsuariosRepository usuariosRepository = new UsuariosRepository();
+    UsuariosService usuariosService = new UsuariosService(usuariosRepository);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +27,7 @@ public class UsuariosController extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            List<Usuarios> usuariosResult = UsuariosService.getAllUsuarios();
+            JSONArray usuariosResult = usuariosService.getAll();
 
             if (usuariosResult != null) {
                 System.out.println("Usuarios recuperados");
@@ -89,7 +92,7 @@ public class UsuariosController extends HttpServlet {
                 newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
                 newUser.setIdTipoUsuario(jsonObject.getInt("idTipoUsuario"));
 
-                Usuarios usuarioResult = UsuariosService.addUsuario(newUser);
+                Usuarios usuarioResult = usuariosService.add(newUser);
                 if (usuarioResult != null) {
                     System.out.println("Usuario agregado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -153,7 +156,7 @@ public class UsuariosController extends HttpServlet {
                 newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
                 newUser.setIdTipoUsuario(jsonObject.getInt("idTipoUsuario"));
 
-                Usuarios usuarioResult = UsuariosService.updateUsuario(newUser);
+                Usuarios usuarioResult = usuariosService.update(newUser);
                 if (usuarioResult != null) {
                     System.out.println("Usuario agregado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -211,7 +214,7 @@ public class UsuariosController extends HttpServlet {
                 deleteUser.setEmail(jsonObject.getString("email"));
 
 
-                if (UsuariosService.deleteUsuario(deleteUser.getEmail())) {
+                if (usuariosService.delete(deleteUser.getEmail())) {
                     System.out.println("Usuario eliminado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.setContentType("application/json");

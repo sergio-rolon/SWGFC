@@ -2,52 +2,57 @@ package org.example.service;
 
 import org.example.modelo.Clientes;
 import org.example.repository.ClientesRepository;
-import org.example.repository.UsuariosRepository;
 import org.json.JSONArray;
 
-import java.util.List;
 
-public class ClientesService {
+public class ClientesService implements CrudService<Clientes> {
 
-//    public static List<Clientes> getAllClientes(){
-//        return ClientesRepository.findAll();
-//    }
-public static JSONArray getAllClientes(){
-    return ClientesRepository.findAll();
-}
+    private ClientesRepository clientesRepository;
 
-    public static Clientes getClienteById(String rfc){
+    public ClientesService(ClientesRepository clientesRepository){
+        this.clientesRepository=clientesRepository;
+    }
+    @Override
+    public JSONArray getAll(){
+        return clientesRepository.findAll();
+    }
+    @Override
+    public Clientes getById(String rfc){
         Clientes clienteResult = null;
-        if(ClientesRepository.existsById(rfc)) {
-            return clienteResult = ClientesRepository.findById(rfc);
+        if(clientesRepository.existsById(rfc)) {
+            return clienteResult = clientesRepository.findById(rfc);
+        }
+        return clienteResult;
+    }
+    @Override
+    public Clientes add(Clientes cliente){
+        Clientes clienteResult = null;
+        if(!clientesRepository.existsById(cliente.getRfc())) {
+            return clienteResult = clientesRepository.save(cliente);
         }
         return clienteResult;
     }
 
-    public static Clientes addCliente(Clientes cliente){
+    @Override
+    public Clientes update(Clientes cliente){
         Clientes clienteResult = null;
-        if(!ClientesRepository.existsById(cliente.getRfc())) {
-            return clienteResult = ClientesRepository.save(cliente);
+        if(clientesRepository.existsById(cliente.getRfc())) {
+            cliente.setIdCliente(clientesRepository.findById(cliente.getRfc()).getIdCliente());
+            return clienteResult = clientesRepository.save(cliente);
         }
         return clienteResult;
     }
-
-
-    public static Clientes updateCliente(Clientes cliente){
-        Clientes clienteResult = null;
-        if(ClientesRepository.existsById(cliente.getRfc())) {
-            cliente.setIdCliente(ClientesRepository.findById(cliente.getRfc()).getIdCliente());
-            return clienteResult = ClientesRepository.save(cliente);
-        }
-        return clienteResult;
-    }
-
-    public static boolean deleteCliente (String rfc){
+    @Override
+    public boolean delete(String rfc){
         boolean result = false;
-        if(ClientesRepository.existsById(rfc)) {
-            ClientesRepository.deleteById(rfc);
+        if(clientesRepository.existsById(rfc)) {
+            clientesRepository.deleteById(rfc);
             result = true;
         }
         return result;
     }
+    @Override
+    public boolean delete(int rfc){return false;}
+    @Override
+    public Clientes getById(int rfc){return new Clientes();}
 }

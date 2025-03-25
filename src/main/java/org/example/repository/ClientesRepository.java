@@ -8,10 +8,8 @@ import org.json.JSONObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ClientesRepository {
+public class ClientesRepository implements CrudRepository<Clientes> {
 
 
 //    public static List<Clientes> findAll(){
@@ -39,37 +37,39 @@ public class ClientesRepository {
 //        }
 //        return allClientes;
 //    }
-public static JSONArray findAll(){
-    JSONArray allClientes = null;
+    @Override
+    public JSONArray findAll(){
+        JSONArray allClientes = null;
 
-    Connection conn = Conexion.getConexion();
-    try{
-        PreparedStatement ps = conn.prepareStatement("SELECT c.\"idCliente\", c.\"razonSocial\", " +
-                "c.\"rfc\", c.\"idEstatus\" as \"estatusCliente\", u.\"idUsuario\", u.\"email\", " +
-                "u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", u.\"numeroTrabajador\", " +
-                "u.\"contrasena\", u.\"idEstatus\" as \"estatusUsuario\", " +
-                "u.\"idTipoUsuario\" FROM \"Clientes\" c INNER JOIN \"Usuarios\" " +
-                "u ON c.\"idUsuario\" = u.\"idUsuario\"");
-        ResultSet rs = ps.executeQuery();
-        allClientes = new JSONArray();
-        while(rs.next()){
-        int totalColumns = rs.getMetaData().getColumnCount();
-            JSONObject cliente = new JSONObject();
-        for(int i=0; i<totalColumns;i++){
-            cliente.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
-        }
-        allClientes.put(cliente);
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT c.\"idCliente\", c.\"razonSocial\", " +
+                    "c.\"rfc\", c.\"idEstatus\" as \"estatusCliente\", u.\"idUsuario\", u.\"email\", " +
+                    "u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", u.\"numeroTrabajador\", " +
+                    "u.\"contrasena\", u.\"idEstatus\" as \"estatusUsuario\", " +
+                    "u.\"idTipoUsuario\" FROM \"Clientes\" c INNER JOIN \"Usuarios\" " +
+                    "u ON c.\"idUsuario\" = u.\"idUsuario\"");
+            ResultSet rs = ps.executeQuery();
+            allClientes = new JSONArray();
+            while(rs.next()){
+            int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject cliente = new JSONObject();
+            for(int i=0; i<totalColumns;i++){
+                cliente.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+            }
+            allClientes.put(cliente);
 
+            }
+            Conexion.endConexion(conn);
+            return allClientes;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
         }
-        Conexion.endConexion(conn);
         return allClientes;
-    }catch (Exception e){
-        System.out.println(e);
-        Conexion.endConexion(conn);
     }
-    return allClientes;
-}
-    public static Clientes findById(String rfc){
+    @Override
+    public Clientes findById(String rfc){
         Clientes cliente = null;
         Connection conn = Conexion.getConexion();
         try{
@@ -93,8 +93,8 @@ public static JSONArray findAll(){
         }
         return cliente;
     }
-
-    public static boolean existsById(String rfc){
+    @Override
+    public boolean existsById(String rfc){
         boolean result = false;
         Connection conn = Conexion.getConexion();
         try{
@@ -113,8 +113,8 @@ public static JSONArray findAll(){
         }
         return result;
     }
-
-    public static Clientes save(Clientes cliente){
+    @Override
+    public Clientes save(Clientes cliente){
         Clientes clienteResult = null;
         // Validar si cliente.idUsuario es diferente de null entonces es un update
         // si no es un insert
@@ -162,8 +162,8 @@ public static JSONArray findAll(){
         }
         return clienteResult;
     }
-
-    public static boolean deleteById(String rfc){
+    @Override
+    public boolean deleteById(String rfc){
         boolean result=false;
         Connection conn = Conexion.getConexion();
         try {
@@ -181,5 +181,14 @@ public static JSONArray findAll(){
             Conexion.endConexion(conn);
         }
         return result;
+    }
+
+    @Override
+    public boolean deleteById(int id){
+        return false;
+    }
+    @Override
+    public Clientes findById(int id) {
+        return new Clientes();
     }
 }

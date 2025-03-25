@@ -1,37 +1,34 @@
 package org.example.repository;
 
-
 import org.example.modelo.Usuarios;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
-public class UsuariosRepository {
+public class UsuariosRepository implements CrudRepository<Usuarios>{
 
-
-    public static List<Usuarios> findAll(){
-        List<Usuarios> allUsuarios = null;
+    @Override
+    public JSONArray findAll(){
+        JSONArray allUsuarios = null;
         Connection conn = Conexion.getConexion();
         try{
-            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Usuarios\"");
+            PreparedStatement ps = conn.prepareStatement("SELECT u.\"idUsuario\", u.\"email\", " +
+                    "u.\"nombre\", u.\"apellidoPaterno\" as \"Apellido Paterno\", u.\"apellidoMaterno\" as \"Apellido Materno\", u.\"numeroTrabajador\", u.\"contrasena\", " +
+                    "te.\"tipoEstatus\" as \"Estatus Usuario\", " +
+                    "tu.\"tipoUsuario\" as \"Tipo Usuario\" FROM \"Usuarios\" u " +
+                    "INNER JOIN \"TipoEstatus\" te ON u.\"idEstatus\" = te.\"idEstatus\"" +
+                    "INNER JOIN \"TipoUsuario\" tu ON u.\"idTipoUsuario\" = tu.\"idTipoUsuario\"");
             ResultSet rs = ps.executeQuery();
-            allUsuarios = new ArrayList<>();
+            allUsuarios = new JSONArray();
             while(rs.next()){
-                Usuarios usuario = new Usuarios();
-                usuario.setIdUsuario(rs.getInt("idUsuario"));
-                usuario.setEmail(rs.getString("email"));
-                usuario.setNombre(rs.getString("nombre"));
-                usuario.setApellidoPaterno(rs.getString("apellidoPaterno"));
-                usuario.setApellidoMaterno(rs.getString("apellidoMaterno"));
-                usuario.setNumeroTrabajador(rs.getString("numeroTrabajador"));
-                usuario.setContrasena(rs.getString("contrasena"));
-                usuario.setIdEstatus(rs.getInt("idEstatus"));
-                usuario.setIdTipoUsuario(rs.getInt("idTipoUsuario"));
-                System.out.println(usuario);
-                allUsuarios.add(usuario);
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject usuario = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    usuario.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allUsuarios.put(usuario);
 
             }
             Conexion.endConexion(conn);
@@ -43,7 +40,8 @@ public class UsuariosRepository {
         return allUsuarios;
     }
 
-    public static Usuarios findById(String email){
+    @Override
+    public Usuarios findById(String email){
         Usuarios usuario = null;
         Connection conn = Conexion.getConexion();
         try{
@@ -72,7 +70,7 @@ public class UsuariosRepository {
         return usuario;
     }
 
-    public static boolean existsById(String email){
+    public boolean existsById(String email){
         boolean result = false;
         Connection conn = Conexion.getConexion();
         try{
@@ -92,7 +90,8 @@ public class UsuariosRepository {
         return result;
     }
 
-    public static Usuarios save(Usuarios usuario){
+    @Override
+    public Usuarios save(Usuarios usuario){
         Usuarios usuarioResult = null;
         // Validar si usuario.idUsuario es diferente de null entonces es un update
         // si no es un insert
@@ -159,7 +158,8 @@ public class UsuariosRepository {
         return usuarioResult;
     }
 
-    public static boolean deleteById(String email){
+    @Override
+    public boolean deleteById(String email){
         boolean result=false;
         Connection conn = Conexion.getConexion();
         try {
@@ -177,5 +177,14 @@ public class UsuariosRepository {
             Conexion.endConexion(conn);
         }
         return result;
+    }
+
+    @Override
+    public boolean deleteById(int id){
+        return false;
+    }
+    @Override
+    public Usuarios findById(int id) {
+        return new Usuarios();
     }
 }

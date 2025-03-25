@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.google.gson.Gson;
 import org.example.dto.Credentials;
+import org.example.repository.UsuariosRepository;
 import org.example.security.Encoder;
 import org.example.security.Validator;
 import org.example.service.UsuariosService;
@@ -22,6 +23,8 @@ import org.example.security.RecaptchaVerifier;
 @WebServlet(name = "Login", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
     private Gson gson = new Gson();
+    UsuariosRepository usuariosRepository = new UsuariosRepository();
+    UsuariosService usuariosService = new UsuariosService(usuariosRepository);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -66,7 +69,7 @@ public class LoginController extends HttpServlet {
             //Validamos respuesta del Recaptcha
                 if(RecaptchaVerifier.verifyRecaptcha(loginUser.getToken())) {
                     //Recuperamos el Usuario si es que existe
-                    Usuarios registeredUsuario = UsuariosService.getUsuarioById(loginUser.getEmail());
+                    Usuarios registeredUsuario = usuariosService.getById(loginUser.getEmail());
 
                     if(registeredUsuario!=null){
                         // Si existe entonces validamos contraseña

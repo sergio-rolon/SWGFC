@@ -7,16 +7,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.modelo.Clientes;
+import org.example.repository.ClientesRepository;
 import org.example.security.Validator;
 import org.example.service.ClientesService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
-import java.util.List;
 
 @WebServlet(name = "Clientes", urlPatterns = {"/clientes/*"})
 public class ClientesController extends HttpServlet {
     private Gson gson = new Gson();
+    ClientesRepository clientesRepository = new ClientesRepository();
+    ClientesService clientesService = new ClientesService(clientesRepository);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +26,7 @@ public class ClientesController extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            JSONArray clientesResult = ClientesService.getAllClientes();
+            JSONArray clientesResult = clientesService.getAll();
 
             if (clientesResult != null) {
                 System.out.println("Clientes recuperados");
@@ -85,7 +87,7 @@ public class ClientesController extends HttpServlet {
                 newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
                 newUser.setIdUsuario(jsonObject.getInt("idUsuario"));
 
-                Clientes clienteResult = ClientesService.addCliente(newUser);
+                Clientes clienteResult = clientesService.add(newUser);
                 if (clienteResult != null) {
                     System.out.println("Cliente agregado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -145,7 +147,7 @@ public class ClientesController extends HttpServlet {
                 newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
                 newUser.setIdUsuario(jsonObject.getInt("idUsuario"));
 
-                Clientes clienteResult = ClientesService.updateCliente(newUser);
+                Clientes clienteResult = clientesService.update(newUser);
                 if (clienteResult != null) {
                     System.out.println("Cliente agregado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -204,7 +206,7 @@ public class ClientesController extends HttpServlet {
                 deleteUser.setRfc(jsonObject.getString("rfc").toUpperCase());
 
 
-                if (ClientesService.deleteCliente(deleteUser.getRfc())) {
+                if (clientesService.delete(deleteUser.getRfc())) {
                     System.out.println("Cliente eliminado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.setContentType("application/json");

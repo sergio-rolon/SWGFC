@@ -1,48 +1,60 @@
 package org.example.service;
 
+import org.example.modelo.Clientes;
 import org.example.modelo.Usuarios;
 import org.example.repository.UsuariosRepository;
+import org.json.JSONArray;
 
-import java.util.List;
 
-public class UsuariosService {
+public class UsuariosService implements CrudService<Usuarios>{
 
-    public static List<Usuarios> getAllUsuarios(){
-        return UsuariosRepository.findAll();
+    private UsuariosRepository usuariosRepository;
+
+    public UsuariosService(UsuariosRepository usuariosRepository){
+        this.usuariosRepository=usuariosRepository;
     }
-
-    public static Usuarios getUsuarioById(String email){
+    @Override
+    public JSONArray getAll(){
+        return usuariosRepository.findAll();
+    }
+    @Override
+    public Usuarios getById(String email){
         Usuarios usuarioResult = null;
-        if(UsuariosRepository.existsById(email)) {
-            return usuarioResult = UsuariosRepository.findById(email);
+        if(usuariosRepository.existsById(email)) {
+            return usuarioResult = usuariosRepository.findById(email);
+        }
+        return usuarioResult;
+    }
+    @Override
+    public Usuarios add(Usuarios usuario){
+        Usuarios usuarioResult = null;
+        if(!usuariosRepository.existsById(usuario.getEmail())) {
+            return usuarioResult = usuariosRepository.save(usuario);
         }
         return usuarioResult;
     }
 
-    public static Usuarios addUsuario(Usuarios usuario){
+    @Override
+    public Usuarios update(Usuarios usuario){
         Usuarios usuarioResult = null;
-        if(!UsuariosRepository.existsById(usuario.getEmail())) {
-            return usuarioResult = UsuariosRepository.save(usuario);
+        if(usuariosRepository.existsById(usuario.getEmail())) {
+            usuario.setIdUsuario(usuariosRepository.findById(usuario.getEmail()).getIdUsuario());
+            return usuarioResult = usuariosRepository.save(usuario);
         }
         return usuarioResult;
     }
-
-
-    public static Usuarios updateUsuario(Usuarios usuario){
-        Usuarios usuarioResult = null;
-        if(UsuariosRepository.existsById(usuario.getEmail())) {
-            usuario.setIdUsuario(UsuariosRepository.findById(usuario.getEmail()).getIdUsuario());
-            return usuarioResult = UsuariosRepository.save(usuario);
-        }
-        return usuarioResult;
-    }
-
-    public static boolean deleteUsuario (String email){
+    @Override
+    public boolean delete (String email){
         boolean result = false;
-        if(UsuariosRepository.existsById(email)) {
-            UsuariosRepository.deleteById(email);
+        if(usuariosRepository.existsById(email)) {
+            usuariosRepository.deleteById(email);
             result = true;
         }
         return result;
     }
+
+    @Override
+    public boolean delete(int rfc){return false;}
+    @Override
+    public Usuarios getById(int rfc){return new Usuarios();}
 }
