@@ -24,7 +24,7 @@ jobs:
       - name: Commit and push JAR to repository
         run: |
           git add target/servlet-embedded-tomcat-jar-with-dependencies.jar
-          git commit -m
+          git commit -m "Add generated .jar to target folder"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
