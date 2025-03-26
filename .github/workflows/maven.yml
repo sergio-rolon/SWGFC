@@ -17,5 +17,5 @@ jobs:
       - name: Upload .jar as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 'my-app-jar'
+          name: 'servlet-embedded-tomcat-jar-with-dependencies.jar'
           path: 'https://github.com/sergio-rolon/SWGFC/tree/main/target/*.jar'
