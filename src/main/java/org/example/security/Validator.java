@@ -80,7 +80,15 @@ public class Validator {
             return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }
-
+    public static String isDouble(String campo, String numero) {
+        try {
+            double isDouble = Double.parseDouble(numero);
+            return "\""+campo+"\": \"success\"";
+        } catch (NumberFormatException e) {
+            validationFailed = true;
+            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
+        }
+    }
     public static String isNum(String campo, String numero) {
         try {
             int isNumber = Integer.parseInt(numero);
