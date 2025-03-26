@@ -12,31 +12,6 @@ import java.sql.ResultSet;
 public class ClientesRepository implements CrudRepository<Clientes> {
 
 
-//    public static List<Clientes> findAll(){
-//        List<Clientes> allClientes = null;
-//        Connection conn = Conexion.getConexion();
-//        try{
-//            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Clientes\"");
-//            ResultSet rs = ps.executeQuery();
-//            allClientes = new ArrayList<>();
-//            while(rs.next()){
-//                Clientes cliente = new Clientes();
-//                cliente.setIdCliente(rs.getInt("idCliente"));
-//                cliente.setRazonSocial(rs.getString("razonSocial"));
-//                cliente.setRfc(rs.getString("rfc"));
-//                cliente.setIdEstatus(rs.getInt("idEstatus"));
-//                cliente.setIdUsuario(rs.getInt("idUsuario"));
-//                System.out.println(cliente);
-//                allClientes.add(cliente);
-//            }
-//            Conexion.endConexion(conn);
-//            return allClientes;
-//        }catch (Exception e){
-//            System.out.println(e);
-//            Conexion.endConexion(conn);
-//        }
-//        return allClientes;
-//    }
     @Override
     public JSONArray findAll(){
         JSONArray allClientes = null;

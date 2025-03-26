@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mktpromomarc.flotilla.config.Util;
 import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
 import mktpromomarc.flotilla.security.Encoder;
@@ -20,6 +21,7 @@ public class UsuariosController extends HttpServlet {
     private Gson gson = new Gson();
     UsuariosRepository usuariosRepository = new UsuariosRepository();
     UsuariosService usuariosService = new UsuariosService(usuariosRepository);
+    String clase = getClass().getSimpleName();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -30,6 +32,7 @@ public class UsuariosController extends HttpServlet {
             JSONArray usuariosResult = usuariosService.getAll();
 
             if (usuariosResult != null) {
+                Util.logInfo("Usuarios recuperados",clase);
                 System.out.println("Usuarios recuperados");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");
@@ -72,7 +75,7 @@ public class UsuariosController extends HttpServlet {
                 String json = sb.toString();
                 JSONObject jsonObject = new JSONObject(json);
 
-                String resultValidation = usuariosValidator(jsonObject);
+                String resultValidation = validateFields(jsonObject);
                 System.out.println("Resultado validación:"+ resultValidation);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -136,7 +139,7 @@ public class UsuariosController extends HttpServlet {
                 String json = sb.toString();
                 JSONObject jsonObject = new JSONObject(json);
 
-                String resultValidation = usuariosValidator(jsonObject);
+                String resultValidation = validateFields(jsonObject);
                 System.out.println("Resultado validación:"+ resultValidation);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -234,7 +237,7 @@ public class UsuariosController extends HttpServlet {
         }
     }
 
-    private String usuariosValidator(JSONObject jsonObject){
+    private String validateFields(JSONObject jsonObject){
         Validator.validationFailed=false;
         StringBuilder sb = new StringBuilder();
         sb.append("{");

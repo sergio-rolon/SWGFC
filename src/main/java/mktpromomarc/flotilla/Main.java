@@ -1,5 +1,6 @@
 package mktpromomarc.flotilla;
 
+import mktpromomarc.flotilla.config.Util;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
@@ -16,8 +17,9 @@ public class Main {
     public static final Optional<String> PORT = Optional.ofNullable(System.getenv("PORT"));
     public static final Optional<String> HOSTNAME = Optional.ofNullable(System.getenv("HOSTNAME"));
 
-    public static void main(String[] args) throws LifecycleException {
 
+    public static void main(String[] args) throws LifecycleException {
+        String clase = Main.class.getSimpleName();
         //String contextPath = "/myapp";
         // Empty string referencing tu host/index.html
         String contextPath = "";
@@ -41,6 +43,7 @@ public class Main {
 
         tomcat.getConnector();
         tomcat.start();
+        Util.logInfo("Tomcat iniciado", clase);
         tomcat.getServer().await();
 
     }

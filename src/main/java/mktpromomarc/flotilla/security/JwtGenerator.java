@@ -14,16 +14,16 @@ import java.util.Date;
  * @author Sergio Rolon
  */
 public class JwtGenerator {
-    private static final String secret;
+    private static final String fraseSecreta;
 
     static{
         ConfigLoader configLoader = ConfigLoader.getInstance();
         if(!configLoader.isEmpty()){
             // Para pruebas en local host
-            secret = configLoader.getProperty("jwtgenerator.secret");
+            fraseSecreta = configLoader.getProperty("jwtgenerator.secret");
         }else {
             // For production
-            secret = System.getenv("PROD_JWT_SECRET");
+            fraseSecreta = System.getenv("PROD_JWT_SECRET");
         }
     }
 
@@ -35,7 +35,7 @@ public class JwtGenerator {
         return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers)
                 .setIssuedAt(new Date())
                 .setExpiration(calendar.getTime())
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, fraseSecreta)
                 .compact(),"true");
     }//generateToken
 }

@@ -80,6 +80,7 @@ public class Validator {
             return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }
+
     public static String isDouble(String campo, String numero) {
         try {
             double isDouble = Double.parseDouble(numero);
@@ -89,6 +90,7 @@ public class Validator {
             return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
         }
     }
+
     public static String isNum(String campo, String numero) {
         try {
             int isNumber = Integer.parseInt(numero);
@@ -98,6 +100,7 @@ public class Validator {
             return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
         }
     }
+
     public static String isNumTwoTypes(String campo, String numero) {
         try {
             int isNumber = Integer.parseInt(numero);
