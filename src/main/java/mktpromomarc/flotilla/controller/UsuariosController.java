@@ -26,6 +26,8 @@ public class UsuariosController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String email = (String) request.getAttribute("email");
+        String role = (String) request.getAttribute("role");
 
         try (PrintWriter out = response.getWriter()) {
 
@@ -33,7 +35,6 @@ public class UsuariosController extends HttpServlet {
 
             if (usuariosResult != null) {
                 Util.logInfo("Usuarios recuperados",clase);
-                System.out.println("Usuarios recuperados");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
