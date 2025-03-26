@@ -1,4 +1,4 @@
-package org.example.security;
+package mktpromomarc.flotilla.security;
 
 public class Validator {
 

@@ -1,4 +1,4 @@
-package org.example.controller;
+package mktpromomarc.flotilla.controller;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,7 +23,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.config.ConfigLoader;
+import mktpromomarc.flotilla.config.ConfigLoader;
 
 
 /**

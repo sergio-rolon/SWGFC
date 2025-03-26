@@ -1,8 +1,8 @@
-package org.example.security;
+package mktpromomarc.flotilla.security;
 
 
-import org.example.config.ConfigLoader;
-import org.example.dto.RecaptchaResponse;
+import mktpromomarc.flotilla.config.ConfigLoader;
+import mktpromomarc.flotilla.dto.RecaptchaResponse;
 
 
 import com.google.gson.Gson;

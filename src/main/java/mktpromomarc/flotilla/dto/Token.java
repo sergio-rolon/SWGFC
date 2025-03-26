@@ -1,4 +1,4 @@
-package org.example.dto;
+package mktpromomarc.flotilla.dto;
 
 public class Token {
 

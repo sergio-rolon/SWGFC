@@ -1,4 +1,4 @@
-package org.example.modelo;
+package mktpromomarc.flotilla.modelo;
 
 public class Clientes {
 

@@ -1,4 +1,4 @@
-package org.example.service;
+package mktpromomarc.flotilla.service;
 
 import org.json.JSONArray;
 

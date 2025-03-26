@@ -1,6 +1,6 @@
-package org.example.repository;
+package mktpromomarc.flotilla.repository;
 
-import org.example.config.ConfigLoader;
+import mktpromomarc.flotilla.config.ConfigLoader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
