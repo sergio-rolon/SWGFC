@@ -13,7 +13,6 @@ import java.util.Properties;
 
         private ConfigLoader() {
 
-
             properties = new Properties();
 
            try (InputStream input = new FileInputStream("SWGFC\\src\\main\\resources\\config.properties")) {
