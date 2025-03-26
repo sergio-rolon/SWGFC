@@ -15,6 +15,7 @@ import java.util.Properties;
 
 
             properties = new Properties();
+
            try (InputStream input = new FileInputStream("SWGFC\\src\\main\\resources\\config.properties")) {
                if (input == null) {
                     System.out.println("Lo siento, no se pudo encontrar config.properties");
