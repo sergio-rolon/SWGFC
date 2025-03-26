@@ -25,7 +25,7 @@ jobs:
           git config user.email "actions@github.com"
       - name: Commit and push JAR to repository
         run: |
-          git add target/SWGFV.jar
+          git add target/SWGFC-jar-with-dependencies.jar
           git commit -m "Add generated .jar to target folder"
           git push
         env:
