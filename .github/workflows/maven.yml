@@ -16,7 +16,7 @@ jobs:
         run: mvn clean compile assembly:single --file pom.xml
       - name: Add .jar to target folder in repo
         run: |
-          ls -al target/
+          ls -la target/
           cp /home/runner/work/SWGFC/SWGFC/target/servlet-embedded-tomcat-jar-with-dependencies.jar $GITHUB_WORKSPACE/target/
       - name: Configure Git
         run: |
