@@ -18,4 +18,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'my-app-jar'
-          path: 'https://github.com/sergio-rolon/SWGFC/tree/main/target'
+          path: 'https://github.com/sergio-rolon/SWGFC/tree/main/target/*.jar'
