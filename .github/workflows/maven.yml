@@ -1,0 +1,28 @@
+name: Build and Deploy Maven Project
+
+on:
+  push:
+    branches:
+      - develop 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean compile assembly:single
+
+      - name: Upload .jar as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: SWGFC
+          path: target/*.jar
