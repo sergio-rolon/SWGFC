@@ -27,12 +27,13 @@ public class JwtGenerator {
         }
     }
 
-    public static Token generateToken(String email, String typeUsers) {
+    public static Token generateToken(String email, String typeUsers, String contrasena) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR,720); //Prueba/Desarrollo
         //calendar.add(Calendar.MINUTE,30);
 
-        return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers)
+        //Original: return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers)
+        return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers).claim("contrasena", contrasena)
                 .setIssuedAt(new Date())
                 .setExpiration(calendar.getTime())
                 .signWith(SignatureAlgorithm.HS256, fraseSecreta)

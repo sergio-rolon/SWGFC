@@ -124,7 +124,15 @@ public class FilterLogin implements Filter {
             try {
                 Claims claims = Jwts.parser().setSigningKey(secret)
                         .parseClaimsJws(token).getBody();
-                claims.forEach((key, value)-> System.out.println("key: " + key + "value: " + value));
+
+                claims.forEach((key, value)-> {
+                    System.out.println("key: " + key + "value: " + value);
+                });
+                //prueba
+                String email = claims.getSubject();
+                String role = claims.get("role", String.class);
+                request.setAttribute("email",email);
+                request.setAttribute("role", role);
             }catch(SignatureException | MalformedJwtException | ExpiredJwtException e) {
                 System.out.println("2. Invalid Token");
                 throw new ServletException("2. Invalid Token");

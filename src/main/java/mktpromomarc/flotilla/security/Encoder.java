@@ -14,11 +14,7 @@ import java.util.Base64;
 
 public class Encoder implements Serializable {
     private static final long serialVersionUID = 5486865543976730876L;
-    // For production
-    //private static final String key = System.getenv("PROD_ENCODER_KEY");
-    //private static final String salt = System.getenv("PROD_ENCODER_SALT");
 
-    // Para pruebas en local host
     private static final String key;
     private static final String salt;
 

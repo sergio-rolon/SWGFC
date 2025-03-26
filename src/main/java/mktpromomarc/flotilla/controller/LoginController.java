@@ -79,6 +79,7 @@ public class LoginController extends HttpServlet {
 
                             String rol;
                             // Establecemos rol para el JWToken
+                           //todo probably this is goint to be changes to .contains("administrador")
                             if(registeredUsuario.getIdTipoUsuario()==1){
                                 rol="administrador";
                             }else if(registeredUsuario.getIdTipoUsuario()==2){
@@ -87,7 +88,7 @@ public class LoginController extends HttpServlet {
                                 rol="asesor";
                             }
                             // Generamos token
-                           Token tokenGenerated = JwtGenerator.generateToken(loginUser.getContrasena(), rol);
+                           Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),rol,registeredUsuario.getContrasena());
                            String tokenResponseString = new Gson().toJson(tokenGenerated);
 
                            System.out.println(tokenResponseString);
