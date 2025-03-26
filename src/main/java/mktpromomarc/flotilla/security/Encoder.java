@@ -1,6 +1,6 @@
-package org.example.security;
+package mktpromomarc.flotilla.security;
 
-import org.example.config.ConfigLoader;
+import mktpromomarc.flotilla.config.ConfigLoader;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

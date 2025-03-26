@@ -1,4 +1,4 @@
-package org.example.repository;
+package mktpromomarc.flotilla.repository;
 
 import org.json.JSONArray;
 

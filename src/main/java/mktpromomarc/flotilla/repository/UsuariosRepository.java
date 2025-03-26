@@ -1,6 +1,6 @@
-package org.example.repository;
+package mktpromomarc.flotilla.repository;
 
-import org.example.modelo.Usuarios;
+import mktpromomarc.flotilla.modelo.Usuarios;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.sql.Connection;

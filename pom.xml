@@ -123,7 +123,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>org.example.Main</mainClass>
+                <mainClass>mktpromomarc.flotilla.Main</mainClass>
               </manifest>
             </archive>
             <descriptorRefs>

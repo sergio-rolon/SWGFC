@@ -1,4 +1,4 @@
-package org.example.config;
+package mktpromomarc.flotilla.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;

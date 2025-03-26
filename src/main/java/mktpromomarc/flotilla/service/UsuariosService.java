@@ -1,8 +1,7 @@
-package org.example.service;
+package mktpromomarc.flotilla.service;
 
-import org.example.modelo.Clientes;
-import org.example.modelo.Usuarios;
-import org.example.repository.UsuariosRepository;
+import mktpromomarc.flotilla.modelo.Usuarios;
+import mktpromomarc.flotilla.repository.UsuariosRepository;
 import org.json.JSONArray;
 
 

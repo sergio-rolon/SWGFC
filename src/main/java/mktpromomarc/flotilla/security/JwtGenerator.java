@@ -1,10 +1,10 @@
-package org.example.security;
+package mktpromomarc.flotilla.security;
 
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.example.config.ConfigLoader;
-import org.example.dto.Token;
+import mktpromomarc.flotilla.config.ConfigLoader;
+import mktpromomarc.flotilla.dto.Token;
 
 import java.util.Calendar;
 import java.util.Date;

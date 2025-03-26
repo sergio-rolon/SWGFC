@@ -1,4 +1,4 @@
-package org.example.controller;
+package mktpromomarc.flotilla.controller;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -6,11 +6,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.modelo.Usuarios;
-import org.example.repository.UsuariosRepository;
-import org.example.security.Encoder;
-import org.example.security.Validator;
-import org.example.service.UsuariosService;
+import mktpromomarc.flotilla.modelo.Usuarios;
+import mktpromomarc.flotilla.repository.UsuariosRepository;
+import mktpromomarc.flotilla.security.Encoder;
+import mktpromomarc.flotilla.security.Validator;
+import mktpromomarc.flotilla.service.UsuariosService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;

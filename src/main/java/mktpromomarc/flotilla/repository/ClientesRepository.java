@@ -1,7 +1,7 @@
-package org.example.repository;
+package mktpromomarc.flotilla.repository;
 
 
-import org.example.modelo.Clientes;
+import mktpromomarc.flotilla.modelo.Clientes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
