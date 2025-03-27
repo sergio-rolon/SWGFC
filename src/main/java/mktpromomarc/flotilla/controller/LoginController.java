@@ -73,7 +73,8 @@ public class LoginController extends HttpServlet {
 
                     if(registeredUsuario!=null){
                         // Si existe entonces validamos contraseña
-                       if (loginUser.getContrasena().equals(new Encoder().decrypt(registeredUsuario.getContrasena()))) {
+                       if (loginUser.getContrasena().equals(new Encoder().decrypt(registeredUsuario.getContrasena()))
+                       && registeredUsuario.getIdEstatus()==1) {
 
                             System.out.println("Usuario logeado correctamente");
 

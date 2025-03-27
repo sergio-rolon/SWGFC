@@ -28,13 +28,38 @@ public class UsuariosController extends HttpServlet {
             throws ServletException, IOException {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
+        String requestUrl = request.getRequestURI();
 
+   if(requestUrl.equals("/api/usuarios/logged")){
+
+       Usuarios usuarioLogeado = usuariosService.getById(email);
+
+       if(usuarioLogeado!=null){
+           try (PrintWriter out = response.getWriter()) {
+
+                   Util.logInfo("Información de usuario loggeado recuperada", clase);
+                   response.setStatus(HttpServletResponse.SC_OK);
+                   response.setContentType("application/json");
+                   response.setCharacterEncoding("UTF-8");
+                   String successResponse = new Gson().toJson(usuarioLogeado);
+                   out.print(successResponse);
+                   out.flush();
+                   return;
+           } catch (IOException ex) {
+               request.setAttribute("message", "There was an error: " + ex.getMessage());
+           }//try
+       }
+       System.out.println("1. Invalid Token");
+       response.sendRedirect("/pages/login.html");
+       return;
+   }
+    if(role.contains("administrador")) {
         try (PrintWriter out = response.getWriter()) {
 
             JSONArray usuariosResult = usuariosService.getAll();
 
             if (usuariosResult != null) {
-                Util.logInfo("Usuarios recuperados",clase);
+                Util.logInfo("Usuarios recuperados", clase);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
@@ -52,7 +77,12 @@ public class UsuariosController extends HttpServlet {
 
         } catch (IOException ex) {
             request.setAttribute("message", "There was an error: " + ex.getMessage());
-        }
+        }//try
+    }
+        Util.logInfo("Usuario sin permisos: "+role, clase);
+        response.sendRedirect("/index.html");
+
+
         }
         
     @Override

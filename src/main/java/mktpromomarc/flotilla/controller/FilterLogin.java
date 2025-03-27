@@ -24,13 +24,17 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
 import mktpromomarc.flotilla.config.ConfigLoader;
+import mktpromomarc.flotilla.modelo.Usuarios;
+import mktpromomarc.flotilla.repository.UsuariosRepository;
+import mktpromomarc.flotilla.security.Encoder;
+import mktpromomarc.flotilla.service.UsuariosService;
 
 
 /**
  *
  * @author Sergio Rolon
  */
-@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios","/clientes"})
+@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios/*","/clientes"})
 public class FilterLogin implements Filter {
 
     private static final boolean debug = true;
@@ -100,14 +104,14 @@ public class FilterLogin implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
-        // Allows crossorigin requests, deleted when deployed final version
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-        //String secret = "OneClickCarSoloQuedamos#4";
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        String pathUri = httpServletRequest.getRequestURI();
+        System.out.println("Path:"+httpServletRequest.getRequestURI());
         String authHeader =  httpServletRequest.getHeader("Authorization");
         if (  (("POST".equals(httpServletRequest.getMethod())) &&
                 (! httpServletRequest.getRequestURI().contains("/login") )  )
@@ -118,7 +122,10 @@ public class FilterLogin implements Filter {
         ) {
             if(authHeader ==null || !authHeader.startsWith("Bearer: ")) {
                 System.out.println("1. Invalid Token");
-                throw new ServletException("1. Invalid Token");
+                ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                return;
+                //throw new ServletException("1. Invalid Token");
+
             }//if authHeader
             String token = authHeader.substring(7);
             try {
@@ -131,11 +138,26 @@ public class FilterLogin implements Filter {
                 //prueba
                 String email = claims.getSubject();
                 String role = claims.get("role", String.class);
+                String contrasena = claims.get("contrasena", String.class);
                 request.setAttribute("email",email);
                 request.setAttribute("role", role);
+                UsuariosRepository usuariosRepository = new UsuariosRepository();
+                UsuariosService usuariosService = new UsuariosService(usuariosRepository);
+
+                Usuarios registeredUsuario = usuariosService.getById(email);
+                if(registeredUsuario==null || !(contrasena.equals(registeredUsuario.getContrasena())
+                        && registeredUsuario.getIdEstatus()==1) ) {
+                    System.out.println("2. Invalid Token");
+
+                    ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                    return;
+                    }
+
             }catch(SignatureException | MalformedJwtException | ExpiredJwtException e) {
                 System.out.println("2. Invalid Token");
-                throw new ServletException("2. Invalid Token");
+                ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                return;
+                //throw new ServletException("2. Invalid Token");
             }//catch
         }//if getMethod
         chain.doFilter(request, response);
