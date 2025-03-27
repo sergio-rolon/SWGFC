@@ -32,8 +32,8 @@ public class JwtGenerator {
         calendar.add(Calendar.HOUR,720); //Prueba/Desarrollo
         //calendar.add(Calendar.MINUTE,30);
 
-        //Original: return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers)
-        return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers).claim("contrasena", contrasena)
+        return new Token(Jwts.builder().setSubject(email).claim("role", typeUsers)
+                .claim("contrasena", contrasena)
                 .setIssuedAt(new Date())
                 .setExpiration(calendar.getTime())
                 .signWith(SignatureAlgorithm.HS256, fraseSecreta)

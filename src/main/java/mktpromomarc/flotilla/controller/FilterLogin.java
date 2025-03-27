@@ -110,8 +110,6 @@ public class FilterLogin implements Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        String pathUri = httpServletRequest.getRequestURI();
-        System.out.println("Path:"+httpServletRequest.getRequestURI());
         String authHeader =  httpServletRequest.getHeader("Authorization");
         if (  (("POST".equals(httpServletRequest.getMethod())) &&
                 (! httpServletRequest.getRequestURI().contains("/login") )  )
@@ -122,9 +120,10 @@ public class FilterLogin implements Filter {
         ) {
             if(authHeader ==null || !authHeader.startsWith("Bearer: ")) {
                 System.out.println("1. Invalid Token");
-                ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
                 return;
-                //throw new ServletException("1. Invalid Token");
 
             }//if authHeader
             String token = authHeader.substring(7);
@@ -148,14 +147,18 @@ public class FilterLogin implements Filter {
                 if(registeredUsuario==null || !(contrasena.equals(registeredUsuario.getContrasena())
                         && registeredUsuario.getIdEstatus()==1) ) {
                     System.out.println("2. Invalid Token");
-
-                    ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                    ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
                     return;
+
                     }
 
             }catch(SignatureException | MalformedJwtException | ExpiredJwtException e) {
                 System.out.println("2. Invalid Token");
-                ((HttpServletResponse) response).sendRedirect("/pages/login.html");
+                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
                 return;
                 //throw new ServletException("2. Invalid Token");
             }//catch

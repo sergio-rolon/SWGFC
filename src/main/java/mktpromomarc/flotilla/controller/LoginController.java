@@ -89,7 +89,8 @@ public class LoginController extends HttpServlet {
                                 rol="asesor";
                             }
                             // Generamos token
-                           Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),rol,registeredUsuario.getContrasena());
+                           Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),rol,
+                                   registeredUsuario.getContrasena());
                            String tokenResponseString = new Gson().toJson(tokenGenerated);
 
                            System.out.println(tokenResponseString);

@@ -69,25 +69,30 @@ function validateLogin() {
   };
 
   fetch(urlLogged, requestOptions)
-    .then(response =>  {
-      if (response.redirected) {
-        window.location.href = "/pages/login.html";
-      } else {
-        return response.json();
+    .then(response => {
+        if (response.ok) {
+          return response.json();  // Si la respuesta es exitosa, manejamos los datos
+        } else if (response.status === 401 || response.status === 403) {
+          // Si el servidor nos dice que no estamos autorizados, redirigimos al login
+          window.location.href = "/pages/login.html";
+          return;  // Salir del flujo para evitar otros procesamientos
+        } else {
+          throw new Error("Algo salió mal con la respuesta del servidor");
+        }
+      })
+      .then(result => {
+        if (result) {
+          const contenedor = document.getElementById("contenedor");
+          contenedor.innerHTML = ""; // Limpiar el contenedor
 
-      }
-    })
-    .then(data => {
-      
-
-        contenedor.innerHTML = "";
-        const nuevoH1 = document.createElement("h1");
-        nuevoH1.textContent = `Bievenido: ${data.nombre}`;
-        contenedor.appendChild(nuevoH1);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+          const nuevoH1 = document.createElement("h1");
+          nuevoH1.textContent = `Bienvenido: ${result.nombre}`;
+          contenedor.appendChild(nuevoH1);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
 }
 
     
