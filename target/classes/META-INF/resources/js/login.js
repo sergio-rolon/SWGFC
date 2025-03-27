@@ -1,17 +1,18 @@
-//const recaptchaResponse = document.getElementById("g-recaptcha-response");
-//const username = document.getElementById("username");
-//const password = document.getElementById("password");
+
 let url =
   window.location.hostname === "localhost"
     ? "http://localhost:8080/api/login"
     : "https://flotilla-mktpromomarc.onrender.com/api/login";
 
+let urlLogged =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8080/api/usuarios/logged"
+    : "https://flotilla-mktpromomarc.onrender.com/api/usuarios/logged";
+
+const contenedor = document.getElementById("contenedor");
+        
+
 function sendDataLogin(token, email, contrasena) {
-  //console.log("username "+username);
-  //console.log("password "+password);
-  //console.log("token "+token);
-  // let email = "admin@asesorenservicios.com";
-  //let contrasena = "administrador";
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -37,8 +38,7 @@ function sendDataLogin(token, email, contrasena) {
 
       if (result.recaptchaResult == "true" && result.accessToken != "false") {
         sessionStorage.setItem("token", result.accessToken);
-        console.log("Recaptcha successfull");
-        console.log("token" + result.accessToken);
+        window.location.href = "/index.html";
       } else if (
         result.recaptchaResult == "true" &&
         result.accessToken == "false"
@@ -53,3 +53,42 @@ function sendDataLogin(token, email, contrasena) {
       console.error(error);
     });
 }
+
+function validateLogin() {
+  const myHeaders = new Headers();
+
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  fetch(urlLogged, requestOptions)
+    .then(response =>  {
+      if (response.redirected) {
+        window.location.href = "/pages/login.html";
+      } else {
+        return response.json();
+
+      }
+    })
+    .then(data => {
+      
+
+        contenedor.innerHTML = "";
+        const nuevoH1 = document.createElement("h1");
+        nuevoH1.textContent = `Bievenido: ${data.nombre}`;
+        contenedor.appendChild(nuevoH1);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+    
+
