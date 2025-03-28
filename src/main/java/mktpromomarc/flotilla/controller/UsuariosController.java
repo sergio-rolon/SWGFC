@@ -23,6 +23,7 @@ public class UsuariosController extends HttpServlet {
     UsuariosService usuariosService = new UsuariosService(usuariosRepository);
     String clase = getClass().getSimpleName();
 
+    // In each html page load, JS will call this path to check if user is logged in path: /api/usuarios/logged
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,35 +38,37 @@ public class UsuariosController extends HttpServlet {
        if(usuarioLogeado!=null){
            try (PrintWriter out = response.getWriter()) {
 
-                   Util.logInfo("Información de usuario loggeado recuperada", clase);
+
                    response.setStatus(HttpServletResponse.SC_OK);
                    response.setContentType("application/json");
                    response.setCharacterEncoding("UTF-8");
                    String successResponse = new Gson().toJson(usuarioLogeado);
                    out.print(successResponse);
                    out.flush();
+                   Util.logInfo("User info recovered and sent in response", clase);
                    return;
            } catch (IOException ex) {
                request.setAttribute("message", "There was an error: " + ex.getMessage());
            }//try
        }
-       System.out.println("1. Invalid Token");
+       Util.logInfo("Access denied "+response+" not logged in", clase);
        response.sendRedirect("/pages/login.html");
        return;
    }
-    if(role.contains("administrador")) {
+    if(role.equals("administrador")) {
         try (PrintWriter out = response.getWriter()) {
 
             JSONArray usuariosResult = usuariosService.getAll();
 
             if (usuariosResult != null) {
-                Util.logInfo("Usuarios recuperados", clase);
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 String successResponse = new Gson().toJson(usuariosResult);
                 out.print(successResponse);
                 out.flush();
+                Util.logInfo("All users recovered for admin role and sent in response", clase);
                 return;
             }
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -73,16 +76,15 @@ public class UsuariosController extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             String errorResponse = "{\"error\": \"No hay usuarios registrados\"}";
             out.print(errorResponse);
+            Util.logInfo("None users recovered for admin role and sent in response", clase);
             out.flush();
 
         } catch (IOException ex) {
             request.setAttribute("message", "There was an error: " + ex.getMessage());
         }//try
     }
-        Util.logInfo("Usuario sin permisos: "+role, clase);
+        Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
         response.sendRedirect("/index.html");
-
-
         }
         
     @Override
@@ -152,7 +154,6 @@ public class UsuariosController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Se ejecuto doPut");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {

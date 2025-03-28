@@ -10,6 +10,7 @@ import java.util.Properties;
 
         private static ConfigLoader instance;
         private Properties properties;
+        String clase = getClass().getSimpleName();
 
         private ConfigLoader() {
 
@@ -17,9 +18,10 @@ import java.util.Properties;
 
            try (InputStream input = new FileInputStream("SWGFC\\src\\main\\resources\\config.properties")) {
                if (input == null) {
-                    System.out.println("Lo siento, no se pudo encontrar config.properties");
+                   Util.logInfo("Config.properties not found, using prod config", clase);
                     return;
                 }
+               Util.logInfo("Config.properties found, using local config", clase);
                 properties.load(input);
             } catch (IOException e) {
                 e.printStackTrace();

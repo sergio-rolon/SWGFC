@@ -1,18 +1,23 @@
 package mktpromomarc.flotilla.repository;
 
 import mktpromomarc.flotilla.config.ConfigLoader;
+import mktpromomarc.flotilla.config.Util;
+import mktpromomarc.flotilla.modelo.Usuarios;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexion {
 
-    // TO-DO pendiente actualizar con config.properties
+
+
     private static final String db_host;
     private static final String db_name;
     private static final String db_port;
     private static final String db_username;
     private static final String db_password;
+
+    static String clase = Conexion.class.getSimpleName();
 
     static{
         ConfigLoader configLoader = ConfigLoader.getInstance();
@@ -31,6 +36,7 @@ public class Conexion {
             db_username = System.getenv("PROD_DB_USERNAME");
             db_password = System.getenv("PROD_DB_PASSWORD");
         }
+
     }
     public static Connection getConexion(){
         Connection conn = null;
@@ -41,11 +47,10 @@ public class Conexion {
             conn = DriverManager.getConnection("jdbc:postgresql://"+db_host+":"+db_port+"/"+db_name,db_username,db_password);
 
         if(conn!=null){
-            System.out.println("Connection Established");
+            Util.logInfo("Connection to database OPEN", clase);
         }else{
-            System.out.println("Connection Failed");
+            Util.logInfo("Connection to dabase FAILED", clase);
         }
-
         }catch (Exception e){
             System.out.println(e);
         }
@@ -56,6 +61,7 @@ public class Conexion {
         if(conn != null){
             try{
                 conn.close();
+                Util.logInfo("Connection to database CLOSE", clase);
             }catch (Throwable t){
 
             }

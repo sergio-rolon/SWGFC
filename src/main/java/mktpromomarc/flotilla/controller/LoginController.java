@@ -1,6 +1,7 @@
 package mktpromomarc.flotilla.controller;
 
 import com.google.gson.Gson;
+import mktpromomarc.flotilla.config.Util;
 import mktpromomarc.flotilla.dto.Credentials;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
 import mktpromomarc.flotilla.security.Encoder;
@@ -25,6 +26,7 @@ public class LoginController extends HttpServlet {
     private Gson gson = new Gson();
     UsuariosRepository usuariosRepository = new UsuariosRepository();
     UsuariosService usuariosService = new UsuariosService(usuariosRepository);
+    String clase = getClass().getSimpleName();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -57,6 +59,7 @@ public class LoginController extends HttpServlet {
                     String errorResponse = "{\"error\": \"Usuario o contraseña incorrecto\"}";
                     out.print(errorResponse);
                     out.flush();
+                    Util.logInfo("Email invalid, sent in response", clase);
                     return;
                 }
 
@@ -65,8 +68,7 @@ public class LoginController extends HttpServlet {
                 loginUser.setEmail(jsonObject.getString("email"));
                 loginUser.setContrasena(jsonObject.getString("contrasena"));
 
-
-            //Validamos respuesta del Recaptcha
+                //Validamos respuesta del Recaptcha
                 if(RecaptchaVerifier.verifyRecaptcha(loginUser.getToken())) {
                     //Recuperamos el Usuario si es que existe
                     Usuarios registeredUsuario = usuariosService.getById(loginUser.getEmail());
@@ -75,9 +77,6 @@ public class LoginController extends HttpServlet {
                         // Si existe entonces validamos contraseña
                        if (loginUser.getContrasena().equals(new Encoder().decrypt(registeredUsuario.getContrasena()))
                        && registeredUsuario.getIdEstatus()==1) {
-
-                            System.out.println("Usuario logeado correctamente");
-
                             String rol;
                             // Establecemos rol para el JWToken
                            //todo probably this is goint to be changes to .contains("administrador")
@@ -100,6 +99,8 @@ public class LoginController extends HttpServlet {
                            response.setCharacterEncoding("UTF-8");
                            out.print(tokenResponseString);
                            out.flush();
+                           Util.logInfo("JWT generated for user "+registeredUsuario.getEmail()+" with role "+
+                                   rol+" and status "+registeredUsuario.getIdEstatus()+"logged in", clase);
                         } else {
                            String tokenResponseString = new Gson().toJson(new Token("false","true"));
 
@@ -108,7 +109,7 @@ public class LoginController extends HttpServlet {
                            out.print(tokenResponseString);
                            out.flush();
 
-                            System.out.println("Usuario o contraseña incorrecto");
+                           Util.logInfo("Invalid user or password, sent in response", clase);
                         }//ifPassword
                     }else{
                         String tokenResponseString = new Gson().toJson(new Token("false","true"));
@@ -119,20 +120,21 @@ public class LoginController extends HttpServlet {
                         out.flush();
 
                         System.out.println("Usuario o contraseña incorrecto");
+                        Util.logInfo("Invalid user or password, sent in response", clase);
                     }//ifExists
                 }//ifRecaptcha
-                else{
-     /* To do cambiar la response indicando falla de captcha y correcta bad request o malformed*/
-            String tokenResponseString = new Gson().toJson(new Token("false","false"));
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            out.print(tokenResponseString);
-            out.flush();
-
+                    else{
+                /* To do cambiar la response indicando falla de captcha y correcta bad request o malformed*/
+                String tokenResponseString = new Gson().toJson(new Token("false","false"));
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                out.print(tokenResponseString);
+                out.flush();
+                Util.logInfo("Invalid recaptcha, sent in response", clase);
+                }
+            }catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
-            }
-
         } catch (IOException ex){
             request.setAttribute("message", "There was an error: "+ex.getMessage());
         }

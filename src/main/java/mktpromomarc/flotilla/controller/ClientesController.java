@@ -24,32 +24,37 @@ public class ClientesController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String email = (String) request.getAttribute("email");
+        String role = (String) request.getAttribute("role");
+        if(role.equals("operacion")) {
+            try (PrintWriter out = response.getWriter()) {
 
-        try (PrintWriter out = response.getWriter()) {
+                JSONArray clientesResult = clientesService.getAll();
 
-            JSONArray clientesResult = clientesService.getAll();
-
-            if (clientesResult != null) {
-                Util.logInfo("Usuarios recuperados",clase);
-                System.out.println("Clientes recuperados");
-                response.setStatus(HttpServletResponse.SC_OK);
+                if (clientesResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    String successResponse = new Gson().toJson(clientesResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All clientes recovered for operacion role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                String successResponse = new Gson().toJson(clientesResult);
-                out.print(successResponse);
+                String errorResponse = "{\"error\": \"No hay clientes registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None users recovered for operation role and sent in response", clase);
                 out.flush();
-                return;
-            }
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            String errorResponse = "{\"error\": \"No hay clientes registrados\"}";
-            out.print(errorResponse);
-            out.flush();
 
-        } catch (IOException ex) {
-            request.setAttribute("message", "There was an error: " + ex.getMessage());
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
         }
+        Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
+        response.sendRedirect("/index.html");
     }
 
     @Override

@@ -1,10 +1,5 @@
 package mktpromomarc.flotilla.controller;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Filter.java to edit this template
- */
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -24,30 +19,23 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
 import mktpromomarc.flotilla.config.ConfigLoader;
+import mktpromomarc.flotilla.config.Util;
 import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
-import mktpromomarc.flotilla.security.Encoder;
 import mktpromomarc.flotilla.service.UsuariosService;
 
-
-/**
- *
- * @author Sergio Rolon
- */
 @WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios/*","/clientes"})
 public class FilterLogin implements Filter {
 
     private static final boolean debug = true;
 
-    // The filter configuration object we are associated with.  If
-    // this value is null, this filter instance is not currently
-    // configured.
     private FilterConfig filterConfig = null;
 
     public FilterLogin() {
     }
 
     private static final String secret;
+    String clase = getClass().getSimpleName();
 
     static{
         ConfigLoader configLoader = ConfigLoader.getInstance();
@@ -59,12 +47,12 @@ public class FilterLogin implements Filter {
             secret = System.getenv("PROD_FL_SECRET");
         }
     }
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
             log("FilterLogin:DoBeforeProcessing");
         }
-
     }
 
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
@@ -72,24 +60,6 @@ public class FilterLogin implements Filter {
         if (debug) {
             log("FilterLogin:DoAfterProcessing");
         }
-
-        // Write code here to process the request and/or response after
-        // the rest of the filter chain is invoked.
-        // For example, a logging filter might log the attributes on the
-        // request object after the request has been processed.
-        /*
-	for (Enumeration en = request.getAttributeNames(); en.hasMoreElements(); ) {
-	    String name = (String)en.nextElement();
-	    Object value = request.getAttribute(name);
-	    log("attribute: " + name + "=" + value.toString());
-
-	}
-         */
-        // For example, a filter might append something to the response.
-        /*
-	PrintWriter respOut = new PrintWriter(response.getWriter());
-	respOut.println("<P><B>This has been appended by an intrusive filter.</B>");
-         */
     }
 
     /**
@@ -119,7 +89,7 @@ public class FilterLogin implements Filter {
                 ("DELETE".equals(httpServletRequest.getMethod()))
         ) {
             if(authHeader ==null || !authHeader.startsWith("Bearer: ")) {
-                System.out.println("1. Invalid Token");
+                Util.logInfo("Invalid token, missing bearear or null authheader", clase);
                 ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
                 response.setContentType("application/json");
                 response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
@@ -130,32 +100,30 @@ public class FilterLogin implements Filter {
             try {
                 Claims claims = Jwts.parser().setSigningKey(secret)
                         .parseClaimsJws(token).getBody();
-
-                claims.forEach((key, value)-> {
-                    System.out.println("key: " + key + "value: " + value);
-                });
                 //prueba
                 String email = claims.getSubject();
                 String role = claims.get("role", String.class);
                 String contrasena = claims.get("contrasena", String.class);
                 request.setAttribute("email",email);
                 request.setAttribute("role", role);
+                Util.logInfo("JWT= role: "+role+" email: "+email, clase);
+
                 UsuariosRepository usuariosRepository = new UsuariosRepository();
                 UsuariosService usuariosService = new UsuariosService(usuariosRepository);
 
                 Usuarios registeredUsuario = usuariosService.getById(email);
+
                 if(registeredUsuario==null || !(contrasena.equals(registeredUsuario.getContrasena())
-                        && registeredUsuario.getIdEstatus()==1) ) {
-                    System.out.println("2. Invalid Token");
+                        && !(registeredUsuario.getIdEstatus()==1)) ) {
+                    Util.logInfo("Invalid token, user null, password invalid or status inactive", clase);
                     ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
                     response.setContentType("application/json");
                     response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
                     return;
-
                     }
 
             }catch(SignatureException | MalformedJwtException | ExpiredJwtException e) {
-                System.out.println("2. Invalid Token");
+                Util.logInfo("Invalid token, wrong signature, expired or malformed JWT", clase);
                 ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
                 response.setContentType("application/json");
                 response.getWriter().write("{\"message\":\"Token inválido o no autorizado\"}");
