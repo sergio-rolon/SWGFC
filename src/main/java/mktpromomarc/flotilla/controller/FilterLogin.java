@@ -106,15 +106,15 @@ public class FilterLogin implements Filter {
                 String contrasena = claims.get("contrasena", String.class);
                 request.setAttribute("email",email);
                 request.setAttribute("role", role);
-                Util.logInfo("JWT= role: "+role+" email: "+email, clase);
+                Util.logInfo("JWT= role: "+role+" email: "+email+"password: "+contrasena, clase);
 
                 UsuariosRepository usuariosRepository = new UsuariosRepository();
                 UsuariosService usuariosService = new UsuariosService(usuariosRepository);
 
                 Usuarios registeredUsuario = usuariosService.getById(email);
 
-                if(registeredUsuario==null || !(contrasena.equals(registeredUsuario.getContrasena())
-                        && !(registeredUsuario.getIdEstatus()==1)) ) {
+                if(registeredUsuario==null || (!contrasena.equals(registeredUsuario.getContrasena())
+                        || registeredUsuario.getIdEstatus()!=1) ) {
                     Util.logInfo("Invalid token, user null, password invalid or status inactive", clase);
                     ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
                     response.setContentType("application/json");
