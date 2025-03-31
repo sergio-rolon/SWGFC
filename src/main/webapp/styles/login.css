@@ -1,0 +1,134 @@
+.contenedor {
+  display: flex;
+  align-items: center;
+  max-height: 340px;
+  justify-content: space-around;
+}
+
+.cuadroDerecho {
+  max-width: 600px;
+  margin: 10px;
+  padding: 20px;
+}
+
+.cuadroIzquierdo {
+  text-align: center;
+}
+
+.logo-main {
+  width: 565px;
+  height: 301px;
+}
+
+.help {
+  text-align: center;
+  font-size: 14px;
+}
+.help img {
+  width: 40px;
+  vertical-align: middle;
+}
+/* derecha versión mobile */
+@media (max-width: 768px) {
+  .contenedor {
+    flex-direction: column;
+    align-items: center;
+  }
+  .cuadroIzquierdo,
+  .cuadroDerecho {
+    max-width: 90%;
+    margin-bottom: 20px;
+  }
+
+  .logo-main {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.cajaLogIn {
+  background-color: #5271ff;
+  border-radius: 20px;
+  color: #ffffff;
+  font-family: "Montserrat";
+  font-size: 20px;
+  font-weight: 600;
+  padding: 30px 30px 10px 30px;
+  max-width: 100%;
+}
+
+.itemForm {
+  padding: 10px;
+  text-align: center;
+}
+.cajaLogIn h2 {
+  color: #fffcfc;
+  text-align: center;
+  font-weight: bolder;
+  font-size: xx-large;
+  margin: 10px;
+  font-family: "Poppins";
+  font-weight: bold !important;
+  font-size: 28px;
+}
+
+.cajaLogIn label {
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left !important;
+}
+
+#btnLogIn {
+  justify-content: center;
+  color: #ffffff;
+  background-color: #ffbd4a;
+  border-radius: 20px;
+  padding: 7px;
+  font-weight: bold;
+  margin-top: 0px;
+  font-family: "Roboto";
+  font-size: 24px;
+  font-style: italic;
+  cursor: pointer;
+}
+
+#btnLogIn:hover {
+  transform: scale(1.2);
+}
+
+.cajaLogIn input {
+  flex-grow: 1;
+  border-radius: 5px;
+  background: rgb(0, 0, 0, 0.25);
+  border-style: solid;
+  border-width: 3px;
+  height: 30px;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+}
+
+.inputGroup img {
+  width: 35px;
+  margin-right: 10px;
+}
+
+.cajaLogIn input,
+textarea {
+  color: white;
+}
+.cajaLogIn input::placeholder {
+  font-size: 15px;
+  color: #ffbd4a;
+}
+
+.helpMessage {
+  color: #000000;
+  font-family: "Montserrat";
+  font-size: 24px;
+  text-align: center;
+  max-height: 75px;
+}

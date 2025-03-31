@@ -1,0 +1,53 @@
+#mainContenedor {
+  margin-bottom: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+.card {
+  background-color: #ffbe4a;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.card img {
+  width: 50%;
+  height: auto;
+  margin-bottom: 15px;
+  display: block;
+}
+.card h3 {
+  font-size: 28px;
+  font-family: "Poppins";
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.card button {
+  font-size: 14px;
+  font-family: "Poppins";
+  font-weight: bold;
+  background-color: #0056b6;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto; /* Para empujar el botón hacia abajo */
+}
+.card button:hover {
+  background-color: #0056b6;
+  transform: scale(1.2);
+}
+@media (max-width: 1000px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}

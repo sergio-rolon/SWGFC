@@ -1,0 +1,92 @@
+/* Estilos generales para el navbar */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #fff9f9;
+  height: 100vh;
+}
+
+header {
+  background-color: #0056b6;
+  padding: 3px 0;
+  position: sticky; /* Esto hace que la barra se quede pegada al hacer scroll */
+  top: 0; /* Posiciona la barra en la parte superior */
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Estilos para el logo */
+.logo img {
+  height: 40px; /* Ajusta la altura del logo según lo necesites */
+  width: auto;
+}
+
+/* Estilos para los enlaces de navegación */
+.nav-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-family: "Poppins";
+}
+
+.nav-links a:hover {
+  background-color: #555;
+}
+
+h1 {
+  font-family: "Poppins";
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  color: #8b7b7b;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+/* Footer*/
+.pre-footer {
+  text-align: center;
+  background-color: #ffbe4a;
+  font-family: "Poppins";
+  font-size: 25px;
+  margin: 0px 0px;
+}
+
+.footer {
+  text-align: center;
+  background-color: #0056b6;
+}
+
+.logo-footer {
+  margin-top: 15px;
+  width: 116px;
+  height: 62px;
+}
+
+.post-footer {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+  color: white;
+}

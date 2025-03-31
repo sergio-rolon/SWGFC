@@ -16,7 +16,7 @@ import java.util.Properties;
 
             properties = new Properties();
 
-           try (InputStream input = new FileInputStream("SWGFC\\src\\main\\resources\\config.properties")) {
+           try (InputStream input = new FileInputStream("E:\\°°Proyecto SWGFV - MKT\\SWGFC repository\\SWGFC\\src\\main\\resources\\config.properties")) {
                if (input == null) {
                    Util.logInfo("Config.properties not found, using prod config", clase);
                     return;

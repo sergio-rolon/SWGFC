@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" />
+    <link
+      rel="icon"
+      href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+    />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Iniciar sesión</title>
@@ -17,37 +20,39 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- style -->
-    <link rel="stylesheet" href="../styles/nav_footer.css" />
+    
     <link rel="stylesheet" href="../styles/login.css" />
+    <link rel="stylesheet" href="../styles/commons.css" />
+   <link rel="stylesheet" href="../styles/index.css" />
 
     <!-- Incluye el script de reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt"></script>  
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt"></script>
     <script defer src="../js/login.js"></script>
 
     <!--<script src="../assets/sweetAlert2/dist/sweetalert2.all.min.js"></script>-->
-
   </head>
-   <body>
-      <header>
-    <nav class="navbar">
-      <div class="logo">
-        <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="Logo" class="logo-img">
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Servicios</a></li>
-        <li><a href="#">Sobre Nosotros</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <h1 >SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
-  <div class="contenedor" id="contenedor">
-    <div class="cuadro">                
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img
+            src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+            alt="Logo"
+            class="logo-img"
+          />
+        </div>
+      </nav>
+    </header>
+    <main>
+      <h1>SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
+      <div class="contenedor" id="contenedor">
+        <div class="cuadroDerecho">
           <div class="col-sm-7 derecha">
             <div class="cajaLogIn p-auto">
               <div class="contenidoLogIn">
@@ -64,7 +69,8 @@
                 <form action="" id="formularioLogIn">
                   <div class="itemForm">
                     <div class="text-start">
-                      <label for="correo-ipt">Correo electrónico:</label> <br />
+                      <label for="correo-ipt">Correo electrónico:</label>
+                      <br />
                     </div>
                     <div class="inputGroup">
                       <img
@@ -96,46 +102,107 @@
                   </div>
                   <div class="itemForm text-center">
                     <button type="submit" id="btnLogIn">Iniciar sesión</button>
+                    <div id="loader" style="display: none">
+                    <div id="loadingMessage" style="text-align: center">
+                    <p>Validando información...</p>
+                    </div>
+                </div>
                   </div>
+
+
                 </form>
               </div>
             </div>
           </div>
-    </div>
-    <div class="cuadro">
-      <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" alt="Logo" class="logo-main">
-    </div>
-  </div>
-      <div>
-      <p>En caso de problemas al iniciar sesión, contacta a tu administrador o recursos humanos.Saludos</p>
-    </div>
-    <footer>
-      <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
-      <div class="footer">
-        <image src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="logo" class="logo-footer"></image>
-        <p class="post-footer">Términos del sitio web | Política de privacidad | Declaración de accesibilidad | Código de conducta para usuarios</p>
+        </div>
+        <div class="cuadroIzquierdo">
+          <img
+            src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+            alt="Logo"
+            class="logo-main"
+          />
+        </div>
       </div>
-    </footer>
-  </main>
-      <script>
-        document.getElementById('btnLogIn').addEventListener('click', function(event) {
-          event.preventDefault();
-            // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
-            if (typeof grecaptcha !== "undefined") {
-                grecaptcha.ready(function() {
-                    grecaptcha.execute('6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt', { action: 'submit' }).then(function(token) {
-                        console.log("Token generado:", token);
-                        // Aquí podrías enviar el token al backend
-                          let email = document.getElementById('correo-ipt').value;
-                          let contrasena = document.getElementById('password-ipt').value;
-                        sendDataLogin(token, email, contrasena)
-                    });
-                });
-            } else {
-                console.error("reCAPTCHA no está cargado correctamente.");
-            }
-        });
-      </script>
-   </body>
-   </html>
 
+      <div class="help">
+        <img
+          src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743365387/hcy4gjrjwzyxss6ht5xt.svg"
+          alt="Teléfono"
+        />
+        <span class="helpMessage"
+          >En caso de problemas al iniciar sesión, contacta a tu administrador o
+          recursos humanos</span
+        >
+
+        <img
+          src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743365387/ieimav36b7hy9bcr8mvs.svg"
+          alt="Email"
+        />
+      </div>
+      <footer>
+        <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+        <div class="footer">
+          <image
+            src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+            alt="logo"
+            class="logo-footer"
+          ></image>
+          <p class="post-footer">
+            Términos del sitio web | Política de privacidad | Declaración de
+            accesibilidad | Código de conducta para usuarios
+          </p>
+        </div>
+      </footer>
+
+      </div>
+    </main>
+    <script>
+      document
+        .getElementById("btnLogIn")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+    // Oculta el botón y muestra el mensaje de validación
+    document.getElementById("btnLogIn").style.display = "none";
+    document.getElementById("loader").style.display = "block";
+          // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
+          if (typeof grecaptcha !== "undefined") {
+            grecaptcha.ready(function () {
+              grecaptcha
+                .execute("6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt", {
+                  action: "submit",
+                })
+                .then(function (token) {
+                  console.log("Token generado:", token);
+                  // Aquí podrías enviar el token al backend
+                  let email = document.getElementById("correo-ipt").value;
+                  let contrasena =
+                    document.getElementById("password-ipt").value;
+                  sendDataLogin(token, email, contrasena);
+                });
+            });
+          } else {
+            console.error("reCAPTCHA no está cargado correctamente.");
+  // Si hay un error, volvemos a mostrar el botón
+            document.getElementById("btnLogIn").style.display = "block";
+            document.getElementById("loader").style.display = "none";
+          }
+        });
+    </script>
+    <style>
+      #loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </body>
+</html>

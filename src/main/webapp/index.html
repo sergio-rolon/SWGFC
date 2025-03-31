@@ -1,10 +1,34 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" />
+    <link
+      rel="icon"
+      href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+    />
     <meta charset="utf-8" />
+    <script
+      src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+    <style>
+      #contenido {
+        visibility: hidden;
+      }
+      #loader {
+        background-color: #fff9f9;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        /*height: 100%;*/
+        display: flex;
+        flex-direction: column; /* Apilamiento vertical */
+        justify-content: center;
+        align-items: center;
+        gap: 20px; /* Espacio entre elementos */
+        z-index: 9999;
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Inicio</title>
 
@@ -19,108 +43,154 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- style -->
-    <link rel="stylesheet" href="../styles/nav_footer.css" />
-    <link rel="stylesheet" href="../styles/login.css" />
-
-
+    <link rel="stylesheet" href="./styles/commons.css" />
+    <link rel="stylesheet" href="./styles/login.css" />
+    <link rel="stylesheet" href="./styles/index.css" />
 
     <!--<script src="../assets/sweetAlert2/dist/sweetalert2.all.min.js"></script>-->
-
   </head>
-   <body>
+  <body>
+    <div id="loader">
+      <br />
+      <img
+        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+        alt="Logo"
+        class="logo-load"
+        style="text-align: center"
+      />
+      <h1 style="margin-top: 0px; margin-bottom: 0px">
+        Estamos preparando su página
+      </h1>
+      <dotlottie-player
+        src="https://lottie.host/9d9a67b5-625f-4b1e-836e-2e06ed497016/bNmBXjwbE4.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        loop
+        autoplay
+      >
+      </dotlottie-player>
+    </div>
+    <div id="contenido">
       <header>
-    <nav class="navbar">
-      <div class="logo">
-        <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="Logo" class="logo-img">
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Servicios</a></li>
-        <li><a href="#">Sobre Nosotros</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <h1 >SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
-  <div class="contenedor" id="contenedor">
-    <div class="cuadro">                
-          <div class="col-sm-7 derecha">
-            <div class="cajaLogIn p-auto">
-              <div class="contenidoLogIn">
-                <h2>Ingresa tu correo organizacional</h2>
-                <div
-                  class="alert alert-danger fade show"
-                  style="display: none"
-                  role="alert"
-                  id="alertValidaciones"
-                >
-                  <p id="alertValidacionesTexto"></p>
-                </div>
+        <nav class="navbar">
+          <div class="logo">
+            <img
+              src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+              alt="Logo"
+              class="logo-img"
+            />
+          </div>
+          <!--        <ul class="nav-links">
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#">Servicios</a></li>
+          <li><a href="#">Sobre Nosotros</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>-->
+        </nav>
+      </header>
+      <main>
+        <h1>SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
+        <div id="mainContenedor">
+          <div class="contenedor" id="contenedor">
+            <div class="cuadro">
+              <div class="col-sm-7 derecha">
+                <div class="cajaLogIn p-auto">
+                  <div class="contenidoLogIn">
+                    <h2>Ingresa tu correo organizacional</h2>
+                    <div
+                      class="alert alert-danger fade show"
+                      style="display: none"
+                      role="alert"
+                      id="alertValidaciones"
+                    >
+                      <p id="alertValidacionesTexto"></p>
+                    </div>
 
-                <form action="" id="formularioLogIn">
-                  <div class="itemForm">
-                    <div class="text-start">
-                      <label for="correo-ipt">Correo electrónico:</label> <br />
-                    </div>
-                    <div class="inputGroup">
-                      <img
-                        src="https://res.cloudinary.com/dz6zf3yio/image/upload/v1725421051/OneClickCar/cw4nzzwjirjpf8imni4p.png"
-                        alt="correoLogo"
-                      />
-                      <input
-                        type="email"
-                        id="correo-ipt"
-                        placeholder="Ejemplo: asesor@asesorenservicios.com"
-                      /><br />
-                    </div>
+                    <form action="" id="formularioLogIn">
+                      <div class="itemForm">
+                        <div class="text-start">
+                          <label for="correo-ipt">Correo electrónico:</label>
+                          <br />
+                        </div>
+                        <div class="inputGroup">
+                          <img
+                            src="https://res.cloudinary.com/dz6zf3yio/image/upload/v1725421051/OneClickCar/cw4nzzwjirjpf8imni4p.png"
+                            alt="correoLogo"
+                          />
+                          <input
+                            type="email"
+                            id="correo-ipt"
+                            placeholder="Ejemplo: asesor@asesorenservicios.com"
+                          /><br />
+                        </div>
+                      </div>
+                      <div class="itemForm">
+                        <div class="text-start">
+                          <label for="password-ipt">Contraseña:</label><br />
+                        </div>
+                        <div class="inputGroup">
+                          <img
+                            src="https://res.cloudinary.com/duxbrimwv/image/upload/v1726193785/keyIcon_eqbgjg.svg"
+                            alt="keyLogo"
+                          />
+                          <input
+                            type="password"
+                            id="password-ipt"
+                            placeholder="********"
+                          /><br />
+                        </div>
+                      </div>
+                      <div class="itemForm text-center">
+                        <button type="submit" id="btnLogIn">
+                          Iniciar sesión
+                        </button>
+                      </div>
+                    </form>
                   </div>
-                  <div class="itemForm">
-                    <div class="text-start">
-                      <label for="password-ipt">Contraseña:</label><br />
-                    </div>
-                    <div class="inputGroup">
-                      <img
-                        src="https://res.cloudinary.com/duxbrimwv/image/upload/v1726193785/keyIcon_eqbgjg.svg"
-                        alt="keyLogo"
-                      />
-                      <input
-                        type="password"
-                        id="password-ipt"
-                        placeholder="********"
-                      /><br />
-                    </div>
-                  </div>
-                  <div class="itemForm text-center">
-                    <button type="submit" id="btnLogIn">Iniciar sesión</button>
-                  </div>
-                </form>
+                </div>
               </div>
             </div>
+            <div class="cuadro">
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+                alt="Logo"
+                class="logo-main"
+              />
+            </div>
           </div>
-              </div>
-    <div class="cuadro">
-      <img src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png" alt="Logo" class="logo-main">
+          <div>
+            <p>
+              En caso de problemas al iniciar sesión, contacta a tu
+              administrador o recursos humanos.Saludos
+            </p>
+          </div>
+        </div>
+        <footer>
+          <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+          <div class="footer">
+            <image
+              src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+              alt="logo"
+              class="logo-footer"
+            ></image>
+            <p class="post-footer">
+              Términos del sitio web | Política de privacidad | Declaración de
+              accesibilidad | Código de conducta para usuarios
+            </p>
+          </div>
+        </footer>
+      </main>
     </div>
-  </div>
-      <div>
-      <p>En caso de problemas al iniciar sesión, contacta a tu administrador o recursos humanos.Saludos</p>
-    </div>
-    <footer>
-      <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
-      <div class="footer">
-        <image src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png" alt="logo" class="logo-footer"></image>
-        <p class="post-footer">Términos del sitio web | Política de privacidad | Declaración de accesibilidad | Código de conducta para usuarios</p>
-      </div>
-    </footer>
-  </main>
-   </body>
-    <script src="../js/login.js"></script>
-      <script>
+  </body>
+  <script src="../js/index.js"></script>
+  <script>
     validateLogin();
   </script>
-   </html>
-
+</html>
