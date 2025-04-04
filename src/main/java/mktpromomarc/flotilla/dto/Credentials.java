@@ -1,5 +1,5 @@
 package mktpromomarc.flotilla.dto;
-
+//dto
 public class Credentials {
     String token;
     String email;
