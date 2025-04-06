@@ -52,6 +52,9 @@ header {
   font-size: 20px;
   font-weight: bold;
 }
+.clickToCloseSession:hover {
+  cursor: pointer;
+}
 .sidebar {
   width: 200px;
   position: fixed;

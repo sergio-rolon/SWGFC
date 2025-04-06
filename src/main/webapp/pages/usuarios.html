@@ -6,7 +6,7 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <meta charset="utf-8" />
-    <!--    <script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
     ></script>
@@ -30,7 +30,7 @@
       }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Inicio</title>-->
+    <title>Inicio</title>
 
     <!-- Fuentes -->
     <link
@@ -56,7 +56,7 @@
   </head>
   <body>
     <div id="loader">
-      <!--    <br />
+      <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
         alt="Logo"
@@ -74,7 +74,7 @@
         loop
         autoplay
       >
-      </dotlottie-player>-->
+      </dotlottie-player>
     </div>
     <div id="contenido">
       <header>
@@ -94,16 +94,22 @@
                 alt="user logged"
                 class="logo-img"
               />
+              <div class="logo">
+                <span class="text-logout" id="emailUserLogged"></span>
+              </div>
             </div>
           </div>
           <div class="right-side-navbar">
             <div class="logo">
               <span class="text-logout">Cerrar sesión</span>
-              <img
-                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/nykh4uyvouqyv2sjyepw.svg"
-                alt="logout"
-                class="logo-img"
-              />
+              <a class="clickToCloseSession">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/nykh4uyvouqyv2sjyepw.svg"
+                  alt="logout"
+                  class="logo-img"
+                  id="clickToLogOut"
+                />
+              </a>
             </div>
           </div>
         </nav>
@@ -120,6 +126,7 @@
         <a href="./placas.html">Placas</a>
         <a href="./asignaciones.html">Asignaciones</a>
       </div>
+
       <div class="container" id="main">
         <main>
           <h1>Gestión de Usuarios</h1>
@@ -179,6 +186,11 @@
           </table>
         </main>
       </div>
+      <script>
+        flag = false;
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      </script>
       <footer>
         <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
         <div class="footer">
@@ -194,9 +206,11 @@
         </div>
       </footer>
     </div>
-
+    <script src="../js/usuarios.js"></script>
     <script>
-      flag = false;
+      validateLogin();
+    </script>
+    <script>
       function sidebar() {
         if (flag) {
           document.getElementById("mySidebar").style.width = "0";
