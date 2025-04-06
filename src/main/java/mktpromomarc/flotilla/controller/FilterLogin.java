@@ -114,7 +114,7 @@ public class FilterLogin implements Filter {
                 Usuarios registeredUsuario = usuariosService.getById(email);
 
                 if(registeredUsuario==null || (!contrasena.equals(registeredUsuario.getContrasena())
-                        || registeredUsuario.getIdEstatus()!=1) ) {
+                        || registeredUsuario.getIdTipoEstatus()!=1) ) {
                     Util.logInfo("Invalid token, user null, password invalid or status inactive", clase);
                     ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED); // o SC_FORBIDDEN
                     response.setContentType("application/json");

@@ -9,7 +9,7 @@ public class Usuarios {
     private String apellidoMaterno;
     private String numeroTrabajador;
     private String contrasena;
-    private int idEstatus;
+    private int idTipoEstatus;
     private int idTipoUsuario;
 
     public Usuarios() {
@@ -23,7 +23,7 @@ public class Usuarios {
         this.apellidoMaterno = apellidoMaterno;
         this.numeroTrabajador = numeroTrabajador;
         this.contrasena = contrasena;
-        this.idEstatus = idEstatus;
+        this.idTipoEstatus = idEstatus;
         this.idTipoUsuario = idTipoUsuario;
     }
 
@@ -83,12 +83,12 @@ public class Usuarios {
         this.contrasena = contrasena;
     }
 
-    public int getIdEstatus() {
-        return idEstatus;
+    public int getIdTipoEstatus() {
+        return idTipoEstatus;
     }
 
-    public void setIdEstatus(int idEstatus) {
-        this.idEstatus = idEstatus;
+    public void setIdTipoEstatus(int idTipoEstatus) {
+        this.idTipoEstatus = idTipoEstatus;
     }
 
     public int getIdTipoUsuario() {
@@ -109,7 +109,7 @@ public class Usuarios {
                 ", apellidoMaterno='" + apellidoMaterno + '\'' +
                 ", numeroTrabajador='" + numeroTrabajador + '\'' +
                 ", contrasena='" + contrasena + '\'' +
-                ", idEstatus=" + idEstatus +
+                ", idEstatus=" + idTipoEstatus +
                 ", idTipoUsuario=" + idTipoUsuario +
                 '}';
     }

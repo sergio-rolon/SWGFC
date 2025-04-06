@@ -125,7 +125,7 @@ public class UsuariosController extends HttpServlet {
                 newUser.setApellidoMaterno(jsonObject.getString("apellidoMaterno"));
                 newUser.setNumeroTrabajador(jsonObject.getString("numeroTrabajador"));
                 newUser.setContrasena(new Encoder().encrypt(jsonObject.getString("contrasena")));
-                newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
+                newUser.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
                 newUser.setIdTipoUsuario(jsonObject.getInt("idTipoUsuario"));
 
                 Usuarios usuarioResult = usuariosService.add(newUser);
@@ -188,7 +188,7 @@ public class UsuariosController extends HttpServlet {
                 newUser.setApellidoMaterno(jsonObject.getString("apellidoMaterno"));
                 newUser.setNumeroTrabajador(jsonObject.getString("numeroTrabajador"));
                 newUser.setContrasena(new Encoder().encrypt(jsonObject.getString("contrasena")));
-                newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
+                newUser.setIdTipoEstatus(jsonObject.getInt("idEstatus"));
                 newUser.setIdTipoUsuario(jsonObject.getInt("idTipoUsuario"));
 
                 Usuarios usuarioResult = usuariosService.update(newUser);
@@ -280,7 +280,7 @@ public class UsuariosController extends HttpServlet {
         sb.append(Validator.isAlpha("Apellido Materno", jsonObject.getString("apellidoMaterno"))).append(",");
         sb.append(Validator.isStringNumeric(jsonObject.getString("numeroTrabajador"))).append(",");
         sb.append(Validator.isAlphaNumSpecial(jsonObject.getString("contrasena"))).append(",");
-        sb.append(Validator.isNumTwoTypes("Id Estatus",String.valueOf(jsonObject.get("idEstatus")))).append(",");
+        sb.append(Validator.isNumTwoTypes("Id Estatus",String.valueOf(jsonObject.get("idTipoEstatus")))).append(",");
         sb.append(Validator.isNumThreeTypes("Id Tipo Usuario",String.valueOf(jsonObject.get("idTipoUsuario"))));
         sb.append("}");
 

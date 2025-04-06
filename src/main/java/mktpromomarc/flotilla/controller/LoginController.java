@@ -76,7 +76,7 @@ public class LoginController extends HttpServlet {
                     if(registeredUsuario!=null){
                         // Si existe entonces validamos contraseña
                        if (loginUser.getContrasena().equals(new Encoder().decrypt(registeredUsuario.getContrasena()))
-                       && registeredUsuario.getIdEstatus()==1) {
+                       && registeredUsuario.getIdTipoEstatus()==1) {
                             String rol;
                             // Establecemos rol para el JWToken
                            //todo probably this is goint to be changes to .contains("administrador")
@@ -100,7 +100,7 @@ public class LoginController extends HttpServlet {
                            out.print(tokenResponseString);
                            out.flush();
                            Util.logInfo("JWT generated for user "+registeredUsuario.getEmail()+" with role "+
-                                   rol+" and status "+registeredUsuario.getIdEstatus()+"logged in", clase);
+                                   rol+" and status "+registeredUsuario.getIdTipoEstatus()+"logged in", clase);
                         } else {
                            String tokenResponseString = new Gson().toJson(new Token("false","true"));
 

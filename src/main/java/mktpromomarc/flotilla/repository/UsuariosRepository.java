@@ -18,7 +18,7 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
                     "u.\"nombre\", u.\"apellidoPaterno\" as \"Apellido Paterno\", u.\"apellidoMaterno\" as \"Apellido Materno\", u.\"numeroTrabajador\", u.\"contrasena\", " +
                     "te.\"tipoEstatus\" as \"Estatus Usuario\", " +
                     "tu.\"tipoUsuario\" as \"Tipo Usuario\" FROM \"Usuarios\" u " +
-                    "INNER JOIN \"TipoEstatus\" te ON u.\"idEstatus\" = te.\"idEstatus\"" +
+                    "INNER JOIN \"TipoEstatus\" te ON u.\"idTipoEstatus\" = te.\"idEstatus\"" +
                     "INNER JOIN \"TipoUsuario\" tu ON u.\"idTipoUsuario\" = tu.\"idTipoUsuario\"");
             ResultSet rs = ps.executeQuery();
             allUsuarios = new JSONArray();
@@ -57,7 +57,7 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
                 usuario.setApellidoMaterno(rs.getString("apellidoMaterno"));
                 usuario.setNumeroTrabajador(rs.getString("numeroTrabajador"));
                 usuario.setContrasena(rs.getString("contrasena"));
-                usuario.setIdEstatus(rs.getInt("idEstatus"));
+                usuario.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
                 usuario.setIdTipoUsuario(rs.getInt("idTipoUsuario"));
                 System.out.println(usuario);
             }
@@ -109,14 +109,14 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
                 PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
                         "\"nombre\"=?," +
                         "\"apellidoPaterno\"=?,\"apellidoMaterno\"=?," +
-                        "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idEstatus\"=?," +
+                        "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idTipoEstatus\"=?," +
                         "\"idTipoUsuario\"=? where \"idUsuario\"=?;");
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getApellidoPaterno());
                 ps.setString(3, usuario.getApellidoMaterno());
                 ps.setString(4, usuario.getNumeroTrabajador());
                 ps.setString(5, usuario.getContrasena());
-                ps.setInt(6, usuario.getIdEstatus());
+                ps.setInt(6, usuario.getIdTipoEstatus());
                 ps.setInt(7, usuario.getIdTipoUsuario());
                 ps.setInt(8, usuario.getIdUsuario());
 
@@ -136,14 +136,14 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
             try {
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO public.\"Usuarios\" (\"idUsuario\", " +
                         "\"email\", \"nombre\", \"apellidoPaterno\", \"apellidoMaterno\", \"numeroTrabajador\"," +
-                        " \"contrasena\", \"idEstatus\", \"idTipoUsuario\") VALUES (DEFAULT,?,?,?,?,?,?,?,?)");
+                        " \"contrasena\", \"idTipoEstatus\", \"idTipoUsuario\") VALUES (DEFAULT,?,?,?,?,?,?,?,?)");
                 ps.setString(1, usuario.getEmail());
                 ps.setString(2, usuario.getNombre());
                 ps.setString(3, usuario.getApellidoPaterno());
                 ps.setString(4, usuario.getApellidoMaterno());
                 ps.setString(5, usuario.getNumeroTrabajador());
                 ps.setString(6, usuario.getContrasena());
-                ps.setInt(7, usuario.getIdEstatus());
+                ps.setInt(7, usuario.getIdTipoEstatus());
                 ps.setInt(8, usuario.getIdTipoUsuario());
 
                 ps.executeUpdate();

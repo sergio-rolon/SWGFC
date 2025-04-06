@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <link
+      rel="icon"
+      href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+    />
+    <meta charset="utf-8" />
+    <!--    <script
+      src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+    <style>
+      #contenido {
+        visibility: hidden;
+      }
+      #loader {
+        background-color: #fff9f9;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        /*height: 100%;*/
+        display: flex;
+        flex-direction: column; /* Apilamiento vertical */
+        justify-content: center;
+        align-items: center;
+        gap: 20px; /* Espacio entre elementos */
+        z-index: 9999;
+      }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inicio</title>-->
+
+    <!-- Fuentes -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style -->
+    <link rel="stylesheet" href="../styles/commons.css" />
+    <link rel="stylesheet" href="../styles/usuarios.css" />
+
+    <!--<script src="../assets/sweetAlert2/dist/sweetalert2.all.min.js"></script>-->
+  </head>
+  <body>
+    <div id="loader">
+      <!--    <br />
+      <img
+        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+        alt="Logo"
+        class="logo-load"
+        style="text-align: center"
+      />
+      <h1 style="margin-top: 0px; margin-bottom: 0px">
+        Estamos preparando su página
+      </h1>
+      <dotlottie-player
+        src="https://lottie.host/9d9a67b5-625f-4b1e-836e-2e06ed497016/bNmBXjwbE4.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        loop
+        autoplay
+      >
+      </dotlottie-player>-->
+    </div>
+    <div id="contenido">
+      <header>
+        <nav class="navbar">
+          <div class="left-side-navbar">
+            <button class="openbtn" onclick="sidebar()">☰</button>
+            <div class="logo">
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                alt="Logo"
+                class="logo-img"
+              />
+            </div>
+            <div class="logo">
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
+                alt="user logged"
+                class="logo-img"
+              />
+            </div>
+          </div>
+          <div class="right-side-navbar">
+            <div class="logo">
+              <span class="text-logout">Cerrar sesión</span>
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/nykh4uyvouqyv2sjyepw.svg"
+                alt="logout"
+                class="logo-img"
+              />
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div id="mySidebar" class="sidebar">
+        <a href="./usuarios.html" class="active">Usuarios</a>
+        <a href="./clientes.html">Clientes</a>
+        <a href="./empleados.html">Empleados</a>
+        <a href="./vehiculos.html">Vehículos</a>
+        <a href="./arrendamientos.html">Arrendamientos</a>
+        <a href="./seguros.html">Seguros</a>
+        <a href="./servicios.html">Servicios</a>
+        <a href="./incidentes.html">Incidentes</a>
+        <a href="./placas.html">Placas</a>
+        <a href="./asignaciones.html">Asignaciones</a>
+      </div>
+      <div class="container" id="main">
+        <main>
+          <h1>Gestión de Usuarios</h1>
+          <form id="userForm">
+            <div class="form-grid">
+              <input type="email" id="email" placeholder="Email" required />
+              <input type="text" id="nombre" placeholder="Nombre" required />
+              <input
+                type="text"
+                id="apellidoPaterno"
+                placeholder="Apellido Paterno"
+                required
+              />
+              <input
+                type="text"
+                id="apellidoMaterno"
+                placeholder="Apellido Materno"
+                required
+              />
+              <input
+                type="text"
+                id="numeroTrabajador"
+                placeholder="Número de Trabajador"
+                required
+              />
+              <input
+                type="password"
+                id="contrasena"
+                placeholder="Contraseña"
+                required
+              />
+              <select id="idEstatus">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+              <select id="idTipoUsuario">
+                <option value="Admin">Administrador</option>
+                <option value="Usuario">Usuario</option>
+              </select>
+            </div>
+            <button type="submit">Registrar</button>
+          </form>
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Número Trabajador</th>
+                <th>Estatus</th>
+                <th>Tipo Usuario</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+          </table>
+        </main>
+      </div>
+      <footer>
+        <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+        <div class="footer">
+          <image
+            src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+            alt="logo"
+            class="logo-footer"
+          ></image>
+          <p class="post-footer">
+            Términos del sitio web | Política de privacidad | Declaración de
+            accesibilidad | Código de conducta para usuarios
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      flag = false;
+      function sidebar() {
+        if (flag) {
+          document.getElementById("mySidebar").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+          flag = false;
+        } else {
+          document.getElementById("mySidebar").style.width = "200px";
+          document.getElementById("main").style.marginLeft = "200px";
+          flag = true;
+        }
+      }
+    </script>
+  </body>
+</html>
