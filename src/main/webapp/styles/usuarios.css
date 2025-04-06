@@ -1,0 +1,58 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  background: #5271ff;
+  padding: 20px;
+  border-radius: 8px;
+}
+input,
+select,
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+button {
+  background-color: #ffbd4a;
+  color: #ffffff;
+  cursor: pointer;
+}
+#userForm {
+  display: flex;
+  flex-direction: column; /* Alinea los elementos de manera vertical */
+  align-items: center; /* Centra los elementos horizontalmente */
+  justify-content: center; /* Centra los elementos verticalmente */
+}
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+table,
+th,
+td {
+  border: 1px solid #bdc3c7;
+}
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+.edit-btn,
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+.edit-btn {
+  background-color: #f39c12;
+}
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

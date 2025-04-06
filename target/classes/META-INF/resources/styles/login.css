@@ -1,7 +1,6 @@
 .contenedor {
   display: flex;
   align-items: center;
-  max-height: 340px;
   justify-content: space-around;
 }
 
@@ -34,17 +33,53 @@
     flex-direction: column;
     align-items: center;
   }
-  .cuadroIzquierdo,
-  .cuadroDerecho {
-    max-width: 90%;
-    margin-bottom: 20px;
+ .cuadroIzquierdo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
 
   .logo-main {
-    width: 100%;
+    width: 80%; /* Reduce el tamaño en móviles */
     height: auto;
+    margin-bottom: 10px; /* Espaciado para evitar superposición */
   }
-}
+ .help {
+    flex-direction: column; /* Acomoda los elementos verticalmente en móviles */
+    text-align: center;
+  }
+  
+  .help img {
+    width: 25px; /* Aún más pequeño para móviles */
+  }
+
+  .helpMessage {
+    font-size: 14px;
+    max-width: 100%; /* Permite mejor adaptación en pantallas pequeñas */
+  }
+/*
+  .help {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; 
+  font-size: 14px;
+  flex-wrap: wrap; 
+  max-width: 100%;
+  padding: 10px;
+
+    .helpMessage {
+ font-size: 16px; 
+  text-align: center;
+  max-width: 80%; 
+  line-height: 1.3;
+  word-wrap: break-word;*/
+  }
+  
+
+
+
 
 .cajaLogIn {
   background-color: #5271ff;

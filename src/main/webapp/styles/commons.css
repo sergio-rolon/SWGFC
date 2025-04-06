@@ -22,13 +22,99 @@ header {
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 0px;
+  height: 46px;
 }
 
+.left-side-navbar {
+  display: flex;
+  height: 40px;
+}
+.right-side-navbar {
+  display: flex;
+  height: 40px;
+}
+.logo {
+  display: flex;
+  height: 40px;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;
+}
 /* Estilos para el logo */
 .logo img {
   height: 40px; /* Ajusta la altura del logo según lo necesites */
   width: auto;
+  margin-left: 2px;
+}
+
+.text-logout {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+}
+.sidebar {
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #0056b6;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 50px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 20px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #ffffff;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #ffbe4a;
+  color: #8b7b7b;
+  font-size: 20px;
+}
+
+.sidebar .active {
+  background-color: #ffbe4a;
+  color: #8b7b7b;
+}
+
+.openbtn {
+  font-size: 40px;
+  cursor: pointer;
+  background-color: #0056b6;
+  color: white;
+  padding: 0px;
+  border: none;
+  padding-inline: 0px;
+  padding-block: 0px;
+  line-height: 0%;
+}
+
+.openbtn:hover {
+  background-color: #ffbe4a;
+  color: #8b7b7b;
+}
+
+#main {
+  transition: margin-left 0.5s;
+  padding: 16px;
+  height: 100%;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
 }
 
 /* Estilos para los enlaces de navegación */
