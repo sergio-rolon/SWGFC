@@ -15,10 +15,10 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps = conn.prepareStatement("SELECT u.\"idUsuario\", u.\"email\", " +
-                    "u.\"nombre\", u.\"apellidoPaterno\" as \"Apellido Paterno\", u.\"apellidoMaterno\" as \"Apellido Materno\", u.\"numeroTrabajador\", u.\"contrasena\", " +
-                    "te.\"tipoEstatus\" as \"Estatus Usuario\", " +
-                    "tu.\"tipoUsuario\" as \"Tipo Usuario\" FROM \"Usuarios\" u " +
-                    "INNER JOIN \"TipoEstatus\" te ON u.\"idTipoEstatus\" = te.\"idEstatus\"" +
+                    "u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", u.\"numeroTrabajador\", u.\"contrasena\", " +
+                    "te.\"tipoEstatus\" as \"estatus\", " +
+                    "tu.\"tipoUsuario\" as \"tipoUsuario\" FROM \"Usuarios\" u " +
+                    "INNER JOIN \"TipoEstatus\" te ON u.\"idTipoEstatus\" = te.\"idTipoEstatus\"" +
                     "INNER JOIN \"TipoUsuario\" tu ON u.\"idTipoUsuario\" = tu.\"idTipoUsuario\"");
             ResultSet rs = ps.executeQuery();
             allUsuarios = new JSONArray();

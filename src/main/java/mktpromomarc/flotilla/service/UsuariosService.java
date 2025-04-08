@@ -18,11 +18,12 @@ public class UsuariosService implements CrudService<Usuarios>{
     }
     @Override
     public Usuarios getById(String email){
-        Usuarios usuarioResult = null;
-        if(usuariosRepository.existsById(email)) {
-            return usuarioResult = usuariosRepository.findById(email);
-        }
-        return usuarioResult;
+//        Usuarios usuarioResult = null;
+//        if(usuariosRepository.existsById(email)) {
+//            return usuarioResult = usuariosRepository.findById(email);
+//        }
+//        return usuarioResult;
+        return usuariosRepository.findById(email);
     }
     @Override
     public Usuarios add(Usuarios usuario){
@@ -44,12 +45,13 @@ public class UsuariosService implements CrudService<Usuarios>{
     }
     @Override
     public boolean delete (String email){
-        boolean result = false;
-        if(usuariosRepository.existsById(email)) {
-            usuariosRepository.deleteById(email);
-            result = true;
-        }
-        return result;
+//        boolean result = false;
+//        if(usuariosRepository.existsById(email)) {
+//            usuariosRepository.deleteById(email);
+//            result = true;
+//        }
+//        return result;
+        return usuariosRepository.deleteById(email);
     }
 
     @Override

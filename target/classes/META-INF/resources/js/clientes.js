@@ -24,7 +24,7 @@ function getAllClientes() {
   fetch(url, requestOptions)
     .then((response) => response.json())
     .then(response => {
-        if (response.ok) {
+        if (response.status=== 200) {
           return response.json();  // Si la respuesta es exitosa, manejamos los datos
         } else if (response.status === 401 || response.status === 403) {
           // Si el servidor nos dice que no estamos autorizados, redirigimos al login

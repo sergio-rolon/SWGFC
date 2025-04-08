@@ -130,7 +130,7 @@
       <div class="container" id="main">
         <main>
           <h1>Gestión de Usuarios</h1>
-          <form id="userForm">
+          <div id="userForm">
             <div class="form-grid">
               <input type="email" id="email" placeholder="Email" required />
               <input type="text" id="nombre" placeholder="Nombre" required />
@@ -158,31 +158,41 @@
                 placeholder="Contraseña"
                 required
               />
-              <select id="idEstatus">
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
+              <select id="idTipoEstatus">
+                <option value="">Selecciona estatus</option>
+                <option value="1">Activo</option>
+                <option value="2">Inactivo</option>
               </select>
               <select id="idTipoUsuario">
-                <option value="Admin">Administrador</option>
-                <option value="Usuario">Usuario</option>
+                <option value="">Selecciona usuario</option>
+                <option value="1">Administrador</option>
+                <option value="2">Operación</option>
+                <option value="3">Asesor</option>
               </select>
             </div>
-            <button type="submit">Registrar</button>
-          </form>
+
+          </div>
+            <div class="button-group">
+              <button id="btnRegistrar">Registrar</button>
+              <button id="btnActualizar">Actualizar</button>
+              <button id="btnLimpiar">Limpiar</button>
+            </div>
           <table>
             <thead>
               <tr>
+                <th>Id</th>
                 <th>Email</th>
                 <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Número Trabajador</th>
+                <th>Apellido paterno</th>
+                <th>Apellido materno</th>
+                <th>Número trabajador</th>
+                <th>Contraseña</th>
                 <th>Estatus</th>
                 <th>Tipo Usuario</th>
-                <th>Acciones</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody id="userTableBody"></tbody>
+            <tbody id="tableBody"></tbody>
           </table>
         </main>
       </div>
@@ -207,9 +217,7 @@
       </footer>
     </div>
     <script src="../js/usuarios.js"></script>
-    <script>
-      validateLogin();
-    </script>
+
     <script>
       function sidebar() {
         if (flag) {

@@ -25,6 +25,11 @@ button {
   align-items: center; /* Centra los elementos horizontalmente */
   justify-content: center; /* Centra los elementos verticalmente */
 }
+  .button-group {
+    display: flex;
+    gap: 10px; /* Espacio entre botones */
+    justify-content: flex-end;
+  }
 table {
   width: 100%;
   margin-top: 20px;
