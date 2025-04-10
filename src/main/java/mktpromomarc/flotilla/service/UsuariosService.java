@@ -2,6 +2,7 @@ package mktpromomarc.flotilla.service;
 
 import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
+import mktpromomarc.flotilla.security.Encoder;
 import org.json.JSONArray;
 
 
@@ -38,7 +39,12 @@ public class UsuariosService implements CrudService<Usuarios>{
     public Usuarios update(Usuarios usuario){
         Usuarios usuarioResult = null;
         if(usuariosRepository.existsById(usuario.getEmail())) {
-            usuario.setIdUsuario(usuariosRepository.findById(usuario.getEmail()).getIdUsuario());
+            Usuarios usuarioRecovered = usuariosRepository.findById(usuario.getEmail());
+            if(!usuario.getContrasena().equals(usuarioRecovered.getContrasena())){
+                usuario.setContrasena(new Encoder().encrypt(usuario.getContrasena()));
+            }
+
+            usuario.setIdUsuario(usuarioRecovered.getIdUsuario());
             return usuarioResult = usuariosRepository.save(usuario);
         }
         return usuarioResult;

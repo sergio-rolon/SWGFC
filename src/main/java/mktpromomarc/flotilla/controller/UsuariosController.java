@@ -187,13 +187,13 @@ public class UsuariosController extends HttpServlet {
                 newUser.setApellidoPaterno(jsonObject.getString("apellidoPaterno"));
                 newUser.setApellidoMaterno(jsonObject.getString("apellidoMaterno"));
                 newUser.setNumeroTrabajador(jsonObject.getString("numeroTrabajador"));
-                newUser.setContrasena(new Encoder().encrypt(jsonObject.getString("contrasena")));
-                newUser.setIdTipoEstatus(jsonObject.getInt("idEstatus"));
+                newUser.setContrasena(jsonObject.getString("contrasena"));
+                newUser.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
                 newUser.setIdTipoUsuario(jsonObject.getInt("idTipoUsuario"));
 
                 Usuarios usuarioResult = usuariosService.update(newUser);
                 if (usuarioResult != null) {
-                    System.out.println("Usuario agregado correctamente");
+                    System.out.println("Usuario actualizado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");

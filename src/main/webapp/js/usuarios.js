@@ -26,6 +26,8 @@ getAllUsuarios();
   .getElementById("btnRegistrar")
   .addEventListener("click", function (event) {
     event.preventDefault();
+    clearErrors();
+    if (!validateNull()) { 
     const raw = JSON.stringify({
       email: email.value,
       nombre: nombre.value,
@@ -37,15 +39,77 @@ getAllUsuarios();
       idTipoUsuario: idTipoUsuario.value
     });
 
-    registerUsuario(raw);
+      registerUsuario(raw);
+      }
   });
 
+const emailError = document.getElementById("emailError");
+const nombreError = document.getElementById("nombreError");
+const apellidoPaternoError = document.getElementById("apellidoPaternoError");
+const apellidoMaternoError = document.getElementById("apellidoMaternoError");
+const numeroTrabajadorError = document.getElementById("numeroTrabajadorError");
+const contrasenaError = document.getElementById("contrasenaError");
 
+function clearErrors() {
+  emailError.textContent = "";
+  email.classList.remove("borde-rojo");
+
+  nombreError.textContent = "";
+  nombre.classList.remove("borde-rojo");
+  
+  apellidoPaternoError.textContent = "";
+  apellidoPaterno.classList.remove("borde-rojo");
+
+  apellidoMaternoError.textContent = "";
+  apellidoMaterno.classList.remove("borde-rojo");
+
+  numeroTrabajadorError.textContent = "";
+  numeroTrabajador.classList.remove("borde-rojo");
+
+  contrasenaError.textContent = "";
+  contrasena.classList.remove("borde-rojo");
+}
+
+function validateNull() {
+  let flag = false;
+  if (!email.value || email.value.trim() === "") {
+    emailError.textContent = "Email no puede ser nulo";
+    email.classList.add("borde-rojo");
+    flag = true;
+  }
+    if (!nombre.value || nombre.value.trim() === "") {
+    nombreError.textContent = "Nombre no puede ser nulo";
+    nombre.classList.add("borde-rojo");
+    flag = true;
+  }
+    if (!apellidoPaterno.value || apellidoPaterno.value.trim() === "") {
+    apellidoPaternoError.textContent = "Apellido paterno no puede ser nulo";
+    apellidoPaterno.classList.add("borde-rojo");
+    flag = true;
+  }
+    if (!apellidoMaterno.value || apellidoMaterno.value.trim() === "") {
+    apellidoMaternoError.textContent = "Apellido materno  no puede ser nulo";
+    apellidoMaterno.classList.add("borde-rojo");
+    flag = true;
+  }
+    if (!numeroTrabajador.value || numeroTrabajador.value.trim() === "") {
+    numeroTrabajadorError.textContent = "Número trabajador no puede ser nulo";
+    numeroTrabajador.classList.add("borde-rojo");
+    flag = true;
+  }
+    if (!contrasena.value || contrasena.value.trim() === "") {
+    contrasenaError.textContent = "Contraseña no puede ser nulo";
+    contrasena.classList.add("borde-rojo");
+    flag = true;
+  }
+
+  return flag;
+}
 
 document
   .getElementById("btnActualizar").addEventListener("click", function (event) {
     event.preventDefault();
-
+    console.log("boton actualizar clickeado")
     const raw = JSON.stringify({
       email: email.value,
       nombre: nombre.value,
@@ -68,6 +132,12 @@ document
     event.preventDefault();
     cleanForm();
   });
+
+
+let actualizarButtonIsActive = false;
+
+
+//******** functions
 
 function cleanForm() {
     email.value="";
@@ -156,7 +226,7 @@ function getAllUsuarios() {
           const mapData = item.map;
 
           const row = document.createElement("tr");
-
+          const usuarioString = JSON.stringify(mapData).replace(/"/g, '&quot;');
           row.innerHTML = `
           <td>${mapData.idUsuario}</td>
           <td>${mapData.email}</td>
@@ -168,7 +238,7 @@ function getAllUsuarios() {
           <td>${mapData.estatus}</td>
           <td>${mapData.tipoUsuario}</td>
           <td>
-          <button onclick="editeUsuario(${JSON.stringify(mapData)})">Editar</button>
+          <button onclick="editeUsuario('${usuarioString}')">Editar</button>
           <button onclick="deleteUsuario('${mapData.email}')">Eliminar</button>
           </td>
           `;
@@ -278,24 +348,24 @@ function registerUsuario(raw) {
 }
 
 function updateUsuario(raw) {
-  
-  const myHeaders = new Headers();
+  if (actualizarButtonIsActive) {
+    const myHeaders = new Headers();
 
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append(
-    "Authorization",
-    `Bearer: ${sessionStorage.getItem("token")}`
-  );
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append(
+      "Authorization",
+      `Bearer: ${sessionStorage.getItem("token")}`
+    );
 
-  const requestOptions = {
-    method: "PUT",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-  fetch(url, requestOptions)
-    .then(response => {
+    fetch(url, requestOptions)
+      .then(response => {
         if (response.ok) {
           return response.json();  // Si la respuesta es exitosa, manejamos los datos
         } else if (response.status === 401 || response.status === 403) {
@@ -305,21 +375,53 @@ function updateUsuario(raw) {
         } else {
           throw new Error("Algo salió mal con la respuesta del servidor");
         }
-    })
-    .then(result => {
-      if (result) {
-        getAllUsuarios();
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      })
+      .then(result => {
+        if (result) {
+          getAllUsuarios();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-  
+    actualizarButtonIsActive = false;
+    console.log("boton actualizar no activo, edita un usuario primero");
+  }
+  //show error message is not active
+  //TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-function editeUsuario(usuarioString) {
 
+
+function editeUsuario(usuarioString) {
+  
   const usuario = JSON.parse(usuarioString);
     email.value=usuario.email;
     nombre.value=usuario.nombre;
@@ -329,14 +431,20 @@ function editeUsuario(usuarioString) {
     contrasena.value = usuario.contrasena;
   if (usuario.estatus=="activo") {
     idTipoEstatus.value=1;
-  }
-  idTipoEstatus.value=2;
+  }else{
+    idTipoEstatus.value = 2;
+    }
     if (usuario.tipoUsuario=="administrador") {
       idTipoUsuario.value = 1;
     } else if (usuario.tipoUsuario=="operacion") {
       idTipoUsuario.value = 2;
-  }
+    } else {
       idTipoUsuario.value = 3;
+  }
+    
+
+
+  actualizarButtonIsActive = true;
 }
 
 

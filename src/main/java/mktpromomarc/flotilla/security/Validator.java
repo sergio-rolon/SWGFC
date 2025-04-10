@@ -29,9 +29,15 @@ public class Validator {
     public static String isAlphaNumSpecial (String contrasena){
         // Expresión regular
         String contrasenaPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
-        if (contrasena.matches(contrasenaPattern)) {
+        try{
+        if (contrasena.matches(contrasenaPattern) || new Encoder().decrypt(contrasena).matches(contrasenaPattern)) {
             return "\"contrasena\": \"success\"";
         } else {
+            validationFailed = true;
+            return "\"contrasena\": \"Contraseña invalida, debe tener 8 o más caracteres, y al menos 1 letra, número y caracter especial\"";
+        }
+        }catch (Exception e){
+            String error = e.getMessage();
             validationFailed = true;
             return "\"contrasena\": \"Contraseña invalida, debe tener 8 o más caracteres, y al menos 1 letra, número y caracter especial\"";
         }

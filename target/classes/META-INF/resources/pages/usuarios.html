@@ -132,43 +132,75 @@
           <h1>Gestión de Usuarios</h1>
           <div id="userForm">
             <div class="form-grid">
-              <input type="email" id="email" placeholder="Email" required />
-              <input type="text" id="nombre" placeholder="Nombre" required />
-              <input
-                type="text"
-                id="apellidoPaterno"
-                placeholder="Apellido Paterno"
-                required
-              />
-              <input
-                type="text"
-                id="apellidoMaterno"
-                placeholder="Apellido Materno"
-                required
-              />
-              <input
-                type="text"
-                id="numeroTrabajador"
-                placeholder="Número de Trabajador"
-                required
-              />
-              <input
-                type="password"
-                id="contrasena"
-                placeholder="Contraseña"
-                required
-              />
-              <select id="idTipoEstatus">
-                <option value="">Selecciona estatus</option>
-                <option value="1">Activo</option>
-                <option value="2">Inactivo</option>
-              </select>
-              <select id="idTipoUsuario">
-                <option value="">Selecciona usuario</option>
-                <option value="1">Administrador</option>
-                <option value="2">Operación</option>
-                <option value="3">Asesor</option>
-              </select>
+              <div>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" placeholder="Ej. usuario@asesorenservicios.com" required /><br>
+                <label for="emailError" id="emailError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="nombre">Nombre:</label><br>
+                <input type="text" id="nombre" placeholder="Ej. Sergio" required /><br>
+                <label for="nombreError" id="nombreError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="apellidoPaterno">Apellido Paterno:</label><br>
+                <input
+                  type="text"
+                  id="apellidoPaterno"
+                  placeholder="Ej. Rolón"
+                  required
+                /><br>
+                <label for="apellidoPaternoError" id="apellidoPaternoError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="apellidoMaterno">Apellido Materno:</label><br>
+                <input
+                  type="text"
+                  id="apellidoMaterno"
+                  placeholder="Ej. Cisneros"
+                  required
+                /><br>
+                <label for="apellidoMaternoError"  id="apellidoMaternoError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="numeroTrabajador">Numero trabajador:</label><br>
+                <input
+                  type="text"
+                  id="numeroTrabajador"
+                  placeholder="Ej. 040015"
+                  required
+                /><br>
+                <label for="numeroTrabajadorError" id="numeroTrabajadorError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="contrasena">Contraseña:</label><br>
+                <input
+                  type="password"
+                  id="contrasena"
+                  placeholder="Contraseña"
+                  required
+                /><br>
+                <label for="contrasenaError" id="contrasenaError" class="label-error"></label><br>
+              </div>
+              <div>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br>
+                <select id="idTipoEstatus">
+                  <!-- <option value="">Selecciona estatus</option>-->
+                  <option value="1">Activo</option>
+                  <option value="2">Inactivo</option>
+                </select>
+                <br>
+              </div>
+              <div>
+                <label for="idTipoUsuario">Selecciona tipo usuario:</label><br>
+                <select id="idTipoUsuario">
+                <!--   <option value="">Selecciona usuario</option>-->
+                  <option value="1">Administrador</option>
+                  <option value="2">Operación</option>
+                  <option value="3">Asesor</option>
+                </select>
+                <br>
+              </div>
             </div>
 
           </div>

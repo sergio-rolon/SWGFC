@@ -7,6 +7,24 @@
   padding: 20px;
   border-radius: 8px;
 }
+input, select{
+  width: 100%;
+}
+label{
+    font-family: "Roboto";
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+  .borde-rojo {
+    border: 2px solid red;
+    outline: none;
+  }
+  .label-error{
+    color:orangered;
+    font-size: 14px;
+  }
+
 input,
 select,
 button {
