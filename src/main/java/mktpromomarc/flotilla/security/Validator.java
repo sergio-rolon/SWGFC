@@ -67,12 +67,12 @@ public class Validator {
 
     public static String isAlpha(String campo, String palabra) {
         String palabraPattern = "^[a-zA-Z]+$";
-
+        String campoNoSpaces = campo.replaceAll("\\s+","");
         if (palabra.matches(palabraPattern)) {
-            return "\""+campo+"\": \"success\"";
+            return "\""+campoNoSpaces+"\": \"success\"";
         } else {
             validationFailed = true;
-            String campoNoSpaces = campo.replaceAll("\\s+","");
+
             return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }

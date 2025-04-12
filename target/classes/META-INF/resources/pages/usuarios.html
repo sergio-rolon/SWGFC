@@ -10,6 +10,7 @@
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       #contenido {
         visibility: hidden;
@@ -214,7 +215,7 @@
                 <input
                   type="password"
                   id="contrasena"
-                  placeholder="Contraseña"
+                  placeholder="8 o más caracteres, al menos 1 letra, número y carácter especial"
                   required
                 /><br />
                 <label
@@ -266,27 +267,36 @@
           <br /><br />
           <div class="table-container">
             <div class="filter-button-group">
-              <button onclick="showAllUsers()">Sin filtro</button>
-              <button onclick="showActiveUsers()">Activos</button>
-              <button onclick="showInactiveUsers()">Inactivos</button>
+              <button class="btn-no-filter" onclick="showAllUsers()">
+                Sin filtro
+              </button>
+              <button class="btn-active" onclick="showActiveUsers()">
+                Activos
+              </button>
+              <button class="btn-inactive" onclick="showInactiveUsers()">
+                Inactivos
+              </button>
             </div>
-            <table class="responsive-table">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Email</th>
-                  <th>Nombre</th>
-                  <th>Apellido paterno</th>
-                  <th>Apellido materno</th>
-                  <th>Número trabajador</th>
-                  <th>Contraseña</th>
-                  <th>Estatus</th>
-                  <th>Tipo Usuario</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tableBody"></tbody>
-            </table>
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Apellido paterno</th>
+                    <th>Apellido materno</th>
+                    <th>Número trabajador</th>
+                    <th>Contraseña</th>
+                    <th>Estatus</th>
+                    <th>Tipo Usuario</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
           </div>
         </main>
       </div>

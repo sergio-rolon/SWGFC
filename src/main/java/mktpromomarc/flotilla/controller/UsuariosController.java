@@ -134,7 +134,7 @@ public class UsuariosController extends HttpServlet {
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                String errorResponse = "{\"error\": \"Usuario ya existe\"}";
+                String errorResponse = "{\"error\": \"El usuario ya existe\"}";
                 out.print(errorResponse);
                 out.flush();
             } catch (IOException ex) {
@@ -193,7 +193,7 @@ public class UsuariosController extends HttpServlet {
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                String errorResponse = "{\"error\": \"Usuario no existe\"}";
+                String errorResponse = "{\"error\": \"El usuario no existe\"}";
                 out.print(errorResponse);
                 out.flush();
             } catch (IOException ex) {

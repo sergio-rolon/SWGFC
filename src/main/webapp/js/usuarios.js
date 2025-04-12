@@ -154,8 +154,9 @@ function cleanForm() {
   apellidoMaterno.value = "";
   numeroTrabajador.value = "";
   contrasena.value = "";
-  idTipoEstatus.value = "";
-  idTipoUsuario.value = "";
+  idTipoEstatus.value = "1";
+  idTipoUsuario.value = "1";
+  actualizarButtonIsActive = false;
 }
 
 function validateLogin() {
@@ -237,43 +238,61 @@ function getAllUsuarios() {
 }
 
 function deleteUsuario(email) {
-  const raw = JSON.stringify({ email: email });
+  Swal.fire({
+    title: "¿Quieres eliminar este usuario?",
+    text: "Esta acción no podrá revertirse.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Eliminar definitivamente",
+    cancelButtonText: `Cancelar`,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const raw = JSON.stringify({ email: email });
 
-  const myHeaders = new Headers();
+      const myHeaders = new Headers();
 
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append(
-    "Authorization",
-    `Bearer: ${sessionStorage.getItem("token")}`
-  );
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append(
+        "Authorization",
+        `Bearer: ${sessionStorage.getItem("token")}`
+      );
 
-  const requestOptions = {
-    method: "DELETE",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
+      const requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-  fetch(url, requestOptions)
-    .then((response) => {
-      if (response.ok) {
-        return response.json(); // Si la respuesta es exitosa, manejamos los datos
-      } else if (response.status === 401 || response.status === 403) {
-        // Si el servidor nos dice que no estamos autorizados, redirigimos al login
-        window.location.href = "/index.html";
-        return; // Salir del flujo para evitar otros procesamientos
-      } else {
-        throw new Error("Algo salió mal con la respuesta del servidor");
-      }
-    })
-    .then((result) => {
-      if (result) {
-        getAllUsuarios();
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      fetch(url, requestOptions)
+        .then((response) => {
+          if (response.ok) {
+            return response.json(); // Si la respuesta es exitosa, manejamos los datos
+          } else if (response.status === 401 || response.status === 403) {
+            // Si el servidor nos dice que no estamos autorizados, redirigimos al login
+            window.location.href = "/index.html";
+            return; // Salir del flujo para evitar otros procesamientos
+          } else {
+            throw new Error("Algo salió mal con la respuesta del servidor");
+          }
+        })
+        .then((result) => {
+          if (result) {
+            Swal.fire({
+              title: "Operación exitosa",
+              text: result.sucess,
+              icon: "success",
+            });
+            getAllUsuarios();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  });
 }
 
 const email = document.getElementById("email");
@@ -305,9 +324,21 @@ function registerUsuario(raw) {
     .then((response) => {
       return response.json().then((result) => {
         if (response.ok) {
+          Swal.fire({
+            title: "Operación exitosa",
+            text: result.success,
+            icon: "success",
+          });
           return result; // Si la respuesta es exitosa, manejamos los datos
         } else if (response.status === 400) {
           setErrorMsgs(result);
+          throw new Error("Error");
+        } else if (response.status === 409) {
+          Swal.fire({
+            title: "Operación fallida",
+            text: result.error,
+            icon: "error",
+          });
           throw new Error("Error");
         } else {
           throw new Error("Algo salió mal con la respuesta del servidor");
@@ -317,6 +348,8 @@ function registerUsuario(raw) {
     .then((result) => {
       if (result) {
         getAllUsuarios();
+        cleanForm();
+        cleanError();
       }
     })
     .catch((error) => {
@@ -325,28 +358,28 @@ function registerUsuario(raw) {
 }
 
 function setErrorMsgs(result) {
-  if (result["email"]) {
+  if (result["email"] && result.email != "success") {
     emailError.textContent = result.email;
   }
-  if (result["Nombre"]) {
+  if (result["Nombre"] && result.Nombre != "success") {
     nombreError.textContent = result.Nombre;
   }
-  if (result["Apellidopaterno"]) {
+  if (result["Apellidopaterno"] && result.Apellidopaterno != "success") {
     apellidoPaternoError.textContent = result.Apellidopaterno;
   }
-  if (result["Apellidomaterno"]) {
+  if (result["Apellidomaterno"] && result.Apellidomaterno != "success") {
     apellidoMaternoError.textContent = result.Apellidomaterno;
   }
-  if (result["numeroTrabajador"]) {
+  if (result["numeroTrabajador"] && result.numeroTrabajador != "success") {
     numeroTrabajadorError.textContent = result.numeroTrabajador;
   }
-  if (result["contrasena"]) {
+  if (result["contrasena"] && result.contrasena != "success") {
     contrasenaError.textContent = result.contrasena;
   }
-  if (result["idTipoEstatus"]) {
+  if (result["idTipoEstatus"] && result.idTipoEstatus != "success") {
     idTipoEstatusError.textContent = result.idTipoEstatus;
   }
-  if (result["idTipoUsuario"]) {
+  if (result["idTipoUsuario"] && result.idTipoUsuario != "success") {
     idTipoUsuarioError.textContent = result.idTipoUsuario;
   }
 }
@@ -382,6 +415,11 @@ function updateUsuario(raw) {
       })
       .then((result) => {
         if (result) {
+          Swal.fire({
+            title: "Operación exitosa",
+            text: "Se han actualizado los datos",
+            icon: "success",
+          });
           getAllUsuarios();
         }
       })
@@ -390,10 +428,13 @@ function updateUsuario(raw) {
       });
 
     actualizarButtonIsActive = false;
-    console.log("boton actualizar no activo, edita un usuario primero");
+  } else {
+    Swal.fire({
+      title: "Operación inválida",
+      text: "Elige primero un usuario para editar",
+      icon: "error",
+    });
   }
-  //show error message is not active
-  //TODO
 }
 
 function editeUsuario(usuarioString) {
@@ -437,8 +478,8 @@ function createTable(usuarios) {
           <td>${usuario.contrasena}</td>
           <td>${usuario.estatus}</td>
           <td>${usuario.tipoUsuario}</td>
-          <td><button onclick="editeUsuario('${usuarioString}')">Editar</button></td>
-          <td><button onclick="deleteUsuario('${usuario.email}')">Eliminar</button></td>
+          <td><button class="edit-btn" onclick="editeUsuario('${usuarioString}')">Editar</button></td>
+          <td><button class="delete-btn" onclick="deleteUsuario('${usuario.email}')">Eliminar</button></td>
           `;
 
     tbody.appendChild(row);
