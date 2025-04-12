@@ -31,7 +31,8 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         // Validamos contentype sea correcto
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
@@ -54,8 +55,7 @@ public class LoginController extends HttpServlet {
                 // Validamos que el email tenga la forma correcta
                 if (!Validator.isEmail(jsonObject.getString("email")).contains("success")) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
+
                     String errorResponse = "{\"error\": \"Usuario o contraseña incorrecto\"}";
                     out.print(errorResponse);
                     out.flush();
@@ -95,42 +95,35 @@ public class LoginController extends HttpServlet {
                            System.out.println(tokenResponseString);
 
                            // Se genera la respuesta
-                           response.setContentType("application/json");
-                           response.setCharacterEncoding("UTF-8");
+
                            out.print(tokenResponseString);
                            out.flush();
                            Util.logInfo("JWT generated for user "+registeredUsuario.getEmail()+" with role "+
                                    rol+" and status "+registeredUsuario.getIdTipoEstatus()+"logged in", clase);
                         } else {
-                           String tokenResponseString = new Gson().toJson(new Token("false","true"));
+                           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-                           response.setContentType("application/json");
-                           response.setCharacterEncoding("UTF-8");
-                           out.print(tokenResponseString);
+                           String errorResponse = "{\"error\": \"Usuario o contraseña incorrecto\"}";
+                           out.print(errorResponse);
                            out.flush();
-
-                           Util.logInfo("Invalid user or password, sent in response", clase);
+                           Util.logInfo("Email invalid, sent in response", clase);
                         }//ifPassword
                     }else{
-                        String tokenResponseString = new Gson().toJson(new Token("false","true"));
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
-                        out.print(tokenResponseString);
+                        String errorResponse = "{\"error\": \"Usuario o contraseña incorrecto\"}";
+                        out.print(errorResponse);
                         out.flush();
-
-                        System.out.println("Usuario o contraseña incorrecto");
-                        Util.logInfo("Invalid user or password, sent in response", clase);
+                        Util.logInfo("Email invalid, sent in response", clase);
                     }//ifExists
                 }//ifRecaptcha
                     else{
-                /* To do cambiar la response indicando falla de captcha y correcta bad request o malformed*/
-                String tokenResponseString = new Gson().toJson(new Token("false","false"));
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                out.print(tokenResponseString);
-                out.flush();
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                String errorResponse = "{\"error\": \"Recaptcha detectó actividad inusual.\"}";
+
+                out.print(errorResponse);
                 Util.logInfo("Invalid recaptcha, sent in response", clase);
+                out.flush();
                 }
             }catch (IOException ex) {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());

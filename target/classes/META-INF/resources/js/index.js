@@ -82,8 +82,8 @@ function validateLogin() {
         throw new Error("Algo salió mal con la respuesta del servidor");
       }
     })
-    .then((result) => {
-      if (result) {
+    .then((usuario) => {
+      if (usuario) {
         const mainContenedor = document.getElementById("mainContenedor");
 
         // Eliminar contenido existente
@@ -172,6 +172,8 @@ function validateLogin() {
           card.appendChild(link);
 
           gridContainer.appendChild(card);
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
           document.getElementById("loader").style.display = "none"; // Oculta el loader
           document.getElementById("contenido").style.visibility = "visible";
         });
@@ -184,3 +186,11 @@ function validateLogin() {
       console.error(error);
     });
 }
+
+document
+  .getElementById("clickToLogOut")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    sessionStorage.removeItem("token");
+    window.location.href = "/pages/login.html";
+  });

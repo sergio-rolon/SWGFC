@@ -72,7 +72,8 @@ public class Validator {
             return "\""+campo+"\": \"success\"";
         } else {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
+            String campoNoSpaces = campo.replaceAll("\\s+","");
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }
 
@@ -108,30 +109,32 @@ public class Validator {
     }
 
     public static String isNumTwoTypes(String campo, String numero) {
+        String campoNoSpaces = campo.replaceAll("\\s+","");
         try {
             int isNumber = Integer.parseInt(numero);
             if(isNumber==1 || isNumber==2){
-                return "\""+campo+"\": \"success\"";
+                return "\""+campoNoSpaces+"\": \"success\"";
             }
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números válidos\"";
         } catch (NumberFormatException e) {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números\"";
         }
     }
 
     public static String isNumThreeTypes(String campo, String numero) {
+        String campoNoSpaces = campo.replaceAll("\\s+","");
         try {
             int isNumber = Integer.parseInt(numero);
             if(isNumber==1 || isNumber==2 || isNumber==3){
-                return "\""+campo+"\": \"success\"";
+                return "\""+campoNoSpaces+"\": \"success\"";
             }
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números válidos\"";
         } catch (NumberFormatException e) {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números\"";
         }
     }
 }

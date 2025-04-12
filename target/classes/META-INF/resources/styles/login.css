@@ -33,7 +33,7 @@
     flex-direction: column;
     align-items: center;
   }
- .cuadroIzquierdo {
+  .cuadroIzquierdo {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,11 +45,11 @@
     height: auto;
     margin-bottom: 10px; /* Espaciado para evitar superposición */
   }
- .help {
+  .help {
     flex-direction: column; /* Acomoda los elementos verticalmente en móviles */
     text-align: center;
   }
-  
+
   .help img {
     width: 25px; /* Aún más pequeño para móviles */
   }
@@ -58,7 +58,7 @@
     font-size: 14px;
     max-width: 100%; /* Permite mejor adaptación en pantallas pequeñas */
   }
-/*
+  /*
   .help {
   display: flex;
   align-items: center;
@@ -75,11 +75,7 @@
   max-width: 80%; 
   line-height: 1.3;
   word-wrap: break-word;*/
-  }
-  
-
-
-
+}
 
 .cajaLogIn {
   background-color: #5271ff;
@@ -113,7 +109,14 @@
   font-weight: bold;
   text-align: left !important;
 }
-
+.borde-rojo {
+  border: 2px solid red;
+  outline: none;
+}
+.label-error {
+  color: orange;
+  font-size: 14px;
+}
 #btnLogIn {
   justify-content: center;
   color: #ffffff;

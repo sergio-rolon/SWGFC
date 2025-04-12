@@ -30,6 +30,8 @@ public class UsuariosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         String requestUrl = request.getRequestURI();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
 
    if(requestUrl.equals("/api/usuarios/logged")){
 
@@ -40,8 +42,6 @@ public class UsuariosController extends HttpServlet {
 
 
                    response.setStatus(HttpServletResponse.SC_OK);
-                   response.setContentType("application/json");
-                   response.setCharacterEncoding("UTF-8");
                    String successResponse = new Gson().toJson(usuarioLogeado);
                    out.print(successResponse);
                    out.flush();
@@ -63,8 +63,6 @@ public class UsuariosController extends HttpServlet {
             if (usuariosResult != null) {
 
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String successResponse = new Gson().toJson(usuariosResult);
                 out.print(successResponse);
                 out.flush();
@@ -72,8 +70,6 @@ public class UsuariosController extends HttpServlet {
                 return;
             }
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             String errorResponse = "{\"error\": \"No hay usuarios registrados\"}";
             out.print(errorResponse);
             Util.logInfo("None users recovered for admin role and sent in response", clase);
@@ -91,6 +87,8 @@ public class UsuariosController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("Se ejecuto doPost");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
@@ -112,8 +110,6 @@ public class UsuariosController extends HttpServlet {
                 System.out.println("Resultado validación:"+ resultValidation);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     out.print(resultValidation);
                     out.flush();
                     return;
@@ -132,16 +128,12 @@ public class UsuariosController extends HttpServlet {
                 if (usuarioResult != null) {
                     System.out.println("Usuario agregado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Usuario registrado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String errorResponse = "{\"error\": \"Usuario ya existe\"}";
                 out.print(errorResponse);
                 out.flush();
@@ -154,6 +146,8 @@ public class UsuariosController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
@@ -175,8 +169,6 @@ public class UsuariosController extends HttpServlet {
                 System.out.println("Resultado validación:"+ resultValidation);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     out.print(resultValidation);
                     out.flush();
                     return;
@@ -195,16 +187,12 @@ public class UsuariosController extends HttpServlet {
                 if (usuarioResult != null) {
                     System.out.println("Usuario actualizado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Usuario modificado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String errorResponse = "{\"error\": \"Usuario no existe\"}";
                 out.print(errorResponse);
                 out.flush();
@@ -217,7 +205,8 @@ public class UsuariosController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
@@ -237,8 +226,6 @@ public class UsuariosController extends HttpServlet {
 
                 if (!Validator.isEmail(jsonObject.getString("email")).contains("success")) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String errorResponse = "{\"error\": \"Email inválido\"}";
                     out.print(errorResponse);
                     out.flush();
@@ -252,16 +239,12 @@ public class UsuariosController extends HttpServlet {
                 if (usuariosService.delete(deleteUser.getEmail())) {
                     System.out.println("Usuario eliminado correctamente");
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Usuario eliminado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String errorResponse = "{\"error\": \"Usuario no existe\"}";
                 out.print(errorResponse);
                 out.flush();
@@ -276,8 +259,8 @@ public class UsuariosController extends HttpServlet {
 
         sb.append(Validator.isEmail(jsonObject.getString("email"))).append(",");
         sb.append(Validator.isAlpha("Nombre", jsonObject.getString("nombre"))).append(",");
-        sb.append(Validator.isAlpha("Apellido Paterno", jsonObject.getString("apellidoPaterno"))).append(",");
-        sb.append(Validator.isAlpha("Apellido Materno", jsonObject.getString("apellidoMaterno"))).append(",");
+        sb.append(Validator.isAlpha("Apellido paterno", jsonObject.getString("apellidoPaterno"))).append(",");
+        sb.append(Validator.isAlpha("Apellido materno", jsonObject.getString("apellidoMaterno"))).append(",");
         sb.append(Validator.isStringNumeric(jsonObject.getString("numeroTrabajador"))).append(",");
         sb.append(Validator.isAlphaNumSpecial(jsonObject.getString("contrasena"))).append(",");
         sb.append(Validator.isNumTwoTypes("Id Estatus",String.valueOf(jsonObject.get("idTipoEstatus")))).append(",");

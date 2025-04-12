@@ -7,23 +7,24 @@
   padding: 20px;
   border-radius: 8px;
 }
-input, select{
+input,
+select {
   width: 100%;
 }
-label{
-    font-family: "Roboto";
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
+label {
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
 }
-  .borde-rojo {
-    border: 2px solid red;
-    outline: none;
-  }
-  .label-error{
-    color:orange;
-    font-size: 14px;
-  }
+.borde-rojo {
+  border: 2px solid red;
+  outline: none;
+}
+.label-error {
+  color: orange;
+  font-size: 14px;
+}
 
 input,
 select,
@@ -34,7 +35,8 @@ button {
 }
 button {
   background-color: #ffbd4a;
-  color: #ffffff;
+  color: black;
+  font-weight: bold;
   cursor: pointer;
 }
 #userForm {
@@ -43,11 +45,16 @@ button {
   align-items: center; /* Centra los elementos horizontalmente */
   justify-content: center; /* Centra los elementos verticalmente */
 }
-  .button-group {
-    display: flex;
-    gap: 10px; /* Espacio entre botones */
-    justify-content: flex-end;
-  }
+.button-group {
+  display: flex;
+  gap: 10px; /* Espacio entre botones */
+  justify-content: center;
+}
+.filter-button-group {
+  display: flex;
+  gap: 10px; /* Espacio entre botones */
+  justify-content: flex-start;
+}
 table {
   width: 100%;
   margin-top: 20px;
@@ -78,4 +85,32 @@ td {
   .form-grid {
     grid-template-columns: repeat(1, 1fr);
   }
+}
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Activa scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
+}
+
+/* Opcional: mejora la estética cuando hay scroll */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 4px;
+}
+
+/* Mantienes el estilo original de la tabla */
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* Evita que se achique demasiado en móviles */
+}
+
+.responsive-table th,
+.responsive-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #bdc3c7;
 }

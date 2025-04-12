@@ -23,7 +23,8 @@ header {
   align-items: center;
   margin: 0 auto;
   padding: 0 0px;
-  height: 46px;
+  /*height: 46px;*/
+  height: auto; /* Permite que crezca si hay más de una fila */
 }
 
 .left-side-navbar {
@@ -49,7 +50,7 @@ header {
 
 .text-logout {
   color: #ffffff;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
 }
 .clickToCloseSession:hover {
@@ -178,4 +179,16 @@ h1 {
   font-family: "Times New Roman", Times, serif;
   font-size: 15px;
   color: white;
+}
+.clickToCloseSession {
+  height: 40px;
+}
+@media (max-width: 768px) {
+  #textToLogOut {
+    visibility: hidden;
+  }
+  .text-logout {
+    word-break: break-word;
+    font-size: 14px;
+  }
 }

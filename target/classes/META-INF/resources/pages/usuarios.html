@@ -101,7 +101,9 @@
           </div>
           <div class="right-side-navbar">
             <div class="logo">
-              <span class="text-logout">Cerrar sesión</span>
+              <span class="text-logout" id="textToLogOut">Cerrar sesión</span>
+            </div>
+            <div class="logo">
               <a class="clickToCloseSession">
                 <img
                   src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/nykh4uyvouqyv2sjyepw.svg"
@@ -133,99 +135,159 @@
           <div id="userForm">
             <div class="form-grid">
               <div>
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" placeholder="Ej. usuario@asesorenservicios.com" required /><br>
-                <label for="emailError" id="emailError" class="label-error"></label><br>
+                <label for="email">Email:</label><br />
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Ej. usuario@asesorenservicios.com"
+                  required
+                /><br />
+                <label
+                  for="emailError"
+                  id="emailError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="nombre">Nombre:</label><br>
-                <input type="text" id="nombre" placeholder="Ej. Sergio" required /><br>
-                <label for="nombreError" id="nombreError" class="label-error"></label><br>
+                <label for="nombre">Nombre:</label><br />
+                <input
+                  type="text"
+                  id="nombre"
+                  placeholder="Ej. Sergio"
+                  required
+                /><br />
+                <label
+                  for="nombreError"
+                  id="nombreError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="apellidoPaterno">Apellido Paterno:</label><br>
+                <label for="apellidoPaterno">Apellido Paterno:</label><br />
                 <input
                   type="text"
                   id="apellidoPaterno"
                   placeholder="Ej. Rolón"
                   required
-                /><br>
-                <label for="apellidoPaternoError" id="apellidoPaternoError" class="label-error"></label><br>
+                /><br />
+                <label
+                  for="apellidoPaternoError"
+                  id="apellidoPaternoError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="apellidoMaterno">Apellido Materno:</label><br>
+                <label for="apellidoMaterno">Apellido Materno:</label><br />
                 <input
                   type="text"
                   id="apellidoMaterno"
                   placeholder="Ej. Cisneros"
                   required
-                /><br>
-                <label for="apellidoMaternoError"  id="apellidoMaternoError" class="label-error"></label><br>
+                /><br />
+                <label
+                  for="apellidoMaternoError"
+                  id="apellidoMaternoError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="numeroTrabajador">Numero trabajador:</label><br>
+                <label for="numeroTrabajador">Numero trabajador:</label><br />
                 <input
                   type="text"
                   id="numeroTrabajador"
                   placeholder="Ej. 040015"
                   required
-                /><br>
-                <label for="numeroTrabajadorError" id="numeroTrabajadorError" class="label-error"></label><br>
+                /><br />
+                <label
+                  for="numeroTrabajadorError"
+                  id="numeroTrabajadorError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="contrasena">Contraseña:</label><br>
+                <label for="contrasena">Contraseña:</label><br />
                 <input
                   type="password"
                   id="contrasena"
                   placeholder="Contraseña"
                   required
-                /><br>
-                <label for="contrasenaError" id="contrasenaError" class="label-error"></label><br>
+                /><br />
+                <label
+                  for="contrasenaError"
+                  id="contrasenaError"
+                  class="label-error"
+                ></label
+                ><br />
               </div>
               <div>
-                <label for="idTipoEstatus">Selecciona estatus:</label><br>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br />
                 <select id="idTipoEstatus">
                   <!-- <option value="">Selecciona estatus</option>-->
                   <option value="1">Activo</option>
                   <option value="2">Inactivo</option>
                 </select>
-                <br>
+                <label
+                  for="idTipoEstatusError"
+                  id="idTipoEstatusError"
+                  class="label-error"
+                ></label>
+                <br />
               </div>
               <div>
-                <label for="idTipoUsuario">Selecciona tipo usuario:</label><br>
+                <label for="idTipoUsuario">Selecciona tipo usuario:</label
+                ><br />
                 <select id="idTipoUsuario">
-                <!--   <option value="">Selecciona usuario</option>-->
+                  <!--   <option value="">Selecciona usuario</option>-->
                   <option value="1">Administrador</option>
                   <option value="2">Operación</option>
                   <option value="3">Asesor</option>
                 </select>
-                <br>
+                <label
+                  for="idTipoUsuarioError"
+                  id="idTipoUsuarioError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
               </div>
             </div>
-
           </div>
-            <div class="button-group">
-              <button id="btnRegistrar">Registrar</button>
-              <button id="btnActualizar">Actualizar</button>
-              <button id="btnLimpiar">Limpiar</button>
+          <br /><br />
+          <div class="table-container">
+            <div class="filter-button-group">
+              <button onclick="showAllUsers()">Sin filtro</button>
+              <button onclick="showActiveUsers()">Activos</button>
+              <button onclick="showInactiveUsers()">Inactivos</button>
             </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Nombre</th>
-                <th>Apellido paterno</th>
-                <th>Apellido materno</th>
-                <th>Número trabajador</th>
-                <th>Contraseña</th>
-                <th>Estatus</th>
-                <th>Tipo Usuario</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
+            <table class="responsive-table">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Email</th>
+                  <th>Nombre</th>
+                  <th>Apellido paterno</th>
+                  <th>Apellido materno</th>
+                  <th>Número trabajador</th>
+                  <th>Contraseña</th>
+                  <th>Estatus</th>
+                  <th>Tipo Usuario</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
         </main>
       </div>
       <script>
