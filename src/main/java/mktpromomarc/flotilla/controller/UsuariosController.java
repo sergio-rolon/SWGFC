@@ -77,7 +77,7 @@ public class UsuariosController extends HttpServlet {
         if(role.equals("operacion") && requestUrl.equals("/api/usuarios/getAllAsesores")){
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray usuariosResult = usuariosRepository.findAllAsesores();
+                JSONArray usuariosResult = usuariosRepository.findAllObjects();
 
                 if (usuariosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);

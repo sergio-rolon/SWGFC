@@ -50,7 +50,7 @@ public class ClientesRepository implements CrudRepository<Clientes> {
     }
 
     @Override
-    public JSONArray findAllAsesores() {
+    public JSONArray findAllObjects() {
         return null;
     }
 

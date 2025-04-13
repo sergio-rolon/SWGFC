@@ -42,7 +42,7 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
         return allUsuarios;
     }
     @Override
-    public JSONArray findAllAsesores(){
+    public JSONArray findAllObjects(){
         JSONArray allAsesores = null;
         Connection conn = Conexion.getConexion();
         try{
