@@ -1,17 +1,35 @@
 let usuariosData = [];
-
-let urlLogged =
-  window.location.hostname === "localhost"
-    ? "http://localhost:8080/api/usuarios/logged"
-    : "https://flotilla-mktpromomarc.onrender.com/api/usuarios/logged";
-
-let url =
-  window.location.hostname === "localhost"
-    ? "http://localhost:8080/api/usuarios"
-    : "https://flotilla-mktpromomarc.onrender.com/api/usuarios";
+let urlLogged = "/api/usuarios/logged";
+let url = "/api/usuarios";
+let actualizarButtonIsActive = false;
 
 const contenedor = document.getElementById("contenedor");
+const tbody = document.getElementById("tableBody");
 
+const emailError = document.getElementById("emailError");
+const nombreError = document.getElementById("nombreError");
+const apellidoPaternoError = document.getElementById("apellidoPaternoError");
+const apellidoMaternoError = document.getElementById("apellidoMaternoError");
+const numeroTrabajadorError = document.getElementById("numeroTrabajadorError");
+const contrasenaError = document.getElementById("contrasenaError");
+const idTipoUsuarioError = document.getElementById("idTipoUsuarioError");
+const idTipoEstatusError = document.getElementById("idTipoEstatusError");
+
+const idUsuario = document.getElementById("idUsuario");
+const email = document.getElementById("email");
+const nombre = document.getElementById("nombre");
+const apellidoPaterno = document.getElementById("apellidoPaterno");
+const apellidoMaterno = document.getElementById("apellidoMaterno");
+const numeroTrabajador = document.getElementById("numeroTrabajador");
+const contrasena = document.getElementById("contrasena");
+const idTipoEstatus = document.getElementById("idTipoEstatus");
+const idTipoUsuario = document.getElementById("idTipoUsuario");
+
+// *********************Execution at start
+validateLogin();
+getAllUsuarios();
+
+// ************************************** Events
 document
   .getElementById("clickToLogOut")
   .addEventListener("click", function (event) {
@@ -19,10 +37,6 @@ document
     sessionStorage.removeItem("token");
     window.location.href = "/pages/login.html";
   });
-
-const tbody = document.getElementById("tableBody");
-validateLogin();
-getAllUsuarios();
 
 document
   .getElementById("btnRegistrar")
@@ -45,14 +59,60 @@ document
     }
   });
 
-const emailError = document.getElementById("emailError");
-const nombreError = document.getElementById("nombreError");
-const apellidoPaternoError = document.getElementById("apellidoPaternoError");
-const apellidoMaternoError = document.getElementById("apellidoMaternoError");
-const numeroTrabajadorError = document.getElementById("numeroTrabajadorError");
-const contrasenaError = document.getElementById("contrasenaError");
-const idTipoUsuarioError = document.getElementById("idTipoUsuarioError");
-const idTipoEstatusError = document.getElementById("idTipoEstatusError");
+document
+  .getElementById("btnActualizar")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    clearErrors();
+    if (actualizarButtonIsActive) {
+      if (!validateNull()) {
+        const raw = JSON.stringify({
+          idUsuario: idUsuario.value,
+          email: email.value,
+          nombre: nombre.value,
+          apellidoPaterno: apellidoPaterno.value,
+          apellidoMaterno: apellidoMaterno.value,
+          numeroTrabajador: numeroTrabajador.value,
+          contrasena: contrasena.value,
+          idTipoEstatus: idTipoEstatus.value,
+          idTipoUsuario: idTipoUsuario.value,
+        });
+        updateUsuario(raw);
+      }
+    } else {
+      Swal.fire({
+        title: "Operación inválida",
+        text: "Elige primero un usuario para editar",
+        icon: "error",
+      });
+    }
+  });
+
+document
+  .getElementById("btnLimpiar")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    clearAll();
+    actualizarButtonIsActive = false;
+  });
+
+//************************************** Functions
+function sidebar() {
+  if (flag) {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+    flag = false;
+  } else {
+    document.getElementById("mySidebar").style.width = "200px";
+    document.getElementById("main").style.marginLeft = "200px";
+    flag = true;
+  }
+}
+
+function clearAll() {
+  clearErrors();
+  clearForm();
+}
 
 function clearErrors() {
   emailError.textContent = "";
@@ -116,38 +176,7 @@ function validateNull() {
   return flag;
 }
 
-document
-  .getElementById("btnActualizar")
-  .addEventListener("click", function (event) {
-    event.preventDefault();
-    console.log("boton actualizar clickeado");
-    const raw = JSON.stringify({
-      email: email.value,
-      nombre: nombre.value,
-      apellidoPaterno: apellidoPaterno.value,
-      apellidoMaterno: apellidoMaterno.value,
-      numeroTrabajador: numeroTrabajador.value,
-      contrasena: contrasena.value,
-      idTipoEstatus: idTipoEstatus.value,
-      idTipoUsuario: idTipoUsuario.value,
-    });
-
-    updateUsuario(raw);
-  });
-
-document
-  .getElementById("btnLimpiar")
-  .addEventListener("click", function (event) {
-    event.preventDefault();
-    cleanForm();
-    clearErrors();
-  });
-
-let actualizarButtonIsActive = false;
-
-//******** functions
-
-function cleanForm() {
+function clearForm() {
   email.value = "";
   nombre.value = "";
   apellidoPaterno.value = "";
@@ -156,6 +185,98 @@ function cleanForm() {
   contrasena.value = "";
   idTipoEstatus.value = "1";
   idTipoUsuario.value = "1";
+  idUsuario.value = "";
+  actualizarButtonIsActive = false;
+}
+
+function setErrorMsgs(result) {
+  if (result["email"] && result.email != "success") {
+    emailError.textContent = result.email;
+  }
+  if (result["Nombre"] && result.Nombre != "success") {
+    nombreError.textContent = result.Nombre;
+  }
+  if (result["Apellidopaterno"] && result.Apellidopaterno != "success") {
+    apellidoPaternoError.textContent = result.Apellidopaterno;
+  }
+  if (result["Apellidomaterno"] && result.Apellidomaterno != "success") {
+    apellidoMaternoError.textContent = result.Apellidomaterno;
+  }
+  if (result["numeroTrabajador"] && result.numeroTrabajador != "success") {
+    numeroTrabajadorError.textContent = result.numeroTrabajador;
+  }
+  if (result["contrasena"] && result.contrasena != "success") {
+    contrasenaError.textContent = result.contrasena;
+  }
+  if (result["idTipoEstatus"] && result.idTipoEstatus != "success") {
+    idTipoEstatusError.textContent = result.idTipoEstatus;
+  }
+  if (result["idTipoUsuario"] && result.idTipoUsuario != "success") {
+    idTipoUsuarioError.textContent = result.idTipoUsuario;
+  }
+}
+
+function editeUsuario(usuarioString) {
+  clearAll();
+  const usuario = JSON.parse(usuarioString);
+  idUsuario.value = usuario.idUsuario;
+  email.value = usuario.email;
+  nombre.value = usuario.nombre;
+  apellidoPaterno.value = usuario.apellidoPaterno;
+  apellidoMaterno.value = usuario.apellidoMaterno;
+  numeroTrabajador.value = usuario.numeroTrabajador;
+  contrasena.value = usuario.contrasena;
+  if (usuario.estatus == "activo") {
+    idTipoEstatus.value = 1;
+  } else {
+    idTipoEstatus.value = 2;
+  }
+  if (usuario.tipoUsuario == "administrador") {
+    idTipoUsuario.value = 1;
+  } else if (usuario.tipoUsuario == "operacion") {
+    idTipoUsuario.value = 2;
+  } else {
+    idTipoUsuario.value = 3;
+  }
+
+  actualizarButtonIsActive = true;
+}
+
+function createTable(usuarios) {
+  tbody.innerHTML = "";
+  usuarios.forEach((usuario) => {
+    const row = document.createElement("tr");
+    const usuarioString = JSON.stringify(usuario).replace(/"/g, "&quot;");
+    row.innerHTML = `
+          <td>${usuario.idUsuario}</td>
+          <td>${usuario.email}</td>
+          <td>${usuario.nombre}</td>
+          <td>${usuario.apellidoPaterno}</td>
+          <td>${usuario.apellidoMaterno}</td>
+          <td>${usuario.numeroTrabajador}</td>
+          <td>${usuario.contrasena}</td>
+          <td>${usuario.estatus}</td>
+          <td>${usuario.tipoUsuario}</td>
+          <td><button class="edit-btn" onclick="editeUsuario('${usuarioString}')">Editar</button></td>
+          <td><button class="delete-btn" onclick="deleteUsuario('${usuario.email}')">Eliminar</button></td>
+          `;
+
+    tbody.appendChild(row);
+  });
+}
+
+function showActiveUsers() {
+  const activos = usuariosData.filter((u) => u.estatus === "activo");
+  createTable(activos);
+}
+
+function showInactiveUsers() {
+  const noActivos = usuariosData.filter((u) => u.estatus === "inactivo");
+  createTable(noActivos);
+}
+
+function showAllUsers() {
+  createTable(usuariosData);
 }
 
 function validateLogin() {
@@ -175,27 +296,30 @@ function validateLogin() {
   fetch(urlLogged, requestOptions)
     .then((response) => {
       if (response.ok) {
-        return response.json(); // Si la respuesta es exitosa, manejamos los datos
-      } else if (response.status === 401 || response.status === 403) {
-        // Si el servidor nos dice que no estamos autorizados, redirigimos al login
+        return response.json();
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
         window.location.href = "/pages/login.html";
-        return; // Salir del flujo para evitar otros procesamientos
+      } else if (response.status === 403) {
+        window.location.href = "/index.html";
       } else {
         throw new Error("Algo salió mal con la respuesta del servidor");
       }
     })
     .then((usuario) => {
       if (usuario) {
-        //const mainContenedor = document.getElementById("mainContenedor");
-        document.getElementById("emailUserLogged").textContent = usuario.email;
-        // Eliminar contenido existente
-        //mainContenedor.innerHTML = "";
-        document.getElementById("loader").style.display = "none"; // Oculta el loader
-        document.getElementById("contenido").style.visibility = "visible";
+        if (usuario.role === "administrador") {
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("contenido").style.visibility = "visible";
+        } else {
+          window.location.href = "/index.html";
+        }
       }
     })
     .catch((error) => {
-      console.error(error);
+      let errorMsg = error;
     });
 }
 
@@ -216,11 +340,13 @@ function getAllUsuarios() {
   fetch(url, requestOptions)
     .then((response) => {
       if (response.ok) {
-        return response.json(); // Si la respuesta es exitosa, manejamos los datos
-      } else if (response.status === 401 || response.status === 403) {
-        // Si el servidor nos dice que no estamos autorizados, redirigimos al login
+        return response.json();
+      } else if (response.status === 403) {
         window.location.href = "/index.html";
-        return; // Salir del flujo para evitar otros procesamientos
+        return;
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/pages/login.html";
       } else {
         throw new Error("Algo salió mal con la respuesta del servidor");
       }
@@ -232,7 +358,62 @@ function getAllUsuarios() {
       }
     })
     .catch((error) => {
-      console.error(error);
+      let errorMsg = error;
+    });
+}
+
+function registerUsuario(raw) {
+  const myHeaders = new Headers();
+
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  fetch(url, requestOptions)
+    .then((response) => {
+      return response.json().then((result) => {
+        if (response.ok) {
+          Swal.fire({
+            title: "Operación exitosa",
+            text: result.success,
+            icon: "success",
+          });
+          return result;
+        } else if (response.status === 400) {
+          setErrorMsgs(result);
+          throw new Error("Error");
+        } else if (response.status === 401) {
+          sessionStorage.removeItem("token");
+          window.location.href = "/pages/login.html";
+        } else if (response.status === 409) {
+          Swal.fire({
+            title: "Operación fallida",
+            text: result.error,
+            icon: "error",
+          });
+          throw new Error("Error");
+        } else {
+          throw new Error("Algo salió mal con la respuesta del servidor");
+        }
+      });
+    })
+    .then((result) => {
+      if (result) {
+        getAllUsuarios();
+        clearAll();
+      }
+    })
+    .catch((error) => {
+      let errorMsg = error;
     });
 }
 
@@ -268,11 +449,12 @@ function deleteUsuario(email) {
       fetch(url, requestOptions)
         .then((response) => {
           if (response.ok) {
-            return response.json(); // Si la respuesta es exitosa, manejamos los datos
-          } else if (response.status === 401 || response.status === 403) {
-            // Si el servidor nos dice que no estamos autorizados, redirigimos al login
+            return response.json();
+          } else if (response.status === 403) {
             window.location.href = "/index.html";
-            return; // Salir del flujo para evitar otros procesamientos
+          } else if (response.status === 401) {
+            sessionStorage.removeItem("token");
+            window.location.href = "/pages/login.html";
           } else {
             throw new Error("Algo salió mal con la respuesta del servidor");
           }
@@ -281,29 +463,20 @@ function deleteUsuario(email) {
           if (result) {
             Swal.fire({
               title: "Operación exitosa",
-              text: result.sucess,
+              text: result.success,
               icon: "success",
             });
             getAllUsuarios();
           }
         })
         .catch((error) => {
-          console.error(error);
+          let errorMsg = error;
         });
     }
   });
 }
 
-const email = document.getElementById("email");
-const nombre = document.getElementById("nombre");
-const apellidoPaterno = document.getElementById("apellidoPaterno");
-const apellidoMaterno = document.getElementById("apellidoMaterno");
-const numeroTrabajador = document.getElementById("numeroTrabajador");
-const contrasena = document.getElementById("contrasena");
-const idTipoEstatus = document.getElementById("idTipoEstatus");
-const idTipoUsuario = document.getElementById("idTipoUsuario");
-
-function registerUsuario(raw) {
+function updateUsuario(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -313,7 +486,7 @@ function registerUsuario(raw) {
   );
 
   const requestOptions = {
-    method: "POST",
+    method: "PUT",
     headers: myHeaders,
     body: raw,
     redirect: "follow",
@@ -328,10 +501,13 @@ function registerUsuario(raw) {
             text: result.success,
             icon: "success",
           });
-          return result; // Si la respuesta es exitosa, manejamos los datos
+          return result;
         } else if (response.status === 400) {
           setErrorMsgs(result);
           throw new Error("Error");
+        } else if (response.status === 401) {
+          sessionStorage.removeItem("token");
+          window.location.href = "/pages/login.html";
         } else if (response.status === 409) {
           Swal.fire({
             title: "Operación fallida",
@@ -339,162 +515,17 @@ function registerUsuario(raw) {
             icon: "error",
           });
           throw new Error("Error");
-        } else {
-          throw new Error("Algo salió mal con la respuesta del servidor");
         }
       });
     })
     .then((result) => {
       if (result) {
         getAllUsuarios();
-        cleanForm();
-        cleanError();
+        clearAll();
+        actualizarButtonIsActive = false;
       }
     })
     .catch((error) => {
       let errorMsg = error;
     });
-}
-
-function setErrorMsgs(result) {
-  if (result["email"] && result.email != "success") {
-    emailError.textContent = result.email;
-  }
-  if (result["Nombre"] && result.Nombre != "success") {
-    nombreError.textContent = result.Nombre;
-  }
-  if (result["Apellidopaterno"] && result.Apellidopaterno != "success") {
-    apellidoPaternoError.textContent = result.Apellidopaterno;
-  }
-  if (result["Apellidomaterno"] && result.Apellidomaterno != "success") {
-    apellidoMaternoError.textContent = result.Apellidomaterno;
-  }
-  if (result["numeroTrabajador"] && result.numeroTrabajador != "success") {
-    numeroTrabajadorError.textContent = result.numeroTrabajador;
-  }
-  if (result["contrasena"] && result.contrasena != "success") {
-    contrasenaError.textContent = result.contrasena;
-  }
-  if (result["idTipoEstatus"] && result.idTipoEstatus != "success") {
-    idTipoEstatusError.textContent = result.idTipoEstatus;
-  }
-  if (result["idTipoUsuario"] && result.idTipoUsuario != "success") {
-    idTipoUsuarioError.textContent = result.idTipoUsuario;
-  }
-}
-
-function updateUsuario(raw) {
-  if (actualizarButtonIsActive) {
-    const myHeaders = new Headers();
-
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append(
-      "Authorization",
-      `Bearer: ${sessionStorage.getItem("token")}`
-    );
-
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(url, requestOptions)
-      .then((response) => {
-        if (response.ok) {
-          return response.json(); // Si la respuesta es exitosa, manejamos los datos
-        } else if (response.status === 401 || response.status === 403) {
-          // Si el servidor nos dice que no estamos autorizados, redirigimos al login
-          window.location.href = "/index.html";
-          return; // Salir del flujo para evitar otros procesamientos
-        } else {
-          throw new Error("Algo salió mal con la respuesta del servidor");
-        }
-      })
-      .then((result) => {
-        if (result) {
-          Swal.fire({
-            title: "Operación exitosa",
-            text: "Se han actualizado los datos",
-            icon: "success",
-          });
-          getAllUsuarios();
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    actualizarButtonIsActive = false;
-  } else {
-    Swal.fire({
-      title: "Operación inválida",
-      text: "Elige primero un usuario para editar",
-      icon: "error",
-    });
-  }
-}
-
-function editeUsuario(usuarioString) {
-  const usuario = JSON.parse(usuarioString);
-  email.value = usuario.email;
-  nombre.value = usuario.nombre;
-  apellidoPaterno.value = usuario.apellidoPaterno;
-  apellidoMaterno.value = usuario.apellidoMaterno;
-  numeroTrabajador.value = usuario.numeroTrabajador;
-  contrasena.value = usuario.contrasena;
-  if (usuario.estatus == "activo") {
-    idTipoEstatus.value = 1;
-  } else {
-    idTipoEstatus.value = 2;
-  }
-  if (usuario.tipoUsuario == "administrador") {
-    idTipoUsuario.value = 1;
-  } else if (usuario.tipoUsuario == "operacion") {
-    idTipoUsuario.value = 2;
-  } else {
-    idTipoUsuario.value = 3;
-  }
-
-  actualizarButtonIsActive = true;
-}
-
-function createTable(usuarios) {
-  tbody.innerHTML = "";
-  usuarios.forEach((usuario) => {
-    // Acceder a los valores dentro de "map"
-
-    const row = document.createElement("tr");
-    const usuarioString = JSON.stringify(usuario).replace(/"/g, "&quot;");
-    row.innerHTML = `
-          <td>${usuario.idUsuario}</td>
-          <td>${usuario.email}</td>
-          <td>${usuario.nombre}</td>
-          <td>${usuario.apellidoPaterno}</td>
-          <td>${usuario.apellidoMaterno}</td>
-          <td>${usuario.numeroTrabajador}</td>
-          <td>${usuario.contrasena}</td>
-          <td>${usuario.estatus}</td>
-          <td>${usuario.tipoUsuario}</td>
-          <td><button class="edit-btn" onclick="editeUsuario('${usuarioString}')">Editar</button></td>
-          <td><button class="delete-btn" onclick="deleteUsuario('${usuario.email}')">Eliminar</button></td>
-          `;
-
-    tbody.appendChild(row);
-  });
-}
-
-function showActiveUsers() {
-  const activos = usuariosData.filter((u) => u.estatus === "activo");
-  createTable(activos);
-}
-
-function showInactiveUsers() {
-  const noActivos = usuariosData.filter((u) => u.estatus === "inactivo");
-  createTable(noActivos);
-}
-
-function showAllUsers() {
-  createTable(usuariosData);
 }

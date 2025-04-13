@@ -12,26 +12,31 @@ import java.sql.ResultSet;
 public class ClientesRepository implements CrudRepository<Clientes> {
 
 
+
     @Override
     public JSONArray findAll(){
         JSONArray allClientes = null;
-
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps = conn.prepareStatement("SELECT c.\"idCliente\", c.\"razonSocial\", " +
-                    "c.\"rfc\", c.\"idEstatus\" as \"estatusCliente\", u.\"idUsuario\", u.\"email\", " +
-                    "u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", u.\"numeroTrabajador\", " +
-                    "u.\"contrasena\", u.\"idEstatus\" as \"estatusUsuario\", " +
-                    "u.\"idTipoUsuario\" FROM \"Clientes\" c INNER JOIN \"Usuarios\" " +
-                    "u ON c.\"idUsuario\" = u.\"idUsuario\"");
+                    "c.\"rfc\", c.\"idUsuario\", u.\"numeroTrabajador\",  " +
+                    "u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", " +
+                    "te1.\"tipoEstatus\" AS \"estatusCliente\", " +
+                    "te2.\"tipoEstatus\" AS \"estatusUsuario\" " +
+                    "FROM \"Clientes\" c " +
+                    "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\""+
+                    "INNER JOIN \"TipoEstatus\" te1 ON c.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
+                    "INNER JOIN \"TipoEstatus\" te2 ON u.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
+                    "ORDER BY c.\"idCliente\" ASC"
+                    );
             ResultSet rs = ps.executeQuery();
             allClientes = new JSONArray();
             while(rs.next()){
-            int totalColumns = rs.getMetaData().getColumnCount();
+                int totalColumns = rs.getMetaData().getColumnCount();
                 JSONObject cliente = new JSONObject();
-            for(int i=0; i<totalColumns;i++){
-                cliente.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
-            }
+                for(int i=0; i<totalColumns;i++){
+                    cliente.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
             allClientes.put(cliente);
 
             }
@@ -43,6 +48,12 @@ public class ClientesRepository implements CrudRepository<Clientes> {
         }
         return allClientes;
     }
+
+    @Override
+    public JSONArray findAllAsesores() {
+        return null;
+    }
+
     @Override
     public Clientes findById(String rfc){
         Clientes cliente = null;
@@ -56,7 +67,7 @@ public class ClientesRepository implements CrudRepository<Clientes> {
                 cliente.setIdCliente(rs.getInt("idCliente"));
                 cliente.setRazonSocial(rs.getString("razonSocial"));
                 cliente.setRfc(rs.getString("rfc"));
-                cliente.setIdEstatus(rs.getInt("idEstatus"));
+                cliente.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
                 cliente.setIdUsuario(rs.getInt("idUsuario"));
                 System.out.println(cliente);
             }
@@ -68,6 +79,7 @@ public class ClientesRepository implements CrudRepository<Clientes> {
         }
         return cliente;
     }
+
     @Override
     public boolean existsById(String rfc){
         boolean result = false;
@@ -88,6 +100,7 @@ public class ClientesRepository implements CrudRepository<Clientes> {
         }
         return result;
     }
+
     @Override
     public Clientes save(Clientes cliente){
         Clientes clienteResult = null;
@@ -98,17 +111,17 @@ public class ClientesRepository implements CrudRepository<Clientes> {
             //update
             try {
                 PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Clientes\" SET " +
-                        "\"razonSocial\"=?,\"idEstatus\"=?,\"idUsuario\"=? where \"idCliente\"=?;");
+                        "\"razonSocial\"=?,\"rfc\"=?,\"idTipoEstatus\"=?,\"idUsuario\"=? where \"idCliente\"=?;");
                 ps.setString(1, cliente.getRazonSocial());
-                ps.setInt(2, cliente.getIdEstatus());
-                ps.setInt(3, cliente.getIdUsuario());
-                ps.setInt(4, cliente.getIdCliente());
+                ps.setString(2, cliente.getRfc());
+                ps.setInt(3, cliente.getIdTipoEstatus());
+                ps.setInt(4, cliente.getIdUsuario());
+                ps.setInt(5, cliente.getIdCliente());
 
                 ps.executeUpdate();
                 Conexion.endConexion(conn);
 
-
-                clienteResult = findById(cliente.getRfc());
+                return cliente;
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -119,10 +132,10 @@ public class ClientesRepository implements CrudRepository<Clientes> {
             //insert
             try {
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO public.\"Clientes\" (\"idCliente\", " +
-                        "\"razonSocial\", \"rfc\", \"idEstatus\", \"idUsuario\") VALUES (DEFAULT,?,?,?,?)");
+                        "\"razonSocial\", \"rfc\", \"idTipoEstatus\", \"idUsuario\") VALUES (DEFAULT,?,?,?,?)");
                 ps.setString(1, cliente.getRazonSocial());
                 ps.setString(2, cliente.getRfc());
-                ps.setInt(3, cliente.getIdEstatus());
+                ps.setInt(3, cliente.getIdTipoEstatus());
                 ps.setInt(4, cliente.getIdUsuario());
 
                 ps.executeUpdate();
@@ -137,6 +150,7 @@ public class ClientesRepository implements CrudRepository<Clientes> {
         }
         return clienteResult;
     }
+
     @Override
     public boolean deleteById(String rfc){
         boolean result=false;
@@ -164,6 +178,27 @@ public class ClientesRepository implements CrudRepository<Clientes> {
     }
     @Override
     public Clientes findById(int id) {
-        return new Clientes();
+        Clientes cliente = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Clientes\" where \"idCliente\" = ?");
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                cliente = new Clientes();
+                cliente.setIdCliente(rs.getInt("idCliente"));
+                cliente.setRazonSocial(rs.getString("razonSocial"));
+                cliente.setRfc(rs.getString("rfc"));
+                cliente.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
+                cliente.setIdUsuario(rs.getInt("idUsuario"));
+                System.out.println(cliente);
+            }
+            Conexion.endConexion(conn);
+            return cliente;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return cliente;
     }
 }

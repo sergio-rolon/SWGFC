@@ -21,11 +21,16 @@ public class ClientesController extends HttpServlet {
     ClientesRepository clientesRepository = new ClientesRepository();
     ClientesService clientesService = new ClientesService(clientesRepository);
     String clase = getClass().getSimpleName();
+    Boolean isDoPut=false;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
+        Util.logInfo("Se ejecutó DoGet", clase);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         if(role.equals("operacion")) {
             try (PrintWriter out = response.getWriter()) {
 
@@ -33,8 +38,6 @@ public class ClientesController extends HttpServlet {
 
                 if (clientesResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = new Gson().toJson(clientesResult);
                     out.print(successResponse);
                     out.flush();
@@ -42,8 +45,6 @@ public class ClientesController extends HttpServlet {
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String errorResponse = "{\"error\": \"No hay clientes registrados\"}";
                 out.print(errorResponse);
                 Util.logInfo("None users recovered for operation role and sent in response", clase);
@@ -55,12 +56,14 @@ public class ClientesController extends HttpServlet {
         }
         Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
         response.sendRedirect("/index.html");
-    }
+    }//doGet
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Se ejecuto doPost");
+        Util.logInfo("Se ejecutó DoPost", clase);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
@@ -79,36 +82,30 @@ public class ClientesController extends HttpServlet {
                 JSONObject jsonObject = new JSONObject(json);
 
                 String resultValidation = validateFields(jsonObject);
-                System.out.println("Resultado validación:"+ resultValidation);
+                Util.logInfo("Resultado validación:"+ resultValidation, clase);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     out.print(resultValidation);
                     out.flush();
                     return;
                 }
-                Clientes newUser = new Clientes();
-                newUser.setRazonSocial(jsonObject.getString("razonSocial"));
-                newUser.setRfc(jsonObject.getString("rfc").toUpperCase());
-                newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
-                newUser.setIdUsuario(jsonObject.getInt("idUsuario"));
+                Clientes newCliente = new Clientes();
+                newCliente.setRazonSocial(jsonObject.getString("razonSocial"));
+                newCliente.setRfc(jsonObject.getString("rfc").toUpperCase());
+                newCliente.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
+                newCliente.setIdUsuario(jsonObject.getInt("idUsuario"));
 
-                Clientes clienteResult = clientesService.add(newUser);
+                Clientes clienteResult = clientesService.add(newCliente);
                 if (clienteResult != null) {
-                    System.out.println("Cliente agregado correctamente");
+                    Util.logInfo("Cliente registrado exitosamente", clase);
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Cliente registrado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                String errorResponse = "{\"error\": \"Cliente ya existe\"}";
+                String errorResponse = "{\"error\": \"El cliente ya existe\"}";
                 out.print(errorResponse);
                 out.flush();
             } catch (IOException ex) {
@@ -120,12 +117,16 @@ public class ClientesController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Se ejecuto doPut");
+        Util.logInfo("Se ejecutó DoPut", clase);
+        isDoPut=true;
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
                 response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
                         + "content type");
+                isDoPut=false;
                 return;
             }
 
@@ -139,36 +140,33 @@ public class ClientesController extends HttpServlet {
                 JSONObject jsonObject = new JSONObject(json);
 
                 String resultValidation = validateFields(jsonObject);
-                System.out.println("Resultado validación:"+ resultValidation);
+                Util.logInfo("Resultado validación:"+ resultValidation, clase);
                 if(Validator.validationFailed){
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     out.print(resultValidation);
                     out.flush();
+                    isDoPut=false;
                     return;
                 }
-                Clientes newUser = new Clientes();
-                newUser.setRazonSocial(jsonObject.getString("razonSocial"));
-                newUser.setRfc(jsonObject.getString("rfc").toUpperCase());
-                newUser.setIdEstatus(jsonObject.getInt("idEstatus"));
-                newUser.setIdUsuario(jsonObject.getInt("idUsuario"));
+                Clientes newCliente = new Clientes();
+                newCliente.setIdCliente(jsonObject.getInt("idCliente"));
+                newCliente.setRazonSocial(jsonObject.getString("razonSocial"));
+                newCliente.setRfc(jsonObject.getString("rfc").toUpperCase());
+                newCliente.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
+                newCliente.setIdUsuario(jsonObject.getInt("idUsuario"));
 
-                Clientes clienteResult = clientesService.update(newUser);
+                Clientes clienteResult = clientesService.update(newCliente);
+                isDoPut=false;
                 if (clienteResult != null) {
-                    System.out.println("Cliente agregado correctamente");
+                    Util.logInfo("Cliente modificado exitosamente", clase);
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Cliente modificado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                String errorResponse = "{\"error\": \"Cliente no existe\"}";
+                String errorResponse = "{\"error\": \"RFC ingresado ya está asignado, intentar con otro\"}";
                 out.print(errorResponse);
                 out.flush();
             } catch (IOException ex) {
@@ -180,7 +178,9 @@ public class ClientesController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        Util.logInfo("Se ejecutó DoDelete", clase);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
@@ -198,34 +198,26 @@ public class ClientesController extends HttpServlet {
                 String json = sb.toString();
                 JSONObject jsonObject = new JSONObject(json);
 
-                // TODO ESTO  NO SE PORQUE LO PUSE
                 if (!Validator.isRfc(jsonObject.getString("rfc")).contains("success")) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String errorResponse = "{\"error\": \"RFC inválido\"}";
                     out.print(errorResponse);
                     out.flush();
                     return;
                 }
 
-                Clientes deleteUser = new Clientes();
-                deleteUser.setRfc(jsonObject.getString("rfc").toUpperCase());
+                Clientes clienteToDelete = new Clientes();
+                clienteToDelete.setRfc(jsonObject.getString("rfc").toUpperCase());
 
-
-                if (clientesService.delete(deleteUser.getRfc())) {
-                    System.out.println("Cliente eliminado correctamente");
+                if (clientesService.delete(clienteToDelete.getRfc())) {
+                    Util.logInfo("Cliente eliminado correctamente", clase);
                     response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     String successResponse = "{\"success\": \"Cliente eliminado exitosamente\"}";
                     out.print(successResponse);
                     out.flush();
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 String errorResponse = "{\"error\": \"Cliente no existe\"}";
                 out.print(errorResponse);
                 out.flush();
@@ -237,10 +229,12 @@ public class ClientesController extends HttpServlet {
         Validator.validationFailed=false;
         StringBuilder sb = new StringBuilder();
         sb.append("{");
-
-        sb.append(Validator.isAlphaNum("Razón social",jsonObject.getString("razonSocial"))).append(",");
+        if(isDoPut) {
+            sb.append(Validator.isNum("Id Cliente", jsonObject.getString("idCliente"))).append(",");
+        }
+        sb.append(Validator.isAlphaNum("Razon social",jsonObject.getString("razonSocial"))).append(",");
         sb.append(Validator.isRfc(jsonObject.getString("rfc"))).append(",");
-        sb.append(Validator.isNumTwoTypes("Id Estatus",String.valueOf(jsonObject.get("idEstatus")))).append(",");
+        sb.append(Validator.isNumTwoTypes("Id Tipo Estatus",String.valueOf(jsonObject.get("idTipoEstatus")))).append(",");
         sb.append(Validator.isNum("Id Usuario",String.valueOf(jsonObject.get("idUsuario"))));
         sb.append("}");
 

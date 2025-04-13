@@ -1,15 +1,45 @@
-let url =
-  window.location.hostname === "localhost"
-    ? "http://localhost:8080/api/login"
-    : "https://flotilla-mktpromomarc.onrender.com/api/login";
-
-let urlLogged =
-  window.location.hostname === "localhost"
-    ? "http://localhost:8080/api/usuarios/logged"
-    : "https://flotilla-mktpromomarc.onrender.com/api/usuarios/logged";
+let url = "/api/login";
+let urlLogged = "/api/usuarios/logged";
 
 const contenedor = document.getElementById("contenedor");
+const loginError = document.getElementById("loginError");
+const correoInput = document.getElementById("correo-ipt");
+const contrasenaInput = document.getElementById("password-ipt");
+const btnLogIn = document.getElementById("btnLogIn");
+const loader = document.getElementById("loader");
 
+// Events
+document.getElementById("btnLogIn").addEventListener("click", function (event) {
+  event.preventDefault();
+  cleanError();
+  if (!validateNull()) {
+    // Oculta el botón y muestra el mensaje de validación
+    btnLogIn.style.visibility = "hidden";
+    loader.style.display = "block";
+    // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
+    if (typeof grecaptcha !== "undefined") {
+      grecaptcha.ready(function () {
+        grecaptcha
+          .execute("6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt", {
+            action: "submit",
+          })
+          .then(function (token) {
+            // Aquí podrías enviar el token al backend
+            let email = correoInput.value;
+            let contrasena = contrasenaInput.value;
+            sendDataLogin(token, email, contrasena);
+          });
+      });
+    } else {
+      loginError.textContent = "reCAPTCHA no está cargado correctamente.";
+      // Si hay un error, volvemos a mostrar el botón
+      btnLogIn.style.visibility = "visible";
+      loader.style.display = "none";
+    }
+  }
+});
+
+// Functions
 function sendDataLogin(token, email, contrasena) {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -50,42 +80,6 @@ function sendDataLogin(token, email, contrasena) {
       let errorMsg = error;
     });
 }
-
-const loginError = document.getElementById("loginError");
-const correoInput = document.getElementById("correo-ipt");
-const contrasenaInput = document.getElementById("password-ipt");
-const btnLogIn = document.getElementById("btnLogIn");
-const loader = document.getElementById("loader");
-//Boton submit action
-document.getElementById("btnLogIn").addEventListener("click", function (event) {
-  event.preventDefault();
-  cleanError();
-  if (!validateNull()) {
-    // Oculta el botón y muestra el mensaje de validación
-    btnLogIn.style.visibility = "hidden";
-    loader.style.display = "block";
-    // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
-    if (typeof grecaptcha !== "undefined") {
-      grecaptcha.ready(function () {
-        grecaptcha
-          .execute("6LeOkTAqAAAAAF8FEldq-RzmmB4OReSioONKtPRt", {
-            action: "submit",
-          })
-          .then(function (token) {
-            // Aquí podrías enviar el token al backend
-            let email = correoInput.value;
-            let contrasena = contrasenaInput.value;
-            sendDataLogin(token, email, contrasena);
-          });
-      });
-    } else {
-      loginError.textContent = "reCAPTCHA no está cargado correctamente.";
-      // Si hay un error, volvemos a mostrar el botón
-      btnLogIn.style.visibility = "visible";
-      loader.style.display = "none";
-    }
-  }
-});
 
 function validateNull() {
   let flag = false;

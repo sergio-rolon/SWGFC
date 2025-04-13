@@ -56,7 +56,7 @@ button {
   font-weight: bold;
   cursor: pointer;
 }
-#userForm {
+#clientForm {
   display: flex;
   flex-direction: column; /* Alinea los elementos de manera vertical */
   align-items: center; /* Centra los elementos horizontalmente */
@@ -276,6 +276,6 @@ td {
 #btnLimpiar:hover {
   background-color: #d0d0d0;
 }
-#idUsuario {
+#idCliente {
   background-color: #e9e1e1;
 }

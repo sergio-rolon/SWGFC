@@ -5,17 +5,17 @@ public class Clientes {
     private int idCliente;
     private String razonSocial;
     private String rfc;
-    private int idEstatus;
+    private int idTipoEstatus;
     private int idUsuario;
 
     public Clientes(){
     }
 
-    public Clientes(int idCliente, String razonSocial, String rfc, int idEstatus, int idUsuario) {
+    public Clientes(int idCliente, String razonSocial, String rfc, int idTipoEstatus, int idUsuario) {
         this.idCliente = idCliente;
         this.razonSocial = razonSocial;
         this.rfc = rfc;
-        this.idEstatus = idEstatus;
+        this.idTipoEstatus = idTipoEstatus;
         this.idUsuario = idUsuario;
     }
 
@@ -43,12 +43,12 @@ public class Clientes {
         this.rfc = rfc;
     }
 
-    public int getIdEstatus() {
-        return idEstatus;
+    public int getIdTipoEstatus() {
+        return idTipoEstatus;
     }
 
-    public void setIdEstatus(int idEstatus) {
-        this.idEstatus = idEstatus;
+    public void setIdTipoEstatus(int idTipoEstatus) {
+        this.idTipoEstatus = idTipoEstatus;
     }
 
     public int getIdUsuario() {
@@ -65,7 +65,7 @@ public class Clientes {
                 "idCliente=" + idCliente +
                 ", razonSocial='" + razonSocial + '\'' +
                 ", rfc='" + rfc + '\'' +
-                ", idEstatus=" + idEstatus +
+                ", idTipoEstatus=" + idTipoEstatus +
                 ", idUsuario=" + idUsuario +
                 '}';
     }

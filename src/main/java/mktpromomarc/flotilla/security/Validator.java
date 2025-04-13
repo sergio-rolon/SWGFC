@@ -34,12 +34,12 @@ public class Validator {
             return "\"contrasena\": \"success\"";
         } else {
             validationFailed = true;
-            return "\"contrasena\": \"Contraseña invalida, debe tener 8 o más caracteres, y al menos 1 letra, número y caracter especial\"";
+            return "\"contrasena\": \"Contraseña inválida, debe tener 8 o más caracteres, y al menos 1 letra, número y carácter especial\"";
         }
         }catch (Exception e){
             String error = e.getMessage();
             validationFailed = true;
-            return "\"contrasena\": \"Contraseña invalida, debe tener 8 o más caracteres, y al menos 1 letra, número y caracter especial\"";
+            return "\"contrasena\": \"Contraseña inválida, debe tener 8 o más caracteres, y al menos 1 letra, número y carácter especial\"";
         }
     }
 
@@ -50,7 +50,7 @@ public class Validator {
             return "\"numeroTrabajador\": \"success\"";
         } else {
             validationFailed = true;
-            return "\"numeroTrabajador\": \"Numero trabajador invalido, deben ser 6 caracteres numéricos\"";
+            return "\"numeroTrabajador\": \"Numero trabajador inválido, deben ser 6 caracteres numéricos\"";
         }
     }
 
@@ -79,12 +79,12 @@ public class Validator {
 
     public static String isAlphaNum(String campo, String palabra) {
         String palabraPattern = "^[a-zA-Z0-9]+$";
-
-        if (palabra.matches(palabraPattern)) {
-            return "\""+campo+"\": \"success\"";
+        String campoNoSpaces = campo.replaceAll("\\s+","");
+        if (palabra.replaceAll("\\s+","").matches(palabraPattern)) {
+            return "\""+campoNoSpaces+"\": \"success\"";
         } else {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener letras sin acentos\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener letras sin acentos o números\"";
         }
     }
 
@@ -99,12 +99,13 @@ public class Validator {
     }
 
     public static String isNum(String campo, String numero) {
+        String campoNoSpaces = campo.replaceAll("\\s+","");
         try {
             int isNumber = Integer.parseInt(numero);
-                return "\""+campo+"\": \"success\"";
+                return "\""+campoNoSpaces+"\": \"success\"";
         } catch (NumberFormatException e) {
             validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
+            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números válidos\"";
         }
     }
 

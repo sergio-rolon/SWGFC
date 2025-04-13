@@ -19,7 +19,9 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
                     "te.\"tipoEstatus\" as \"estatus\", " +
                     "tu.\"tipoUsuario\" as \"tipoUsuario\" FROM \"Usuarios\" u " +
                     "INNER JOIN \"TipoEstatus\" te ON u.\"idTipoEstatus\" = te.\"idTipoEstatus\"" +
-                    "INNER JOIN \"TipoUsuario\" tu ON u.\"idTipoUsuario\" = tu.\"idTipoUsuario\"");
+                    "INNER JOIN \"TipoUsuario\" tu ON u.\"idTipoUsuario\" = tu.\"idTipoUsuario\""+
+                            "ORDER BY u.\"idUsuario\" ASC"
+                    );
             ResultSet rs = ps.executeQuery();
             allUsuarios = new JSONArray();
             while(rs.next()){
@@ -38,6 +40,36 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
             Conexion.endConexion(conn);
         }
         return allUsuarios;
+    }
+    @Override
+    public JSONArray findAllAsesores(){
+        JSONArray allAsesores = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT u.\"idUsuario\", u.\"nombre\", u.\"apellidoPaterno\", u.\"apellidoMaterno\", " +
+                    "u.\"numeroTrabajador\" FROM \"Usuarios\" u " +
+                    "where \"idTipoUsuario\" = ? AND \"idTipoEstatus\" = ? "+
+                    "ORDER BY u.\"numeroTrabajador\" ASC"
+            );
+            ps.setInt(1,3);
+            ps.setInt(2,1);
+            ResultSet rs = ps.executeQuery();
+            allAsesores = new JSONArray();
+            while(rs.next()){
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject usuario = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    usuario.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allAsesores.put(usuario);
+            }
+            Conexion.endConexion(conn);
+            return allAsesores;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allAsesores;
     }
 
     @Override
@@ -100,31 +132,25 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
         if(usuario.getIdUsuario()!=0){
             //update
             try {
-                /*PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
-                        "\"email\"=?,\"nombre\"=?," +
-                        "\"apellidoPaterno\"=?,\"apellidoMaterno\"=?," +
-                        "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idEstatus\"=?," +
-                        "\"idTipoUsuario\"=? where \"idUsuario\"=?;");
-                ps.setString(1, usuario.getEmail());*/
                 PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Usuarios\" SET " +
-                        "\"nombre\"=?," +
+                        "\"email\"=?,\"nombre\"=?," +
                         "\"apellidoPaterno\"=?,\"apellidoMaterno\"=?," +
                         "\"numeroTrabajador\"=?,\"contrasena\"=?,\"idTipoEstatus\"=?," +
                         "\"idTipoUsuario\"=? where \"idUsuario\"=?;");
-                ps.setString(1, usuario.getNombre());
-                ps.setString(2, usuario.getApellidoPaterno());
-                ps.setString(3, usuario.getApellidoMaterno());
-                ps.setString(4, usuario.getNumeroTrabajador());
-                ps.setString(5, usuario.getContrasena());
-                ps.setInt(6, usuario.getIdTipoEstatus());
-                ps.setInt(7, usuario.getIdTipoUsuario());
-                ps.setInt(8, usuario.getIdUsuario());
+                ps.setString(1, usuario.getEmail());
+                ps.setString(2, usuario.getNombre());
+                ps.setString(3, usuario.getApellidoPaterno());
+                ps.setString(4, usuario.getApellidoMaterno());
+                ps.setString(5, usuario.getNumeroTrabajador());
+                ps.setString(6, usuario.getContrasena());
+                ps.setInt(7, usuario.getIdTipoEstatus());
+                ps.setInt(8, usuario.getIdTipoUsuario());
+                ps.setInt(9, usuario.getIdUsuario());
 
                 ps.executeUpdate();
                 Conexion.endConexion(conn);
 
-
-                usuarioResult = findById(usuario.getEmail());
+                return usuario;
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -186,6 +212,31 @@ public class UsuariosRepository implements CrudRepository<Usuarios>{
     }
     @Override
     public Usuarios findById(int id) {
-        return new Usuarios();
+        Usuarios usuario = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Usuarios\" where \"idUsuario\" = ?");
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                usuario = new Usuarios();
+                usuario.setIdUsuario(rs.getInt("idUsuario"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                usuario.setApellidoMaterno(rs.getString("apellidoMaterno"));
+                usuario.setNumeroTrabajador(rs.getString("numeroTrabajador"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
+                usuario.setIdTipoUsuario(rs.getInt("idTipoUsuario"));
+                System.out.println(usuario);
+            }
+            Conexion.endConexion(conn);
+            return usuario;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return usuario;
     }
 }

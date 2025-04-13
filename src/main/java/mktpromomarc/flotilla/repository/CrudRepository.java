@@ -4,6 +4,7 @@ import org.json.JSONArray;
 
 public interface CrudRepository<T> {
     JSONArray findAll();
+    JSONArray findAllAsesores();
     T findById(String id);
     T findById(int id);
     boolean existsById(String id);
