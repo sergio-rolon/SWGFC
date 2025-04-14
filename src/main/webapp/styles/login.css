@@ -170,3 +170,13 @@ textarea {
   text-align: center;
   max-height: 75px;
 }
+.logo-load {
+  max-width: 300px; /* Tamaño normal en escritorio */
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .logo-load {
+    max-width: 150px; /* Tamaño reducido en móviles */
+  }
+}
