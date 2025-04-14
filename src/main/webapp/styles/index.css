@@ -58,6 +58,6 @@
 
 @media (max-width: 768px) {
   .logo-load {
-    max-width: 150px; /* Tamaño reducido en móviles */
+    max-width: 200px; /* Tamaño reducido en móviles */
   }
 }
