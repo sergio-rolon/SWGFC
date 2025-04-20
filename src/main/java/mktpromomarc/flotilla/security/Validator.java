@@ -6,12 +6,12 @@ public class Validator {
 
     public static String isRfc (String rfc){
             // Expresión regular
-            String rfcPattern = "^[a-zA-Z0-9]{12}$";
+            String rfcPattern = "^[a-zA-Z0-9]{12,13}$";
             if (rfc.matches(rfcPattern)) {
                 return "\"rfc\": \"success\"";
             } else {
                 validationFailed = true;
-                return "\"rfc\": \"RFC inválido, debe tener 12 caracteres alfanuméricos\"";
+                return "\"rfc\": \"RFC inválido, debe tener 12 o 13 caracteres alfanuméricos\"";
             }
     }
 
