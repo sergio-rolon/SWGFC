@@ -2,7 +2,7 @@ package mktpromomarc.flotilla.repository;
 
 import org.json.JSONArray;
 
-public interface CrudRepository<T> {
+public interface ICrudRepository<T> {
     JSONArray findAll();
     JSONArray findAllObjects();
     T findById(String id);

@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class ClientesRepository implements CrudRepository<Clientes> {
+public class ClientesRepository implements ICrudRepository<Clientes> {
 
 
 

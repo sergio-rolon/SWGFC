@@ -14,7 +14,7 @@ document.getElementById("btnLogIn").addEventListener("click", function (event) {
   cleanError();
   if (!validateNull()) {
     // Oculta el botón y muestra el mensaje de validación
-    btnLogIn.style.visibility = "hidden";
+    btnLogIn.style.display = "none";
     loader.style.display = "block";
     // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
     if (typeof grecaptcha !== "undefined") {
@@ -33,7 +33,7 @@ document.getElementById("btnLogIn").addEventListener("click", function (event) {
     } else {
       loginError.textContent = "reCAPTCHA no está cargado correctamente.";
       // Si hay un error, volvemos a mostrar el botón
-      btnLogIn.style.visibility = "visible";
+      btnLogIn.style.display = "block";
       loader.style.display = "none";
     }
   }
@@ -64,7 +64,7 @@ function sendDataLogin(token, email, contrasena) {
           return result;
         } else if (response.status === 400) {
           loginError.textContent = result.error;
-          btnLogIn.style.visibility = "visible";
+          btnLogIn.style.display = "block";
           loader.style.display = "none";
           throw new Error("Error");
         }
@@ -72,7 +72,7 @@ function sendDataLogin(token, email, contrasena) {
     })
     .then((result) => {
       sessionStorage.setItem("token", result.accessToken);
-      btnLogIn.style.visibility = "visible";
+      btnLogIn.style.display = "block";
       loader.style.display = "none";
       window.location.href = "/index.html";
     })

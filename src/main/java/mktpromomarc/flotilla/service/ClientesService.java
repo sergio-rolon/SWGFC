@@ -1,13 +1,11 @@
 package mktpromomarc.flotilla.service;
 
 import mktpromomarc.flotilla.modelo.Clientes;
-import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.repository.ClientesRepository;
-import mktpromomarc.flotilla.security.Encoder;
 import org.json.JSONArray;
 
 
-public class ClientesService implements CrudService<Clientes> {
+public class ClientesService implements ICrudService<Clientes> {
 
     private ClientesRepository clientesRepository;
 

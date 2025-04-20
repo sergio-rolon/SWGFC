@@ -6,7 +6,7 @@ import mktpromomarc.flotilla.security.Encoder;
 import org.json.JSONArray;
 
 
-public class UsuariosService implements CrudService<Usuarios>{
+public class UsuariosService implements ICrudService<Usuarios> {
 
     private UsuariosRepository usuariosRepository;
 

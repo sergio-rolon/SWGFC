@@ -77,18 +77,17 @@ public class LoginController extends HttpServlet {
                         // Si existe entonces validamos contraseña
                        if (loginUser.getContrasena().equals(new Encoder().decrypt(registeredUsuario.getContrasena()))
                        && registeredUsuario.getIdTipoEstatus()==1) {
-                            String rol;
+                            String role;
                             // Establecemos rol para el JWToken
-                           //todo probably this is goint to be changes to .contains("administrador")
                             if(registeredUsuario.getIdTipoUsuario()==1){
-                                rol="administrador";
+                                role="administrador";
                             }else if(registeredUsuario.getIdTipoUsuario()==2){
-                                rol="operacion";
+                                role="operacion";
                             }else{
-                                rol="asesor";
+                                role="asesor";
                             }
                             // Generamos token
-                           Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),rol,
+                           Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),role,
                                    registeredUsuario.getContrasena());
                            String tokenResponseString = new Gson().toJson(tokenGenerated);
 
@@ -99,7 +98,7 @@ public class LoginController extends HttpServlet {
                            out.print(tokenResponseString);
                            out.flush();
                            Util.logInfo("JWT generated for user "+registeredUsuario.getEmail()+" with role "+
-                                   rol+" and status "+registeredUsuario.getIdTipoEstatus()+"logged in", clase);
+                                   role+" and status "+registeredUsuario.getIdTipoEstatus()+"logged in", clase);
                         } else {
                            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 

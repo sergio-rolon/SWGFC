@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class UsuariosRepository implements CrudRepository<Usuarios>{
+public class UsuariosRepository implements ICrudRepository<Usuarios> {
 
     @Override
     public JSONArray findAll(){
