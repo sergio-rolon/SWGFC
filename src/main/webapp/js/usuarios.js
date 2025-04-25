@@ -26,6 +26,11 @@ const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idTipoUsuario = document.getElementById("idTipoUsuario");
 
 // *********************Execution at start
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
 validateLogin();
 getAllUsuarios();
 

@@ -19,6 +19,11 @@ const idUsuario = document.getElementById("idUsuario");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idUsuarioSelect = document.getElementById("idUsuarioSelect");
 // *********************Execution at start
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
 validateLogin();
 getAllClientes();
 getAllAsesores();

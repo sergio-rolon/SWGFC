@@ -65,6 +65,11 @@ public class FilterLogin implements Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//        httpServletResponse.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+//        httpServletResponse.setHeader("Pragma", "no-cache");
+//        httpServletResponse.setDateHeader("Expires", 0);
+//        httpServletResponse.setHeader("X-Accel-Expires", "0"); // para algunos proxies
+//        httpServletResponse.setHeader("Vary", "*"); // también ayuda a evitar el caché agresivo
 
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         String authHeader =  httpServletRequest.getHeader("Authorization");

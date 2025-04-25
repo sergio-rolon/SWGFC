@@ -9,6 +9,11 @@ const btnLogIn = document.getElementById("btnLogIn");
 const loader = document.getElementById("loader");
 
 // Events
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
 document.getElementById("btnLogIn").addEventListener("click", function (event) {
   event.preventDefault();
   cleanError();

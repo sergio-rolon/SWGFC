@@ -56,6 +56,12 @@ let urlIncidentes =
 
 const contenedor = document.getElementById("contenedor");
 
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
+
 function validateLogin() {
   const myHeaders = new Headers();
 
