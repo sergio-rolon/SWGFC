@@ -164,7 +164,9 @@ function editeCliente(clienteString) {
   } else {
     idTipoEstatus.value = 2;
   }
-  idUsuarioSelect.value = cliente.idUsuario;
+  if (idUsuarioSelect.options.length > 0) {
+     idUsuarioSelect.selectedIndex = 0;
+  }
 
   actualizarButtonIsActive = true;
 }

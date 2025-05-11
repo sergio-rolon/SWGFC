@@ -1,32 +1,43 @@
-let clientesData = [];
+let empleadosData = [];
 let urlLogged = "/api/usuarios/logged";
-let url = "/api/clientes";
-let urlAsesores = "/api/usuarios/getAllAsesores";
+let url = "/api/empleados";
+let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
 
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
-const razonSocialError = document.getElementById("razonSocialError");
-const rfcError = document.getElementById("rfcError");
-const idUsuarioError = document.getElementById("idUsuarioError");
+const numeroTrabajadorError = document.getElementById("numeroTrabajadorError");
+const nombreError = document.getElementById("nombreError");
+const apellidoPaternoError = document.getElementById("apellidoPaternoError");
+const apellidoMaternoError = document.getElementById("apellidoMaternoError");
+const municipioAsignadoError = document.getElementById("municipioAsignadoError");
+const estadoAsignadoError = document.getElementById("estadoAsignadoError");
+const cantidadGasolinaError = document.getElementById("cantidadGasolinaError");
 const idTipoEstatusError = document.getElementById("idTipoEstatusError");
+const idClienteError = document.getElementById("idClienteError");
 
+const idEmpleado = document.getElementById("idEmpleado");
+const numeroTrabajador = document.getElementById("numeroTrabajador");
+const nombre = document.getElementById("nombre");
+const apellidoPaterno = document.getElementById("apellidoPaterno");
+const apellidoMaterno = document.getElementById("apellidoMaterno");
+const municipioAsignado = document.getElementById("municipioAsignado");
+const estadoAsignado = document.getElementById("estadoAsignado");
+const cantidadGasolina = document.getElementById("cantidadGasolina");
 const idCliente = document.getElementById("idCliente");
-const razonSocial = document.getElementById("razonSocial");
-const rfc = document.getElementById("rfc");
-const idUsuario = document.getElementById("idUsuario");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
-const idUsuarioSelect = document.getElementById("idUsuarioSelect");
+const idClienteSelect = document.getElementById("idClienteSelect");
 // *********************Execution at start
 window.addEventListener('pageshow', function (event) {
   if (event.persisted) {
     window.location.reload();
   }
 });
+
 validateLogin();
+getAllEmpleados();
 getAllClientes();
-getAllAsesores();
 
 // ************************************** Events
 document
@@ -44,13 +55,18 @@ document
     clearErrors();
     if (!validateNull()) {
       const raw = JSON.stringify({
-        razonSocial: razonSocial.value,
-        rfc: rfc.value,
-        idTipoEstatus: idTipoEstatus.value,
-        idUsuario: idUsuarioSelect.value,
+      numeroTrabajador: numeroTrabajador.value,
+      nombre: nombre.value,
+      apellidoPaterno: apellidoPaterno.value,
+      apellidoMaterno: apellidoMaterno.value,
+      municipioAsignado: municipioAsignado.value,
+      estadoAsignado: estadoAsignado.value,
+      cantidadGasolina: cantidadGasolina.value,
+      idTipoEstatus: idTipoEstatus.value,
+      idCliente: idClienteSelect.value,
       });
 
-      registerCliente(raw);
+      registerEmpleado(raw);
     }
   });
 
@@ -62,18 +78,23 @@ document
     if (actualizarButtonIsActive) {
       if (!validateNull()) {
         const raw = JSON.stringify({
-          idCliente: idCliente.value,
-          razonSocial: razonSocial.value,
-          rfc: rfc.value,
+        idEmpleado: idEmpleado.value,
+          numeroTrabajador: numeroTrabajador.value,
+          nombre: nombre.value,
+          apellidoPaterno: apellidoPaterno.value,
+          apellidoMaterno: apellidoMaterno.value,
+          municipioAsignado: municipioAsignado.value,
+          estadoAsignado: estadoAsignado.value,
+          cantidadGasolina: cantidadGasolina.value,
           idTipoEstatus: idTipoEstatus.value,
-          idUsuario: idUsuarioSelect.value,
+          idCliente: idClienteSelect.value,
         });
-        updateCliente(raw);
+        updateEmpleado(raw);
       }
     } else {
       Swal.fire({
         title: "Operación inválida",
-        text: "Elige primero un cliente para editar",
+        text: "Elige primero un empleado para editar",
         icon: "error",
       });
     }
@@ -106,106 +127,177 @@ function clearAll() {
 }
 
 function clearErrors() {
-  razonSocialError.textContent = "";
-  razonSocial.classList.remove("borde-rojo");
+  numeroTrabajadorError.textContent = "";
+  numeroTrabajador.classList.remove("borde-rojo");
 
-  rfcError.textContent = "";
-  rfc.classList.remove("borde-rojo");
+  nombreError.textContent = "";
+  nombre.classList.remove("borde-rojo");
+
+  apellidoPaternoError.textContent = "";
+  apellidoPaterno.classList.remove("borde-rojo");
+
+  apellidoMaternoError.textContent = "";
+  apellidoMaterno.classList.remove("borde-rojo");
+
+  municipioAsignadoError.textContent = "";
+  municipioAsignado.classList.remove("borde-rojo");
+
+  estadoAsignadoError.textContent = "";
+  estadoAsignado.classList.remove("borde-rojo");
+
+  cantidadGasolinaError.textContent = "";
+  cantidadGasolina.classList.remove("borde-rojo");
 }
 
 function validateNull() {
   let flag = false;
-  if (!razonSocial.value || razonSocial.value.trim() === "") {
-    razonSocialError.textContent = "Razón social no puede ser nulo";
-    razonSocial.classList.add("borde-rojo");
+  if (!numeroTrabajador.value || numeroTrabajador.value.trim() === "") {
+    numeroTrabajadorError.textContent = "Número de trabajador no puede ser nulo";
+    numeroTrabajador.classList.add("borde-rojo");
     flag = true;
   }
-  if (!rfc.value || rfc.value.trim() === "") {
-    rfcError.textContent = "RFC no puede ser nulo";
-    rfc.classList.add("borde-rojo");
+  if (!nombre.value || nombre.value.trim() === "") {
+    nombreError.textContent = "Nombre no puede ser nulo";
+    nombre.classList.add("borde-rojo");
     flag = true;
   }
-
+  if (!apellidoPaterno.value || apellidoPaterno.value.trim() === "") {
+    apellidoPaternoError.textContent = "Apellido paterno no puede ser nulo";
+    apellidoPaterno.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!apellidoMaterno.value || apellidoMaterno.value.trim() === "") {
+    apellidoMaternoError.textContent = "Apellido materno no puede ser nulo";
+    apellidoMaterno.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!municipioAsignado.value || municipioAsignado.value.trim() === "") {
+    municipioAsignadoError.textContent = "Municipio no puede ser nulo";
+    municipioAsignado.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!estadoAsignado.value || estadoAsignado.value.trim() === "") {
+    estadoAsignadoError.textContent = "Estado no puede ser nulo";
+    estadoAsignado.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!cantidadGasolina.value || cantidadGasolina.value.trim() === "") {
+    cantidadGasolinaError.textContent = "Cantidad gasolina no puede ser nulo";
+    cantidadGasolina.classList.add("borde-rojo");
+    flag = true;
+  }
   return flag;
 }
 
 function clearForm() {
-  razonSocial.value = "";
-  rfc.value = "";
+  numeroTrabajador.value = "";
+  nombre.value = "";
+  apellidoPaterno.value = "";
+  apellidoMaterno.value = "";
+  municipioAsignado.value = "";
+  estadoAsignado.value = "";
+  cantidadGasolina.value = "";
   idTipoEstatus.value = "1";
-  idUsuarioSelect.value = "7";
-  idCliente.value = "";
+    if (idClienteSelect.options.length > 0) {
+      idClienteSelect.selectedIndex = 0;
+    }
+  idEmpleado.value = "";
   actualizarButtonIsActive = false;
 }
 
 function setErrorMsgs(result) {
-  if (result["Razonsocial"] && result.Razonsocial != "success") {
-    razonSocialError.textContent = result.Razonsocial;
+  if (result["numeroTrabajador"] && result.numeroTrabajador != "success") {
+    numeroTrabajadorError.textContent = result.numeroTrabajador;
   }
-  if (result["rfc"] && result.rfc != "success") {
-    rfcError.textContent = result.rfc;
+  if (result["Nombre"] && result.Nombre != "success") {
+    nombreError.textContent = result.Nombre;
   }
-  if (result["idTipoEstatus"] && result.idTipoEstatus != "success") {
-    idTipoEstatusError.textContent = result.idTipoEstatus;
+  if (result["Apellidopaterno"] && result.Apellidopaterno != "success") {
+    apellidoPaternoError.textContent = result.Apellidopaterno;
   }
-  if (result["idUsuario"] && result.idUsuario != "success") {
-    idUsuarioError.textContent = result.idUsuario;
+  if (result["Apellidomaterno"] && result.Apellidomaterno != "success") {
+    apellidoMaternoError.textContent = result.Apellidomaterno;
+  }
+  if (result["Municipioasignado"] && result.Municipioasignado != "success") {
+    municipioAsignadoError.textContent = result.Municipioasignado;
+  }
+  if (result["Estadoasignado"] && result.Estadoasignado != "success") {
+    estadoAsignadoError.textContent = result.Estadoasignado;
+  }
+  if (result["Cantidadgasolina"] && result.Cantidadgasolina != "success") {
+    cantidadGasolinaError.textContent = result.Cantidadgasolina;
+  }
+  if (result["IdTipoEstatus"] && result.IdTipoEstatus != "success") {
+    idTipoEstatusError.textContent = result.IdTipoEstatus;
+  }
+  if (result["IdCliente"] && result.IdCliente != "success") {
+    idClienteError.textContent = result.IdCliente;
   }
 }
 
-function editeCliente(clienteString) {
+function editeEmpleado(empleadoString) {
   clearAll();
-  const cliente = JSON.parse(clienteString);
-  idCliente.value = cliente.idCliente;
-  razonSocial.value = cliente.razonSocial;
-  rfc.value = cliente.rfc;
-  if (cliente.estatusCliente == "activo") {
+  const empleado = JSON.parse(empleadoString);
+  idEmpleado.value = empleado.idEmpleado;
+  numeroTrabajador.value=empleado.numeroTrabajador;
+  nombre.value=empleado.nombre;
+  apellidoPaterno.value=empleado.apellidoPaterno;
+  apellidoMaterno.value = empleado.apellidoMaterno;
+  municipioAsignado.value = empleado.municipioAsignado;
+  estadoAsignado.value = empleado.estadoAsignado;
+  cantidadGasolina.value = empleado.cantidadGasolina;
+  if (empleado.estatusEmpleado == "activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
   }
-  if (idUsuarioSelect.options.length > 0) {
-     idUsuarioSelect.selectedIndex = 0;
-  }
+  idClienteSelect.value = empleado.idCliente;
 
   actualizarButtonIsActive = true;
 }
 
-function createTable(clientes) {
+function createTable(empleados) {
   tbody.innerHTML = "";
-  clientes.forEach((cliente) => {
+  empleados.forEach((empleado) => {
     const row = document.createElement("tr");
-    const clienteString = JSON.stringify(cliente).replace(/"/g, "&quot;");
+    const empleadoString = JSON.stringify(empleado).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${cliente.idCliente}</td>
-          <td>${cliente.razonSocial}</td>
-          <td>${cliente.rfc}</td>
-          <td>${cliente.estatusCliente}</td>
-          <td>${cliente.numeroTrabajador}</td>
-          <td>${cliente.nombre}</td>
-          <td>${cliente.apellidoPaterno}</td>
-          <td>${cliente.apellidoMaterno}</td>
-          <td>${cliente.estatusUsuario}</td>
-          <td><button class="edit-btn" onclick="editeCliente('${clienteString}')">Editar</button></td>
-          <td><button class="delete-btn" onclick="deleteCliente('${cliente.rfc}')">Eliminar</button></td>
-          `;
+          <td>${empleado.idEmpleado}</td>
+          <td>${empleado.numeroTrabajador}</td>
+          <td>${empleado.nombre}</td>
+          <td>${empleado.apellidoPaterno}</td>
+          <td>${empleado.apellidoMaterno}</td>
+          <td>${empleado.municipioAsignado}</td>
+           <td>${empleado.estadoAsignado}</td>
+           <td>${empleado.cantidadGasolina}</td>
+          <td>${empleado.estatusEmpleado}</td>
+          <td>${empleado.rfc}</td>
+          <td>${empleado.razonSocial}</td>
+          <td>${empleado.estatusCliente}</td>
+                ${
+                  window.operacionMode
+                    ? ""
+                    : `<td><button class="edit-btn" onclick="editeEmpleado('${empleadoString}')">Editar</button></td>
+                       <td><button class="delete-btn" onclick="deleteEmpleado('${empleado.numeroTrabajador}')">Eliminar</button></td>`
+                }
+              `;
 
     tbody.appendChild(row);
   });
 }
 
-function showActiveClientes() {
-  const activos = clientesData.filter((u) => u.estatusCliente === "activo");
+function showActiveEmpleados() {
+  const activos = empleadosData.filter((u) => u.estatusEmpleado === "activo");
   createTable(activos);
 }
 
-function showInactiveClientes() {
-  const noActivos = clientesData.filter((u) => u.estatusCliente === "inactivo");
+function showInactiveEmpleados() {
+  const noActivos = empleadosData.filter((u) => u.estatusEmpleado === "inactivo");
   createTable(noActivos);
 }
 
-function showAllClientes() {
-  createTable(clientesData);
+function showAllEmpleados() {
+  createTable(empleadosData);
 }
 
 function validateLogin() {
@@ -237,14 +329,28 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
-          document.getElementById("emailUserLogged").textContent =
-            usuario.email;
+
+        if (usuario.role === "asesor") {
+          document.getElementById("emailUserLogged").textContent = usuario.email;
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("contenido").style.visibility = "visible";
+        } else if(usuario.role === "operacion"){
+          const empleadoForm = document.getElementById("empleadoForm");
+          if (empleadoForm) empleadoForm.remove();
+          window.operacionMode = true;
+          const tableHeader = document.getElementById("tableHeader");
+            if (tableHeader && tableHeader.rows.length > 0) {
+              const headerRow = tableHeader.rows[0];
+              headerRow.deleteCell(-1);
+              headerRow.deleteCell(-1);
+            }
+          document.getElementById("emailUserLogged").textContent = usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else {
-          window.location.href = "/index.html";
+         window.location.href = "/index.html";
         }
+
       }
     })
     .catch((error) => {
@@ -252,7 +358,7 @@ function validateLogin() {
     });
 }
 
-function getAllClientes() {
+function getAllEmpleados() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -282,8 +388,8 @@ function getAllClientes() {
     })
     .then((result) => {
       if (result) {
-        clientesData = result.myArrayList.map((item) => item.map);
-        createTable(clientesData);
+        empleadosData = result.myArrayList.map((item) => item.map);
+        createTable(empleadosData);
       }
     })
     .catch((error) => {
@@ -291,7 +397,7 @@ function getAllClientes() {
     });
 }
 
-function getAllAsesores() {
+function getAllClientes() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -305,7 +411,7 @@ function getAllAsesores() {
     redirect: "follow",
   };
 
-  fetch(urlAsesores, requestOptions)
+  fetch(urlClientes, requestOptions)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -321,13 +427,13 @@ function getAllAsesores() {
     })
     .then((result) => {
       if (result) {
-        idUsuarioSelect.innerHTML = "";
-        let asesores = result.myArrayList.map((item) => item.map);
-        asesores.forEach((asesor) => {
+        idClienteSelect.innerHTML = "";
+        let clientes = result.myArrayList.map((item) => item.map);
+        clientes.forEach((cliente) => {
           const option = document.createElement("option");
-          option.value = asesor.idUsuario;
-          option.textContent = `${asesor.numeroTrabajador} - ${asesor.nombre} ${asesor.apellidoPaterno} ${asesor.apellidoMaterno}`;
-          idUsuarioSelect.appendChild(option);
+          option.value = cliente.idCliente;
+          option.textContent = `${cliente.razonSocial} - ${cliente.rfc}`;
+          idClienteSelect.appendChild(option);
         });
       }
     })
@@ -336,7 +442,7 @@ function getAllAsesores() {
     });
 }
 
-function registerCliente(raw) {
+function registerEmpleado(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -382,8 +488,7 @@ function registerCliente(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllClientes();
-        //getAllAsesores();
+        getAllEmpleados();
         clearAll();
       }
     })
@@ -392,9 +497,9 @@ function registerCliente(raw) {
     });
 }
 
-function deleteCliente(rfc) {
+function deleteEmpleado(numeroTrabajador) {
   Swal.fire({
-    title: "¿Quieres eliminar este cliente?",
+    title: "¿Quieres eliminar este empleado?",
     text: "Esta acción no podrá revertirse.",
     icon: "warning",
     showCancelButton: true,
@@ -404,7 +509,7 @@ function deleteCliente(rfc) {
     cancelButtonText: `Cancelar`,
   }).then((result) => {
     if (result.isConfirmed) {
-      const raw = JSON.stringify({ rfc: rfc });
+      const raw = JSON.stringify({ numeroTrabajador: numeroTrabajador });
 
       const myHeaders = new Headers();
 
@@ -441,8 +546,7 @@ function deleteCliente(rfc) {
               text: result.success,
               icon: "success",
             });
-            getAllClientes();
-            //getAllAsesores();
+            getAllEmpleados();
           }
         })
         .catch((error) => {
@@ -452,7 +556,7 @@ function deleteCliente(rfc) {
   });
 }
 
-function updateCliente(raw) {
+function updateEmpleado(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -496,8 +600,7 @@ function updateCliente(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllClientes();
-        //getAllAsesores();
+        getAllEmpleados();
         clearAll();
         actualizarButtonIsActive = false;
       }

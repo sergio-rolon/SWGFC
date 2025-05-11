@@ -1,32 +1,39 @@
-let clientesData = [];
+let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
-let url = "/api/clientes";
-let urlAsesores = "/api/usuarios/getAllAsesores";
+let url = "/api/vehiculos";
+let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
 
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
-const razonSocialError = document.getElementById("razonSocialError");
-const rfcError = document.getElementById("rfcError");
-const idUsuarioError = document.getElementById("idUsuarioError");
+const numeroSerieError = document.getElementById("numeroSerieError");
+const marcaError = document.getElementById("marcaError");
+const tipoError = document.getElementById("tipoError");
+const modeloError = document.getElementById("modeloError");
+const accesoriosError = document.getElementById("accesoriosError");
 const idTipoEstatusError = document.getElementById("idTipoEstatusError");
+const idClienteError = document.getElementById("idClienteError");
 
+const idVehiculo = document.getElementById("idVehiculo");
+const numeroSerie = document.getElementById("numeroSerie");
+const marca = document.getElementById("marca");
+const tipo = document.getElementById("tipo");
+const modelo = document.getElementById("modelo");
+const accesorios = document.getElementById("accesorios");
 const idCliente = document.getElementById("idCliente");
-const razonSocial = document.getElementById("razonSocial");
-const rfc = document.getElementById("rfc");
-const idUsuario = document.getElementById("idUsuario");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
-const idUsuarioSelect = document.getElementById("idUsuarioSelect");
+const idClienteSelect = document.getElementById("idClienteSelect");
 // *********************Execution at start
 window.addEventListener('pageshow', function (event) {
   if (event.persisted) {
     window.location.reload();
   }
 });
+
 validateLogin();
+getAllVehiculos();
 getAllClientes();
-getAllAsesores();
 
 // ************************************** Events
 document
@@ -44,13 +51,16 @@ document
     clearErrors();
     if (!validateNull()) {
       const raw = JSON.stringify({
-        razonSocial: razonSocial.value,
-        rfc: rfc.value,
-        idTipoEstatus: idTipoEstatus.value,
-        idUsuario: idUsuarioSelect.value,
+      numeroSerie: numeroSerie.value,
+      marca: marca.value,
+      tipo: tipo.value,
+      modelo: modelo.value,
+      accesorios: accesorios.value,
+      idTipoEstatus: idTipoEstatus.value,
+      idCliente: idClienteSelect.value,
       });
 
-      registerCliente(raw);
+      registerVehiculo(raw);
     }
   });
 
@@ -62,18 +72,21 @@ document
     if (actualizarButtonIsActive) {
       if (!validateNull()) {
         const raw = JSON.stringify({
-          idCliente: idCliente.value,
-          razonSocial: razonSocial.value,
-          rfc: rfc.value,
+        idVehiculo: idVehiculo.value,
+          numeroSerie: numeroSerie.value,
+          marca: marca.value,
+          tipo: tipo.value,
+          modelo: modelo.value,
+          accesorios: accesorios.value,
           idTipoEstatus: idTipoEstatus.value,
-          idUsuario: idUsuarioSelect.value,
+          idCliente: idClienteSelect.value,
         });
-        updateCliente(raw);
+        updateVehiculo(raw);
       }
     } else {
       Swal.fire({
         title: "Operación inválida",
-        text: "Elige primero un cliente para editar",
+        text: "Elige primero un vehículo para editar",
         icon: "error",
       });
     }
@@ -106,106 +119,149 @@ function clearAll() {
 }
 
 function clearErrors() {
-  razonSocialError.textContent = "";
-  razonSocial.classList.remove("borde-rojo");
+  numeroSerieError.textContent = "";
+  numeroSerie.classList.remove("borde-rojo");
 
-  rfcError.textContent = "";
-  rfc.classList.remove("borde-rojo");
+  marcaError.textContent = "";
+  marca.classList.remove("borde-rojo");
+
+  tipoError.textContent = "";
+  tipo.classList.remove("borde-rojo");
+
+  modeloError.textContent = "";
+  modelo.classList.remove("borde-rojo");
+
+  accesoriosError.textContent = "";
+  accesorios.classList.remove("borde-rojo");
 }
 
 function validateNull() {
   let flag = false;
-  if (!razonSocial.value || razonSocial.value.trim() === "") {
-    razonSocialError.textContent = "Razón social no puede ser nulo";
-    razonSocial.classList.add("borde-rojo");
+  if (!numeroSerie.value || numeroSerie.value.trim() === "") {
+    numeroSerieError.textContent = "Número de serie no puede ser nulo";
+    numeroSerie.classList.add("borde-rojo");
     flag = true;
   }
-  if (!rfc.value || rfc.value.trim() === "") {
-    rfcError.textContent = "RFC no puede ser nulo";
-    rfc.classList.add("borde-rojo");
+  if (!marca.value || marca.value.trim() === "") {
+    marcaError.textContent = "Marca no puede ser nulo";
+    marca.classList.add("borde-rojo");
     flag = true;
   }
-
+  if (!tipo.value || tipo.value.trim() === "") {
+    tipoError.textContent = "Tipo no puede ser nulo";
+    tipo.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!modelo.value || modelo.value.trim() === "") {
+    modeloError.textContent = "Modelo no puede ser nulo";
+    modelo.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!accesorios.value || accesorios.value.trim() === "") {
+    accesoriosError.textContent = "Accesorios no puede ser nulo";
+    accesorios.classList.add("borde-rojo");
+    flag = true;
+  }
   return flag;
 }
 
 function clearForm() {
-  razonSocial.value = "";
-  rfc.value = "";
+  numeroSerie.value = "";
+  marca.value = "";
+  tipo.value = "";
+  modelo.value = "";
+  accesorios.value = "";
   idTipoEstatus.value = "1";
-  idUsuarioSelect.value = "7";
-  idCliente.value = "";
+    if (idClienteSelect.options.length > 0) {
+      idClienteSelect.selectedIndex = 0;
+    }
+  idVehiculo.value = "";
   actualizarButtonIsActive = false;
 }
 
 function setErrorMsgs(result) {
-  if (result["Razonsocial"] && result.Razonsocial != "success") {
-    razonSocialError.textContent = result.Razonsocial;
+  if (result["numeroSerie"] && result.numeroSerie != "success") {
+    numeroSerieError.textContent = result.numeroSerie;
   }
-  if (result["rfc"] && result.rfc != "success") {
-    rfcError.textContent = result.rfc;
+  if (result["Marca"] && result.Marca != "success") {
+    marcaError.textContent = result.Marca;
   }
-  if (result["idTipoEstatus"] && result.idTipoEstatus != "success") {
-    idTipoEstatusError.textContent = result.idTipoEstatus;
+  if (result["Tipo"] && result.Tipo != "success") {
+    tipoError.textContent = result.Tipo;
   }
-  if (result["idUsuario"] && result.idUsuario != "success") {
-    idUsuarioError.textContent = result.idUsuario;
+  if (result["Modelo"] && result.Modelo != "success") {
+    modeloError.textContent = result.Modelo;
+  }
+  if (result["Accesorios"] && result.Accesorios != "success") {
+    accesoriosError.textContent = result.Accesorios;
+  }
+  if (result["IdTipoEstatus"] && result.IdTipoEstatus != "success") {
+    idTipoEstatusError.textContent = result.IdTipoEstatus;
+  }
+  if (result["IdCliente"] && result.IdCliente != "success") {
+    idClienteError.textContent = result.IdCliente;
   }
 }
 
-function editeCliente(clienteString) {
+function editeVehiculo(vehiculoString) {
   clearAll();
-  const cliente = JSON.parse(clienteString);
-  idCliente.value = cliente.idCliente;
-  razonSocial.value = cliente.razonSocial;
-  rfc.value = cliente.rfc;
-  if (cliente.estatusCliente == "activo") {
+  const vehiculo = JSON.parse(vehiculoString);
+  idVehiculo.value = vehiculo.idVehiculo;
+  numeroSerie.value=vehiculo.numeroSerie;
+  marca.value=vehiculo.marca;
+  tipo.value=vehiculo.tipo;
+  modelo.value = vehiculo.modelo;
+  accesorios.value = vehiculo.accesorios;
+  if (vehiculo.estatusVehiculo == "activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
   }
-  if (idUsuarioSelect.options.length > 0) {
-     idUsuarioSelect.selectedIndex = 0;
-  }
+  idClienteSelect.value = vehiculo.idCliente;
 
   actualizarButtonIsActive = true;
 }
 
-function createTable(clientes) {
+function createTable(vehiculos) {
   tbody.innerHTML = "";
-  clientes.forEach((cliente) => {
+  vehiculos.forEach((vehiculo) => {
     const row = document.createElement("tr");
-    const clienteString = JSON.stringify(cliente).replace(/"/g, "&quot;");
+    const vehiculoString = JSON.stringify(vehiculo).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${cliente.idCliente}</td>
-          <td>${cliente.razonSocial}</td>
-          <td>${cliente.rfc}</td>
-          <td>${cliente.estatusCliente}</td>
-          <td>${cliente.numeroTrabajador}</td>
-          <td>${cliente.nombre}</td>
-          <td>${cliente.apellidoPaterno}</td>
-          <td>${cliente.apellidoMaterno}</td>
-          <td>${cliente.estatusUsuario}</td>
-          <td><button class="edit-btn" onclick="editeCliente('${clienteString}')">Editar</button></td>
-          <td><button class="delete-btn" onclick="deleteCliente('${cliente.rfc}')">Eliminar</button></td>
-          `;
+          <td>${vehiculo.idVehiculo}</td>
+          <td>${vehiculo.numeroSerie}</td>
+          <td>${vehiculo.marca}</td>
+          <td>${vehiculo.tipo}</td>
+          <td>${vehiculo.modelo}</td>
+          <td>${vehiculo.accesorios}</td>
+          <td>${vehiculo.estatusVehiculo}</td>
+          <td>${vehiculo.rfc}</td>
+          <td>${vehiculo.razonSocial}</td>
+          <td>${vehiculo.estatusCliente}</td>
+                ${
+                  window.asesorMode
+                    ? ""
+                    : `<td><button class="edit-btn" onclick="editeVehiculo('${vehiculoString}')">Editar</button></td>
+                       <td><button class="delete-btn" onclick="deleteVehiculo('${vehiculo.numeroSerie}')">Eliminar</button></td>`
+                }
+              `;
 
     tbody.appendChild(row);
   });
 }
 
-function showActiveClientes() {
-  const activos = clientesData.filter((u) => u.estatusCliente === "activo");
+function showActiveVehiculos() {
+  const activos = vehiculosData.filter((u) => u.estatusVehiculo === "activo");
   createTable(activos);
 }
 
-function showInactiveClientes() {
-  const noActivos = clientesData.filter((u) => u.estatusCliente === "inactivo");
+function showInactiveVehiculos() {
+  const noActivos = vehiculosData.filter((u) => u.estatusVehiculo === "inactivo");
   createTable(noActivos);
 }
 
-function showAllClientes() {
-  createTable(clientesData);
+function showAllVehiculos() {
+  createTable(vehiculosData);
 }
 
 function validateLogin() {
@@ -237,14 +293,28 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
+
         if (usuario.role === "operacion") {
-          document.getElementById("emailUserLogged").textContent =
-            usuario.email;
+          document.getElementById("emailUserLogged").textContent = usuario.email;
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("contenido").style.visibility = "visible";
+        } else if(usuario.role === "asesor"){
+          const vehiculoForm = document.getElementById("vehiculoForm");
+          if (vehiculoForm) vehiculoForm.remove();
+          window.asesorMode = true;
+          const tableHeader = document.getElementById("tableHeader");
+            if (tableHeader && tableHeader.rows.length > 0) {
+              const headerRow = tableHeader.rows[0];
+              headerRow.deleteCell(-1);
+              headerRow.deleteCell(-1);
+            }
+          document.getElementById("emailUserLogged").textContent = usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else {
-          window.location.href = "/index.html";
+         window.location.href = "/index.html";
         }
+
       }
     })
     .catch((error) => {
@@ -252,7 +322,7 @@ function validateLogin() {
     });
 }
 
-function getAllClientes() {
+function getAllVehiculos() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -282,8 +352,8 @@ function getAllClientes() {
     })
     .then((result) => {
       if (result) {
-        clientesData = result.myArrayList.map((item) => item.map);
-        createTable(clientesData);
+        vehiculosData = result.myArrayList.map((item) => item.map);
+        createTable(vehiculosData);
       }
     })
     .catch((error) => {
@@ -291,7 +361,7 @@ function getAllClientes() {
     });
 }
 
-function getAllAsesores() {
+function getAllClientes() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -305,7 +375,7 @@ function getAllAsesores() {
     redirect: "follow",
   };
 
-  fetch(urlAsesores, requestOptions)
+  fetch(urlClientes, requestOptions)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -321,13 +391,13 @@ function getAllAsesores() {
     })
     .then((result) => {
       if (result) {
-        idUsuarioSelect.innerHTML = "";
-        let asesores = result.myArrayList.map((item) => item.map);
-        asesores.forEach((asesor) => {
+        idClienteSelect.innerHTML = "";
+        let clientes = result.myArrayList.map((item) => item.map);
+        clientes.forEach((cliente) => {
           const option = document.createElement("option");
-          option.value = asesor.idUsuario;
-          option.textContent = `${asesor.numeroTrabajador} - ${asesor.nombre} ${asesor.apellidoPaterno} ${asesor.apellidoMaterno}`;
-          idUsuarioSelect.appendChild(option);
+          option.value = cliente.idCliente;
+          option.textContent = `${cliente.razonSocial} - ${cliente.rfc}`;
+          idClienteSelect.appendChild(option);
         });
       }
     })
@@ -336,7 +406,7 @@ function getAllAsesores() {
     });
 }
 
-function registerCliente(raw) {
+function registerVehiculo(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -382,8 +452,7 @@ function registerCliente(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllClientes();
-        //getAllAsesores();
+        getAllVehiculos();
         clearAll();
       }
     })
@@ -392,9 +461,9 @@ function registerCliente(raw) {
     });
 }
 
-function deleteCliente(rfc) {
+function deleteVehiculo(numeroSerie) {
   Swal.fire({
-    title: "¿Quieres eliminar este cliente?",
+    title: "¿Quieres eliminar este vehículo?",
     text: "Esta acción no podrá revertirse.",
     icon: "warning",
     showCancelButton: true,
@@ -404,7 +473,7 @@ function deleteCliente(rfc) {
     cancelButtonText: `Cancelar`,
   }).then((result) => {
     if (result.isConfirmed) {
-      const raw = JSON.stringify({ rfc: rfc });
+      const raw = JSON.stringify({ numeroSerie: numeroSerie });
 
       const myHeaders = new Headers();
 
@@ -441,8 +510,7 @@ function deleteCliente(rfc) {
               text: result.success,
               icon: "success",
             });
-            getAllClientes();
-            //getAllAsesores();
+            getAllVehiculos();
           }
         })
         .catch((error) => {
@@ -452,7 +520,7 @@ function deleteCliente(rfc) {
   });
 }
 
-function updateCliente(raw) {
+function updateVehiculo(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -496,8 +564,7 @@ function updateCliente(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllClientes();
-        //getAllAsesores();
+        getAllVehiculos();
         clearAll();
         actualizarButtonIsActive = false;
       }

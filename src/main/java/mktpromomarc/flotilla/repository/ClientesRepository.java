@@ -1,6 +1,7 @@
 package mktpromomarc.flotilla.repository;
 
 
+import mktpromomarc.flotilla.controller.ClientesController;
 import mktpromomarc.flotilla.modelo.Clientes;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,7 +52,44 @@ public class ClientesRepository implements ICrudRepository<Clientes> {
 
     @Override
     public JSONArray findAllObjects() {
-        return null;
+        JSONArray allClientes = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps;
+            if(ClientesController.isAsesor){
+            ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
+                    "FROM \"Clientes\" c " +
+                    "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\" " +
+                    "WHERE c.\"idTipoEstatus\" = ? AND u.\"email\" = ? "+
+                    "ORDER BY c.\"idCliente\" ASC"
+            );
+            ps.setInt(1,1);
+            ps.setString(2,ClientesController.emailAsesor);
+            }else{
+            ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
+                                "FROM \"Clientes\" c " +
+                                "where \"idTipoEstatus\" = ? "+
+                                "ORDER BY c.\"idCliente\" ASC"
+            );
+            ps.setInt(1,1);
+            }
+            ResultSet rs = ps.executeQuery();
+            allClientes = new JSONArray();
+            while(rs.next()){
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject cliente = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    cliente.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allClientes.put(cliente);
+            }
+            Conexion.endConexion(conn);
+            return allClientes;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allClientes;
     }
 
     @Override

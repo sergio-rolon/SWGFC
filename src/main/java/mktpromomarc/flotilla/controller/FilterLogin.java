@@ -24,7 +24,7 @@ import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
 import mktpromomarc.flotilla.service.UsuariosService;
 
-@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios/*","/clientes/*"})
+@WebFilter(filterName = "FilterLogin", urlPatterns = {"/login","/usuarios/*","/clientes/*","/vehiculos/*","/empleados/*"})
 public class FilterLogin implements Filter {
     private static final boolean debug = true;
     private FilterConfig filterConfig = null;

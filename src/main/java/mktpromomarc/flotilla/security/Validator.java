@@ -17,18 +17,18 @@ public class Validator {
 
     public static String isNumeroSerie (String numeroSerie){
         // Expresión regular
-        String numeroSeriePattern = "^[a-zA-Z0-9]{18}$";
+        String numeroSeriePattern = "^[a-zA-Z0-9]{17}$";
         if (numeroSerie.matches(numeroSeriePattern)) {
             return "\"numeroSerie\": \"success\"";
         } else {
             validationFailed = true;
-            return "\"numeroSerie\": \"Número serie inválido, debe tener 18 caracteres alfanuméricos\"";
+            return "\"numeroSerie\": \"Número serie inválido, debe tener 17 caracteres alfanuméricos\"";
         }
     }
 
     public static String isAlphaNumSpecial (String contrasena){
         // Expresión regular
-        String contrasenaPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
+        String contrasenaPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%_^&*(),.?\":{}|<>]).{8,}$";
         try{
         if (contrasena.matches(contrasenaPattern) || new Encoder().decrypt(contrasena).matches(contrasenaPattern)) {
             return "\"contrasena\": \"success\"";

@@ -22,15 +22,45 @@ public class ClientesController extends HttpServlet {
     ClientesService clientesService = new ClientesService(clientesRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
+    public static Boolean isAsesor=false;
+    public static String emailAsesor="";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
+        String requestUrl = request.getRequestURI();
         Util.logInfo("Se ejecutó DoGet", clase);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
+        isAsesor=role.equals("asesor");
+        if((role.equals("operacion") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
+            emailAsesor=isAsesor?email:"";
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray clientesResult = clientesRepository.findAllObjects();
+
+                if (clientesResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(clientesResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All clients recovered for operacion role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay clientes registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None users recovered for operacion role and sent in response", clase);
+                out.flush();
+
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }//try
+
+        }
+
         if(role.equals("operacion")) {
             try (PrintWriter out = response.getWriter()) {
 
