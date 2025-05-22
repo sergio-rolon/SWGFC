@@ -1,5 +1,10 @@
 package mktpromomarc.flotilla.security;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Validator {
 
     public static boolean validationFailed;
@@ -136,6 +141,41 @@ public class Validator {
         } catch (NumberFormatException e) {
             validationFailed = true;
             return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números\"";
+        }
+    }
+    public static String isNumeroContrato (String numeroContrato){
+        // Expresión regular
+        String numeroContratoPattern = "^[a-zA-Z0-9]{8}$";
+        if (numeroContrato.matches(numeroContratoPattern)) {
+            return "\"numeroContrato\": \"success\"";
+        } else {
+            validationFailed = true;
+            return "\"numeroContrato\": \"Número contrato inválido, debe tener 8 caracteres alfanuméricos\"";
+        }
+    }
+    public static String isBigDecimal(String campo, String numero) {
+        String campoNoSpaces = campo.replaceAll("\\s+", "");
+        try {
+            new BigDecimal(numero); // Intentamos parsear el número
+            return "\"" + campoNoSpaces + "\": \"success\"";
+        } catch (NumberFormatException e) {
+            validationFailed = true;
+            return "\"" + campoNoSpaces + "\": \"" + campo + " debe ser un número decimal válido\"";
+        }
+    }
+    public static String isDate(String campo, String valor) {
+        String campoNoSpaces = campo.replaceAll("\\s+", "");
+        if (!valor.matches("\\d{8}")) {
+            validationFailed = true;
+            return "\"" + campoNoSpaces + "\": \"" + campo + " debe estar en formato yyyyMMdd\"";
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate.parse(valor, formatter);
+            return "\"" + campoNoSpaces + "\": \"success\"";
+        } catch (DateTimeParseException e) {
+            validationFailed = true;
+            return "\"" + campoNoSpaces + "\": \"" + campo + " contiene una fecha inválida\"";
         }
     }
 }
