@@ -1,6 +1,7 @@
 package mktpromomarc.flotilla.modelo;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Arrendamientos {
 
@@ -24,7 +25,7 @@ public class Arrendamientos {
     public Arrendamientos(BigDecimal mensualidad, BigDecimal comision) {
         this.mensualidad = mensualidad;
         this.comision = comision;
-        this.total = mensualidad.add(comision.multiply(mensualidad));
+        this.total = mensualidad.add(comision.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP).multiply(mensualidad));
         this.totalConIva = total.multiply(new BigDecimal("1.16"));
     }
 
@@ -36,7 +37,7 @@ public class Arrendamientos {
         this.fechaTermino = fechaTermino;
         this.mensualidad = mensualidad;
         this.comision = comision;
-        this.total = mensualidad.add(comision.multiply(mensualidad));
+        this.total = mensualidad.add(comision.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP).multiply(mensualidad));
         this.totalConIva = total.multiply(new BigDecimal("1.16"));
         this.numeroMeses = numeroMeses;
         this.idTipoEstatus = idTipoEstatus;

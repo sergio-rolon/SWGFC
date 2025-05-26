@@ -9,10 +9,10 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <!-- Scripts -->
-    <!--<script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
-    ></script>-->
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
     <link
@@ -30,10 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <!-- <link rel="stylesheet" href="../styles/usuarios.css" />-->
+    <link rel="stylesheet" href="../styles/clientes.css" />
   </head>
   <body>
-<!--    <div id="loader">
+    <div id="loader">
       <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
@@ -53,7 +53,7 @@
         autoplay
       >
       </dotlottie-player>
-    </div>-->
+    </div>
     <div id="contenido">
       <header>
         <nav class="navbar">
@@ -95,7 +95,7 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
-        <a href="./usuarios.html" class="active">Usuarios</a>
+        <a href="./usuarios.html">Usuarios</a>
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
@@ -103,23 +103,164 @@
         <a href="./seguros.html">Seguros</a>
         <a href="./servicios.html">Servicios</a>
         <a href="./incidentes.html">Incidentes</a>
-        <a href="./placas.html">Placas</a>
+        <a href="./placas.html" class="active">Placas</a>
         <a href="./asignaciones.html">Asignaciones</a>
       </div>
 
       <div class="container" id="main">
         <main>
           <h1>Gestión de placas</h1>
-          <div style="text-align: center">
-                            <img
-        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
-        alt="Logo"
-        class="logo-load"
-        
-      />
-          </div>
+          <div id="placaForm">
+            <div class="form-grid">
+              <div>
+                <label for="idPlaca">Id:</label><br />
+                <input type="text" id="idPlaca" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="seriePlaca">Serie de placa:</label><br />
+                <input
+                  type="text"
+                  id="seriePlaca"
+                  placeholder="Ej. JP16656"
+                  required
+                /><br />
+                <label
+                  for="seriePlacaError"
+                  id="seriePlacaError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="estado">Estado:</label><br />
+                <input
+                  type="text"
+                  id="estado"
+                  placeholder="Ej. Jalisco"
+                  required
+                /><br />
+                <label
+                  for="estadoError"
+                  id="estadoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
 
-      <h1 style="text-align: center">En construcción</h1>
+              <div>
+                <label for="costo">Costo:</label><br />
+                <input
+                  type="text"
+                  id="costo"
+                  placeholder="Ej. 25000"
+                  required
+                /><br />
+                <label
+                  for="costoError"
+                  id="costoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="comision">Comisión:</label><br />
+                <input
+                  type="text"
+                  id="comision"
+                  placeholder="Ej. 4.5"
+                  required
+                /><br />
+                <label
+                  for="comisionError"
+                  id="comisionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="anoRenovacion">Año de renovación:</label><br />
+                <input
+                  type="text"
+                  id="anoRenovacion"
+                  placeholder="Ej. 2025"
+                  required
+                /><br />
+                <label
+                  for="anoRenovacionError"
+                  id="anoRenovacionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br />
+                <select id="idTipoEstatus">
+                  <option value="1">Activo</option>
+                  <option value="2">Inactivo</option>
+                </select>
+                <label
+                  for="idTipoEstatusError"
+                  id="idTipoEstatusError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idVehiculoSelect">Selecciona vehículo:</label><br />
+                <select id="idVehiculoSelect"></select>
+                <label
+                  for="idVehiculoError"
+                  id="idVehiculoError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
+          </div>
+          <br /><br />
+          <div class="table-container">
+            <div class="filter-button-group">
+              <button class="btn-no-filter" onclick="showAllPlacas()">
+                Sin filtro
+              </button>
+              <button class="btn-active" onclick="showActivePlacas()">
+                Activos
+              </button>
+              <button class="btn-inactive" onclick="showInactivePlacas()">
+                Inactivos
+              </button>
+            </div>
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Número de póliza</th>
+                    <th>Estado</th>
+                    <th>Costo</th>
+                    <th>Comisión</th>
+                    <th>Total</th>
+                    <th>Total con IVA</th>
+                    <th>Año renovación</th>
+                    <th>Estatus placa</th>
+                    <th>Número de serie</th>
+                    <th>Estatus vehículo</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </main>
       </div>
       <script>
@@ -142,21 +283,6 @@
         </div>
       </footer>
     </div>
-    <!--<script src="../js/usuarios.js"></script>-->
-    <script>
-      //teporal
-      function sidebar() {
-  if (flag) {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    flag = false;
-  } else {
-    document.getElementById("mySidebar").style.width = "200px";
-    document.getElementById("main").style.marginLeft = "200px";
-    flag = true;
-  }
-}
-    </script>
+    <script src="../js/placas.js"></script>
   </body>
 </html>
-

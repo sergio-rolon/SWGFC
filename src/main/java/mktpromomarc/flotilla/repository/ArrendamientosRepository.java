@@ -1,6 +1,5 @@
 package mktpromomarc.flotilla.repository;
 
-import mktpromomarc.flotilla.controller.ArrendamientosController;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import mktpromomarc.flotilla.modelo.Arrendamientos;
@@ -12,11 +11,14 @@ public class ArrendamientosRepository implements ICrudRepository<Arrendamientos>
 
     @Override
     public JSONArray findAll(){
+        return null;
+    }
+    public JSONArray findAll(boolean isAsesor, String emailAsesor){
         JSONArray allArrendamientos = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps;
-            if(ArrendamientosController.isAsesor){
+            if(isAsesor){
                 ps = conn.prepareStatement("SELECT a.\"idArrendamiento\", a.\"numeroContrato\", a.\"arrendadora\", " +
                         "a.\"fechaInicio\",a.\"fechaTermino\", a.\"mensualidad\", a.\"comision\", a.\"total\", " +
                         "a.\"totalConIva\",a.\"numeroMeses\", "+
@@ -32,12 +34,12 @@ public class ArrendamientosRepository implements ICrudRepository<Arrendamientos>
                         "WHERE u.\"email\" = ? " +
                         "ORDER BY a.\"idArrendamiento\" ASC"
                 );
-                ps.setString(1,ArrendamientosController.emailAsesor);
+                ps.setString(1,emailAsesor);
             }else{
                 ps = conn.prepareStatement("SELECT a.\"idArrendamiento\", a.\"numeroContrato\", a.\"arrendadora\", " +
                         "a.\"fechaInicio\",a.\"fechaTermino\", a.\"mensualidad\", a.\"comision\", a.\"total\", " +
                         "a.\"totalConIva\",a.\"numeroMeses\", "+
-                        "v.\"numeroSerie\"," +
+                        "v.\"numeroSerie\",v.\"idVehiculo\"," +
                         "te1.\"tipoEstatus\" AS \"estatusArrendamiento\", " +
                         "te2.\"tipoEstatus\" AS \"estatusVehiculo\" " +
                         "FROM \"Arrendamientos\" a " +
@@ -51,11 +53,11 @@ public class ArrendamientosRepository implements ICrudRepository<Arrendamientos>
             allArrendamientos = new JSONArray();
             while(rs.next()){
                 int totalColumns = rs.getMetaData().getColumnCount();
-                JSONObject Arrendamiento = new JSONObject();
+                JSONObject arrendamiento = new JSONObject();
                 for(int i=0; i<totalColumns;i++){
-                    Arrendamiento.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                    arrendamiento.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
                 }
-                allArrendamientos.put(Arrendamiento);
+                allArrendamientos.put(arrendamiento);
 
             }
             Conexion.endConexion(conn);
@@ -74,35 +76,35 @@ public class ArrendamientosRepository implements ICrudRepository<Arrendamientos>
 
     @Override
     public Arrendamientos findById(String numeroContrato){
-        Arrendamientos Arrendamiento = null;
+        Arrendamientos arrendamiento = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Arrendamientos\" where \"numeroContrato\" = ?");
             ps.setString(1,numeroContrato);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Arrendamiento = new Arrendamientos();
-                Arrendamiento.setIdArrendamiento(rs.getInt("idArrendamiento"));
-                Arrendamiento.setNumeroContrato(rs.getString("numeroContrato"));
-                Arrendamiento.setArrendadora(rs.getString("arrendadora"));
-                Arrendamiento.setFechaInicio(rs.getString("fechaInicio"));
-                Arrendamiento.setFechaTermino(rs.getString("fechaTermino"));
-                Arrendamiento.setMensualidad(rs.getBigDecimal("mensualidad"));
-                Arrendamiento.setComision(rs.getBigDecimal("comision"));
-                Arrendamiento.setTotal(rs.getBigDecimal("total"));
-                Arrendamiento.setTotalConIva(rs.getBigDecimal("totalConIva"));
-                Arrendamiento.setNumeroMeses(rs.getInt("numeroMeses"));
-                Arrendamiento.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
-                Arrendamiento.setIdVehiculo(rs.getInt("idVehiculo"));
-                System.out.println(Arrendamiento);
+                arrendamiento = new Arrendamientos();
+                arrendamiento.setIdArrendamiento(rs.getInt("idArrendamiento"));
+                arrendamiento.setNumeroContrato(rs.getString("numeroContrato"));
+                arrendamiento.setArrendadora(rs.getString("arrendadora"));
+                arrendamiento.setFechaInicio(rs.getString("fechaInicio"));
+                arrendamiento.setFechaTermino(rs.getString("fechaTermino"));
+                arrendamiento.setMensualidad(rs.getBigDecimal("mensualidad"));
+                arrendamiento.setComision(rs.getBigDecimal("comision"));
+                arrendamiento.setTotal(rs.getBigDecimal("total"));
+                arrendamiento.setTotalConIva(rs.getBigDecimal("totalConIva"));
+                arrendamiento.setNumeroMeses(rs.getInt("numeroMeses"));
+                arrendamiento.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
+                arrendamiento.setIdVehiculo(rs.getInt("idVehiculo"));
+                System.out.println(arrendamiento);
             }
             Conexion.endConexion(conn);
-            return Arrendamiento;
+            return arrendamiento;
         }catch (Exception e){
             System.out.println(e);
             Conexion.endConexion(conn);
         }
-        return Arrendamiento;
+        return arrendamiento;
     }
 
     @Override
@@ -221,34 +223,54 @@ public class ArrendamientosRepository implements ICrudRepository<Arrendamientos>
     }
     @Override
     public Arrendamientos findById(int id) {
-        Arrendamientos Arrendamiento = null;
+        Arrendamientos arrendamiento = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Arrendamientos\" where \"idArrendamiento\" = ?");
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Arrendamiento = new Arrendamientos();
-                Arrendamiento.setIdArrendamiento(rs.getInt("idArrendamiento"));
-                Arrendamiento.setNumeroContrato(rs.getString("numeroContrato"));
-                Arrendamiento.setArrendadora(rs.getString("arrendadora"));
-                Arrendamiento.setFechaInicio(rs.getString("fechaInicio"));
-                Arrendamiento.setFechaTermino(rs.getString("fechaTermino"));
-                Arrendamiento.setMensualidad(rs.getBigDecimal("mensualidad"));
-                Arrendamiento.setComision(rs.getBigDecimal("comision"));
-                Arrendamiento.setTotal(rs.getBigDecimal("total"));
-                Arrendamiento.setTotalConIva(rs.getBigDecimal("totalConIva"));
-                Arrendamiento.setNumeroMeses(rs.getInt("numeroMeses"));
-                Arrendamiento.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
-                Arrendamiento.setIdVehiculo(rs.getInt("idVehiculo"));
-                System.out.println(Arrendamiento);
+                arrendamiento = new Arrendamientos();
+                arrendamiento.setIdArrendamiento(rs.getInt("idArrendamiento"));
+                arrendamiento.setNumeroContrato(rs.getString("numeroContrato"));
+                arrendamiento.setArrendadora(rs.getString("arrendadora"));
+                arrendamiento.setFechaInicio(rs.getString("fechaInicio"));
+                arrendamiento.setFechaTermino(rs.getString("fechaTermino"));
+                arrendamiento.setMensualidad(rs.getBigDecimal("mensualidad"));
+                arrendamiento.setComision(rs.getBigDecimal("comision"));
+                arrendamiento.setTotal(rs.getBigDecimal("total"));
+                arrendamiento.setTotalConIva(rs.getBigDecimal("totalConIva"));
+                arrendamiento.setNumeroMeses(rs.getInt("numeroMeses"));
+                arrendamiento.setIdTipoEstatus(rs.getInt("idTipoEstatus"));
+                arrendamiento.setIdVehiculo(rs.getInt("idVehiculo"));
+                System.out.println(arrendamiento);
             }
             Conexion.endConexion(conn);
-            return Arrendamiento;
+            return arrendamiento;
         }catch (Exception e){
             System.out.println(e);
             Conexion.endConexion(conn);
         }
-        return Arrendamiento;
+        return arrendamiento;
+    }
+
+    public boolean existByNumeroSerie(int idVehiculo){
+        boolean result = false;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM public.\"Arrendamientos\" where \"idVehiculo\" = ?");
+            ps.setInt(1,idVehiculo);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                result = rs.getBoolean(1);
+                System.out.println("Id vehículo asignado a un arrendamiento? "+result);
+            }
+            Conexion.endConexion(conn);
+            return result;
+        }catch (Exception e){
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return result;
     }
 }

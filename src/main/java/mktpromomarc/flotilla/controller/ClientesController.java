@@ -22,8 +22,7 @@ public class ClientesController extends HttpServlet {
     ClientesService clientesService = new ClientesService(clientesRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
-    public static Boolean isAsesor=false;
-    public static String emailAsesor="";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,12 +33,13 @@ public class ClientesController extends HttpServlet {
         Util.logInfo("Se ejecutó DoGet", clase);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        isAsesor=role.equals("asesor");
+       boolean isAsesor=role.equals("asesor");
+       String emailAsesor="";
         if((role.equals("operacion") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray clientesResult = clientesRepository.findAllObjects();
+                JSONArray clientesResult = clientesRepository.findAllObjects(isAsesor,emailAsesor);
 
                 if (clientesResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);

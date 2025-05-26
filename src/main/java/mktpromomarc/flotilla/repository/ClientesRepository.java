@@ -52,26 +52,29 @@ public class ClientesRepository implements ICrudRepository<Clientes> {
 
     @Override
     public JSONArray findAllObjects() {
+        return null;
+    }
+    public JSONArray findAllObjects(boolean isAsesor, String emailAsesor) {
         JSONArray allClientes = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps;
-            if(ClientesController.isAsesor){
-            ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
-                    "FROM \"Clientes\" c " +
-                    "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\" " +
-                    "WHERE c.\"idTipoEstatus\" = ? AND u.\"email\" = ? "+
-                    "ORDER BY c.\"idCliente\" ASC"
-            );
-            ps.setInt(1,1);
-            ps.setString(2,ClientesController.emailAsesor);
+            if(isAsesor){
+                ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
+                        "FROM \"Clientes\" c " +
+                        "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\" " +
+                        "WHERE c.\"idTipoEstatus\" = ? AND u.\"email\" = ? "+
+                        "ORDER BY c.\"idCliente\" ASC"
+                );
+                ps.setInt(1,1);
+                ps.setString(2,emailAsesor);
             }else{
-            ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
-                                "FROM \"Clientes\" c " +
-                                "where \"idTipoEstatus\" = ? "+
-                                "ORDER BY c.\"idCliente\" ASC"
-            );
-            ps.setInt(1,1);
+                ps = conn.prepareStatement("SELECT c.\"razonSocial\", c.\"rfc\", c.\"idCliente\"  " +
+                        "FROM \"Clientes\" c " +
+                        "where \"idTipoEstatus\" = ? "+
+                        "ORDER BY c.\"idCliente\" ASC"
+                );
+                ps.setInt(1,1);
             }
             ResultSet rs = ps.executeQuery();
             allClientes = new JSONArray();
@@ -91,7 +94,6 @@ public class ClientesRepository implements ICrudRepository<Clientes> {
         }
         return allClientes;
     }
-
     @Override
     public Clientes findById(String rfc){
         Clientes cliente = null;

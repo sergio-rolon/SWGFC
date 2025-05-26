@@ -17,6 +17,10 @@ public class ArrendamientosService implements ICrudService<Arrendamientos> {
     public JSONArray getAll(){
         return arrendamientosRepository.findAll();
     }
+    public JSONArray getAll(boolean isAsesor, String emailAsesor){
+        return arrendamientosRepository.findAll(isAsesor, emailAsesor);
+    }
+
     @Override
     public Arrendamientos getById(String numeroContrato){
         return arrendamientosRepository.findById(numeroContrato);
@@ -25,7 +29,12 @@ public class ArrendamientosService implements ICrudService<Arrendamientos> {
     public Arrendamientos add(Arrendamientos arrendamiento){
         Arrendamientos arrendamientoResult = null;
         if(!arrendamientosRepository.existsById(arrendamiento.getNumeroContrato())) {
-            arrendamientoResult = arrendamientosRepository.save(arrendamiento);
+            if (!arrendamientosRepository.existByNumeroSerie(arrendamiento.getIdVehiculo())) {
+                arrendamientoResult = arrendamientosRepository.save(arrendamiento);
+            }else{
+                arrendamientoResult=new Arrendamientos();
+                arrendamientoResult.setIdArrendamiento(Integer.parseInt("-1"));
+            }
         }
         return arrendamientoResult;
     }

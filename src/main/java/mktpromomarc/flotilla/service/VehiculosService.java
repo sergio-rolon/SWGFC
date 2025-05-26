@@ -17,6 +17,9 @@ public class VehiculosService implements ICrudService<Vehiculos> {
     public JSONArray getAll(){
         return vehiculosRepository.findAll();
     }
+    public JSONArray getAll(boolean isAsesor, String emailAsesor){
+        return vehiculosRepository.findAll(isAsesor, emailAsesor);
+    }
     @Override
     public Vehiculos getById(String numeroSerie){
         return vehiculosRepository.findById(numeroSerie);

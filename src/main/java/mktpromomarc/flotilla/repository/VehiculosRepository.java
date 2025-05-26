@@ -13,11 +13,15 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
 
     @Override
     public JSONArray findAll(){
+        return null;
+    }
+
+    public JSONArray findAll(boolean isAsesor, String emailAsesor){
         JSONArray allVehiculos = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps;
-            if(VehiculosController.isAsesor){
+            if(isAsesor){
                 ps = conn.prepareStatement("SELECT v.\"idVehiculo\", v.\"numeroSerie\", " +
                         "v.\"marca\",v.\"tipo\", v.\"modelo\", v.\"accesorios\", v.\"idCliente\", " +
                         "c.\"rfc\", c.\"razonSocial\", " +
@@ -31,19 +35,19 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
                         "WHERE u.\"email\" = ? " +
                         "ORDER BY v.\"idVehiculo\" ASC"
                 );
-                ps.setString(1,VehiculosController.emailAsesor);
+                ps.setString(1,emailAsesor);
             }else{
                 ps = conn.prepareStatement("SELECT v.\"idVehiculo\", v.\"numeroSerie\", " +
-                    "v.\"marca\",v.\"tipo\", v.\"modelo\", v.\"accesorios\", v.\"idCliente\", c.\"rfc\",  " +
-                    "c.\"razonSocial\", " +
-                    "te1.\"tipoEstatus\" AS \"estatusVehiculo\", " +
-                    "te2.\"tipoEstatus\" AS \"estatusCliente\" " +
-                    "FROM \"Vehiculos\" v " +
-                    "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\""+
-                    "INNER JOIN \"TipoEstatus\" te1 ON v.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
-                    "INNER JOIN \"TipoEstatus\" te2 ON c.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
-                    "ORDER BY v.\"idVehiculo\" ASC"
-            );
+                        "v.\"marca\",v.\"tipo\", v.\"modelo\", v.\"accesorios\", v.\"idCliente\", c.\"rfc\",  " +
+                        "c.\"razonSocial\", " +
+                        "te1.\"tipoEstatus\" AS \"estatusVehiculo\", " +
+                        "te2.\"tipoEstatus\" AS \"estatusCliente\" " +
+                        "FROM \"Vehiculos\" v " +
+                        "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\""+
+                        "INNER JOIN \"TipoEstatus\" te1 ON v.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
+                        "INNER JOIN \"TipoEstatus\" te2 ON c.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
+                        "ORDER BY v.\"idVehiculo\" ASC"
+                );
             }
             ResultSet rs = ps.executeQuery();
             allVehiculos = new JSONArray();
@@ -64,12 +68,65 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
         }
         return allVehiculos;
     }
-
     @Override
     public JSONArray findAllObjects() {
         return null;
     }
+    public JSONArray findAllObjects(String pathInfo) {
+        JSONArray allVehiculos = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps=null;
+            if(pathInfo.equals("/getVehiculosSinArrendamiento")) {
+                ps = conn.prepareStatement(
+                        "SELECT * FROM \"Vehiculos\" v " +
+                                "WHERE NOT EXISTS (" +
+                                "SELECT 1 FROM \"Arrendamientos\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                );
+            }else if(pathInfo.equals("/getVehiculosSinSeguro")){
+                ps = conn.prepareStatement(
+                        "SELECT * FROM \"Vehiculos\" v " +
+                                "WHERE NOT EXISTS (" +
+                                "SELECT 1 FROM \"Seguros\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                );
 
+            }else if(pathInfo.equals("/getVehiculosSinPlaca")){
+                ps = conn.prepareStatement(
+                        "SELECT * FROM \"Vehiculos\" v " +
+                                "WHERE NOT EXISTS (" +
+                                "SELECT 1 FROM \"Placas\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+                                "AND a.\"idTipoEstatus\"=1" +
+                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                );
+
+            }else if(pathInfo.equals("/getVehiculosParaAsignacion")){
+                ps = conn.prepareStatement("SELECT \"idVehiculo\", \"numeroSerie\", \"idCliente\"" +
+                        "FROM \"Vehiculos\" c " +
+                        "where \"idTipoEstatus\" = ? "+
+                        "ORDER BY c.\"idVehiculo\" ASC"
+                );
+                ps.setInt(1,1);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            allVehiculos = new JSONArray();
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject vehiculo = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    vehiculo.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allVehiculos.put(vehiculo);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allVehiculos;
+    }
     @Override
     public Vehiculos findById(String numeroSerie){
         Vehiculos vehiculo = null;

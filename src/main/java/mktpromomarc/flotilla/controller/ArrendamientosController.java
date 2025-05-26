@@ -22,8 +22,7 @@ public class ArrendamientosController extends HttpServlet {
     ArrendamientosService arrendamientosService = new ArrendamientosService(arrendamientosRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
-    public static Boolean isAsesor=false;
-    public static String emailAsesor="";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,12 +33,13 @@ public class ArrendamientosController extends HttpServlet {
         Util.logInfo("Se ejecutó DoGet", clase);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        isAsesor=role.equals("asesor");
+        boolean isAsesor=role.equals("asesor");
+        String emailAsesor="";
         if(role.equals("operacion") || isAsesor) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray arrendamientosResult = arrendamientosService.getAll();
+                JSONArray arrendamientosResult = arrendamientosService.getAll(isAsesor, emailAsesor);
 
                 if (arrendamientosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -54,7 +54,7 @@ public class ArrendamientosController extends HttpServlet {
                 out.print(errorResponse);
                 Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
                 out.flush();
-
+                return;
             } catch (IOException ex) {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
@@ -110,10 +110,17 @@ public class ArrendamientosController extends HttpServlet {
 
                     Arrendamientos arrendamientoResult = arrendamientosService.add(newArrendamiento);
                     if (arrendamientoResult != null) {
+                        if(!(arrendamientoResult.getIdArrendamiento()==-1)){
                         Util.logInfo("Arrendamiento registrado exitosamente", clase);
                         response.setStatus(HttpServletResponse.SC_OK);
                         String successResponse = "{\"success\": \"Arrendamiento registrado exitosamente\"}";
                         out.print(successResponse);
+                        out.flush();
+                        return;
+                        }
+                        response.setStatus(HttpServletResponse.SC_CONFLICT);
+                        String errorResponse = "{\"error\": \"El número de serie ya está asignado, intenta con otro\"}";
+                        out.print(errorResponse);
                         out.flush();
                         return;
                     }
@@ -121,6 +128,7 @@ public class ArrendamientosController extends HttpServlet {
                     String errorResponse = "{\"error\": \"El arrendamiento ya existe\"}";
                     out.print(errorResponse);
                     out.flush();
+                    return;
                 } catch (IOException ex) {
                     request.setAttribute("message", "There was an error: " + ex.getMessage());
                 }
@@ -252,6 +260,7 @@ public class ArrendamientosController extends HttpServlet {
                     String errorResponse = "{\"error\": \"Arrendamiento no existe\"}";
                     out.print(errorResponse);
                     out.flush();
+                    return;
                 }
             }
         }

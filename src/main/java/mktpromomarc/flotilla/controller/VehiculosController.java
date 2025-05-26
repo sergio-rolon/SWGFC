@@ -14,7 +14,7 @@ import mktpromomarc.flotilla.service.VehiculosService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
-
+/* Bandera aqui en adelante empezaré a hacer cambios de las variables staticas*/
 @WebServlet(name = "Vehiculos", urlPatterns = {"/vehiculos/*"})
 public class VehiculosController extends HttpServlet {
     private Gson gson = new Gson();
@@ -22,24 +22,49 @@ public class VehiculosController extends HttpServlet {
     VehiculosService vehiculosService = new VehiculosService(vehiculosRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
-    public static Boolean isAsesor=false;
-    public static String emailAsesor="";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = (String) request.getAttribute("email");
-
         String role = (String) request.getAttribute("role");
+        String pathInfo=request.getPathInfo() !=null ? request.getPathInfo():"";
+        boolean isAsesor = role.equals("asesor");
+        String emailAsesor="";
         Util.logInfo("Se ejecutó DoGet", clase);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        isAsesor=role.equals("asesor");
-        if(role.equals("operacion") || isAsesor) {
+
+        if(role.equals("operacion") && pathInfo.isEmpty() || isAsesor && pathInfo.isEmpty()) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray vehiculosResult = vehiculosService.getAll();
+                JSONArray vehiculosResult = vehiculosService.getAll(isAsesor,emailAsesor);
+
+                if (vehiculosResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(vehiculosResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All vehiculos recovered for "+role+" role and sent in response", clase);
+                    Util.logInfo(successResponse, clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay vehículos registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
+                out.flush();
+                return;
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
+        }
+        if(role.equals("operacion") && !pathInfo.isEmpty()){
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray vehiculosResult = vehiculosRepository.findAllObjects(pathInfo);
 
                 if (vehiculosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -54,7 +79,7 @@ public class VehiculosController extends HttpServlet {
                 out.print(errorResponse);
                 Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
                 out.flush();
-
+                return;
             } catch (IOException ex) {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }

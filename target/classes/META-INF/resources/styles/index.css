@@ -40,7 +40,7 @@
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: auto; /* Para empujar el botón hacia abajo */
+  margin-top: auto;
 }
 .card button:hover {
   background-color: #0056b6;
@@ -52,12 +52,12 @@
   }
 }
 .logo-load {
-  max-width: 300px; /* Tamaño normal en escritorio */
+  max-width: 300px;
   height: auto;
 }
 
 @media (max-width: 768px) {
   .logo-load {
-    max-width: 200px; /* Tamaño reducido en móviles */
+    max-width: 200px;
   }
 }

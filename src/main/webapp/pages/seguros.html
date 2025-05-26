@@ -9,10 +9,10 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <!-- Scripts -->
-    <!--<script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
-    ></script>-->
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
     <link
@@ -30,10 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <!-- <link rel="stylesheet" href="../styles/usuarios.css" />-->
+    <link rel="stylesheet" href="../styles/clientes.css" />
   </head>
   <body>
-<!--    <div id="loader">
+    <div id="loader">
       <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
@@ -53,7 +53,7 @@
         autoplay
       >
       </dotlottie-player>
-    </div>-->
+    </div>
     <div id="contenido">
       <header>
         <nav class="navbar">
@@ -95,12 +95,12 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
-        <a href="./usuarios.html" class="active">Usuarios</a>
+        <a href="./usuarios.html">Usuarios</a>
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
         <a href="./arrendamientos.html">Arrendamientos</a>
-        <a href="./seguros.html">Seguros</a>
+        <a href="./seguros.html" class="active">Seguros</a>
         <a href="./servicios.html">Servicios</a>
         <a href="./incidentes.html">Incidentes</a>
         <a href="./placas.html">Placas</a>
@@ -110,16 +110,184 @@
       <div class="container" id="main">
         <main>
           <h1>Gestión de seguros</h1>
-          <div style="text-align: center">
-                            <img
-        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
-        alt="Logo"
-        class="logo-load"
-        
-      />
+          <div id="seguroForm">
+            <div class="form-grid">
+              <div>
+                <label for="idSeguro">Id:</label><br />
+                <input type="text" id="idSeguro" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="numeroPoliza">Número de póliza:</label><br />
+                <input
+                  type="text"
+                  id="numeroPoliza"
+                  placeholder="Ej. GN44005901"
+                  required
+                /><br />
+                <label
+                  for="numeroPolizaError"
+                  id="numeroPolizaError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="aseguradora">Aseguradora:</label><br />
+                <input
+                  type="text"
+                  id="aseguradora"
+                  placeholder="Ej. Qualitas"
+                  required
+                /><br />
+                <label
+                  for="aseguradoraError"
+                  id="aseguradoraError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaInicio">Fecha de inicio:</label><br />
+                <input type="date" id="fechaInicio" required /><br />
+                <label
+                  for="fechaInicioError"
+                  id="fechaInicioError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaTermino">Fecha de término:</label><br />
+                <input
+                  type="date"
+                  id="fechaTermino"
+                  placeholder="Ej. 04/05/2025"
+                  required
+                /><br />
+                <label
+                  for="fechaTerminoError"
+                  id="fechaTerminoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="mensualidad">Mensualidad:</label><br />
+                <input
+                  type="text"
+                  id="mensualidad"
+                  placeholder="Ej. 25000"
+                  required
+                /><br />
+                <label
+                  for="mensualidadError"
+                  id="mensualidadError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="comision">Comisión:</label><br />
+                <input
+                  type="text"
+                  id="comision"
+                  placeholder="Ej. 4.5"
+                  required
+                /><br />
+                <label
+                  for="comisionError"
+                  id="comisionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="numeroMeses">Número de meses:</label><br />
+                <input
+                  type="text"
+                  id="numeroMeses"
+                  placeholder="Ej. 36"
+                  required
+                /><br />
+                <label
+                  for="numeroMesesError"
+                  id="numeroMesesError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br />
+                <select id="idTipoEstatus">
+                  <option value="1">Activo</option>
+                  <option value="2">Inactivo</option>
+                </select>
+                <label
+                  for="idTipoEstatusError"
+                  id="idTipoEstatusError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div>
+                <label for="idVehiculoSelect">Selecciona vehículo:</label><br />
+                <select id="idVehiculoSelect"></select>
+                <label
+                  for="idVehiculoError"
+                  id="idVehiculoError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
           </div>
-
-      <h1 style="text-align: center">En construcción</h1>
+          <br /><br />
+          <div class="table-container">
+            <div class="filter-button-group">
+              <button class="btn-no-filter" onclick="showAllSeguros()">
+                Sin filtro
+              </button>
+              <button class="btn-active" onclick="showActiveSeguros()">
+                Activos
+              </button>
+              <button class="btn-inactive" onclick="showInactiveSeguros()">
+                Inactivos
+              </button>
+            </div>
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Número de póliza</th>
+                    <th>Aseguradora</th>
+                    <th>Fecha de inicio</th>
+                    <th>Fecha de término</th>
+                    <th>Mensualidad</th>
+                    <th>Comisión</th>
+                    <th>Total</th>
+                    <th>Total con IVA</th>
+                    <th>Número de meses</th>
+                    <th>Estatus seguro</th>
+                    <th>Número de serie</th>
+                    <th>Estatus vehículo</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </main>
       </div>
       <script>
@@ -142,21 +310,6 @@
         </div>
       </footer>
     </div>
-    <!--<script src="../js/usuarios.js"></script>-->
-    <script>
-      //teporal
-      function sidebar() {
-  if (flag) {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    flag = false;
-  } else {
-    document.getElementById("mySidebar").style.width = "200px";
-    document.getElementById("main").style.marginLeft = "200px";
-    flag = true;
-  }
-}
-    </script>
+    <script src="../js/seguros.js"></script>
   </body>
 </html>
-

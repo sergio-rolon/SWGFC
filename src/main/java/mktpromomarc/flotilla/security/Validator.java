@@ -1,6 +1,7 @@
 package mktpromomarc.flotilla.security;
 
 import java.math.BigDecimal;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -69,16 +70,20 @@ public class Validator {
             return "\"email\": \"Email inválido, debe tener dominio @asesorenservicios.com\"";
         }
     }
-
+    public static String replaceSpacesAndAccents(String campo){
+        String result= campo.replaceAll("\\s+","").replaceAll("ñ","n");
+        String normalizado = Normalizer.normalize(result, Normalizer.Form.NFD);
+        return normalizado.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+    }
     public static String isAlpha(String campo, String palabra) {
-        String palabraPattern = "^[a-zA-Z]+$";
-        String campoNoSpaces = campo.replaceAll("\\s+","");
+        String palabraPattern = "^[a-zA-Z ]+$";
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         if (palabra.matches(palabraPattern)) {
-            return "\""+campoNoSpaces+"\": \"success\"";
+            return "\""+campoNoSpacesAndAccents+"\": \"success\"";
         } else {
             validationFailed = true;
 
-            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener letras sin acentos\"";
+            return "\""+campoNoSpacesAndAccents+"\": \""+campo+" solo debe contener letras sin acentos\"";
         }
     }
 
@@ -104,13 +109,13 @@ public class Validator {
     }
 
     public static String isNum(String campo, String numero) {
-        String campoNoSpaces = campo.replaceAll("\\s+","");
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         try {
             int isNumber = Integer.parseInt(numero);
-                return "\""+campoNoSpaces+"\": \"success\"";
+                return "\""+campoNoSpacesAndAccents+"\": \"success\"";
         } catch (NumberFormatException e) {
             validationFailed = true;
-            return "\""+campoNoSpaces+"\": \""+campo+" solo debe contener números válidos\"";
+            return "\""+campoNoSpacesAndAccents+"\": \""+campo+" solo debe contener números válidos\"";
         }
     }
 
@@ -153,29 +158,49 @@ public class Validator {
             return "\"numeroContrato\": \"Número contrato inválido, debe tener 8 caracteres alfanuméricos\"";
         }
     }
+    public static String isSeriePlaca (String seriePlaca){
+        // Expresión regular
+        String seriePlacaPattern = "^[a-zA-Z0-9]{7}$";
+        if (seriePlaca.matches(seriePlacaPattern)) {
+            return "\"seriePlaca\": \"success\"";
+        } else {
+            validationFailed = true;
+            return "\"seriePlaca\": \"Serie de placa inválido, debe tener 7 caracteres alfanuméricos\"";
+        }
+    }
+    public static String isNumeroPoliza (String numeroPoliza){
+        // Expresión regular
+        String numeroPolizaPattern = "^[a-zA-Z0-9]{10}$";
+        if (numeroPoliza.matches(numeroPolizaPattern)) {
+            return "\"numeroPoliza\": \"success\"";
+        } else {
+            validationFailed = true;
+            return "\"numeroPoliza\": \"Número póliza inválido, debe tener 10 caracteres alfanuméricos\"";
+        }
+    }
     public static String isBigDecimal(String campo, String numero) {
-        String campoNoSpaces = campo.replaceAll("\\s+", "");
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         try {
             new BigDecimal(numero); // Intentamos parsear el número
-            return "\"" + campoNoSpaces + "\": \"success\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
         } catch (NumberFormatException e) {
             validationFailed = true;
-            return "\"" + campoNoSpaces + "\": \"" + campo + " debe ser un número decimal válido\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " debe ser un número decimal válido\"";
         }
     }
     public static String isDate(String campo, String valor) {
-        String campoNoSpaces = campo.replaceAll("\\s+", "");
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         if (!valor.matches("\\d{8}")) {
             validationFailed = true;
-            return "\"" + campoNoSpaces + "\": \"" + campo + " debe estar en formato yyyyMMdd\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " debe estar en formato yyyyMMdd\"";
         }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             LocalDate.parse(valor, formatter);
-            return "\"" + campoNoSpaces + "\": \"success\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
         } catch (DateTimeParseException e) {
             validationFailed = true;
-            return "\"" + campoNoSpaces + "\": \"" + campo + " contiene una fecha inválida\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " contiene una fecha inválida\"";
         }
     }
 }

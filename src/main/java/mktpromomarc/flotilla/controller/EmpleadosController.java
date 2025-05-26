@@ -25,24 +25,49 @@ public class EmpleadosController extends HttpServlet {
     EmpleadosService empleadosService = new EmpleadosService(empleadosRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
-    public static Boolean isAsesor=false;
-    public static String emailAsesor="";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
+        String pathInfo=request.getPathInfo() !=null ? request.getPathInfo():"";
         Util.logInfo("Se ejecutó DoGet", clase);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        isAsesor=role.equals("asesor");
+        boolean isAsesor=role.equals("asesor");
+        String emailAsesor="";
         if(role.equals("operacion") || isAsesor) {
             emailAsesor=isAsesor?email:"";
 
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray empleadosResult = empleadosService.getAll();
+                JSONArray empleadosResult = empleadosService.getAll(isAsesor,emailAsesor);
+
+                if (empleadosResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(empleadosResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All empleados recovered for "+role+" role and sent in response", clase);
+                    Util.logInfo(successResponse, clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay empleados registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
+                out.flush();
+                return;
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
+        }
+        if(role.equals("operacion") && !pathInfo.isEmpty()){
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray empleadosResult = empleadosRepository.findAllObjects(pathInfo);
 
                 if (empleadosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -57,7 +82,7 @@ public class EmpleadosController extends HttpServlet {
                 out.print(errorResponse);
                 Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
                 out.flush();
-
+                return;
             } catch (IOException ex) {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }

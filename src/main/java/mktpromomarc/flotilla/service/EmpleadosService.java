@@ -17,6 +17,10 @@ public class EmpleadosService implements ICrudService<Empleados> {
     public JSONArray getAll(){
         return empleadosRepository.findAll();
     }
+    public JSONArray getAll(boolean isAsesor, String emailAsesor){
+        return empleadosRepository.findAll(isAsesor, emailAsesor);
+    }
+
     @Override
     public Empleados getById(String numeroTrabajador){
         return empleadosRepository.findById(numeroTrabajador);

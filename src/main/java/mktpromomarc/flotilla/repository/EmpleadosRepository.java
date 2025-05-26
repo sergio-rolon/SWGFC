@@ -14,11 +14,14 @@ public class EmpleadosRepository implements ICrudRepository<Empleados>{
 
     @Override
     public JSONArray findAll(){
+        return null;
+    }
+    public JSONArray findAll(boolean isAsesor, String emailAsesor){
         JSONArray allEmpleados = null;
         Connection conn = Conexion.getConexion();
         try{
             PreparedStatement ps;
-            if(EmpleadosController.isAsesor){
+            if(isAsesor){
                 ps = conn.prepareStatement("SELECT e.\"idEmpleado\", e.\"numeroTrabajador\", " +
                         "e.\"nombre\",e.\"apellidoPaterno\", e.\"apellidoMaterno\", e.\"municipioAsignado\"," +
                         "e.\"estadoAsignado\", e.\"cantidadGasolina\", e.\"idCliente\", c.\"rfc\",  " +
@@ -33,21 +36,21 @@ public class EmpleadosRepository implements ICrudRepository<Empleados>{
                         "WHERE u.\"email\" = ? " +
                         "ORDER BY e.\"idEmpleado\" ASC"
                 );
-                ps.setString(1,EmpleadosController.emailAsesor);
+                ps.setString(1,emailAsesor);
 
             }else{
                 ps = conn.prepareStatement("SELECT e.\"idEmpleado\", e.\"numeroTrabajador\", " +
-                    "e.\"nombre\",e.\"apellidoPaterno\", e.\"apellidoMaterno\", e.\"municipioAsignado\"," +
-                    "e.\"estadoAsignado\", e.\"cantidadGasolina\", e.\"idCliente\", c.\"rfc\",  " +
-                    "c.\"razonSocial\", " +
-                    "te1.\"tipoEstatus\" AS \"estatusEmpleado\", " +
-                    "te2.\"tipoEstatus\" AS \"estatusCliente\" " +
-                    "FROM \"Empleados\" e " +
-                    "INNER JOIN \"Clientes\" c ON e.\"idCliente\" = c.\"idCliente\""+
-                    "INNER JOIN \"TipoEstatus\" te1 ON e.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
-                    "INNER JOIN \"TipoEstatus\" te2 ON c.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
-                    "ORDER BY e.\"idEmpleado\" ASC"
-            );
+                        "e.\"nombre\",e.\"apellidoPaterno\", e.\"apellidoMaterno\", e.\"municipioAsignado\"," +
+                        "e.\"estadoAsignado\", e.\"cantidadGasolina\", e.\"idCliente\", c.\"rfc\",  " +
+                        "c.\"razonSocial\", " +
+                        "te1.\"tipoEstatus\" AS \"estatusEmpleado\", " +
+                        "te2.\"tipoEstatus\" AS \"estatusCliente\" " +
+                        "FROM \"Empleados\" e " +
+                        "INNER JOIN \"Clientes\" c ON e.\"idCliente\" = c.\"idCliente\""+
+                        "INNER JOIN \"TipoEstatus\" te1 ON e.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
+                        "INNER JOIN \"TipoEstatus\" te2 ON c.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
+                        "ORDER BY e.\"idEmpleado\" ASC"
+                );
             }
             ResultSet rs = ps.executeQuery();
             allEmpleados = new JSONArray();
@@ -73,7 +76,36 @@ public class EmpleadosRepository implements ICrudRepository<Empleados>{
     public JSONArray findAllObjects() {
         return null;
     }
-
+    public JSONArray findAllObjects(String pathInfo) {
+        JSONArray allEmpleados = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps=null;
+            if(pathInfo.equals("/getEmpleadosParaAsignacion")) {
+                ps = conn.prepareStatement(
+                        "SELECT \"idEmpleado\", \"numeroTrabajador\", \"nombre\",\"apellidoPaterno\"," +
+                                "\"apellidoMaterno\",\"idCliente\"," +
+                                "FROM \"Empleados\"" +
+                                "WHERE \"idTipoEstatus\"=1 ORDER BY \"idEmpleado\" ASC"
+                );
+            }
+            ResultSet rs = ps.executeQuery();
+            allEmpleados = new JSONArray();
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject empleado = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    empleado.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allEmpleados.put(empleado);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allEmpleados;
+    }
     @Override
     public Empleados findById(String numeroTrabajador){
         Empleados empleado = null;

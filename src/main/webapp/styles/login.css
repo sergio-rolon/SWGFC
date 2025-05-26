@@ -27,7 +27,7 @@
   width: 40px;
   vertical-align: middle;
 }
-/* derecha versión mobile */
+
 @media (max-width: 768px) {
   .contenedor {
     flex-direction: column;
@@ -41,40 +41,23 @@
   }
 
   .logo-main {
-    width: 80%; /* Reduce el tamaño en móviles */
+    width: 80%;
     height: auto;
-    margin-bottom: 10px; /* Espaciado para evitar superposición */
+    margin-bottom: 10px;
   }
   .help {
-    flex-direction: column; /* Acomoda los elementos verticalmente en móviles */
+    flex-direction: column;
     text-align: center;
   }
 
   .help img {
-    width: 25px; /* Aún más pequeño para móviles */
+    width: 25px;
   }
 
   .helpMessage {
     font-size: 14px;
-    max-width: 100%; /* Permite mejor adaptación en pantallas pequeñas */
+    max-width: 100%;
   }
-  /*
-  .help {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; 
-  font-size: 14px;
-  flex-wrap: wrap; 
-  max-width: 100%;
-  padding: 10px;
-
-    .helpMessage {
- font-size: 16px; 
-  text-align: center;
-  max-width: 80%; 
-  line-height: 1.3;
-  word-wrap: break-word;*/
 }
 
 .cajaLogIn {
@@ -171,12 +154,12 @@ textarea {
   max-height: 75px;
 }
 .logo-load {
-  max-width: 300px; /* Tamaño normal en escritorio */
+  max-width: 300px;
   height: auto;
 }
 
 @media (max-width: 768px) {
   .logo-load {
-    max-width: 200px; /* Tamaño reducido en móviles */
+    max-width: 200px;
   }
 }

@@ -12,8 +12,8 @@ body {
 header {
   background-color: #0056b6;
   padding: 3px 0;
-  position: sticky; /* Esto hace que la barra se quede pegada al hacer scroll */
-  top: 0; /* Posiciona la barra en la parte superior */
+  position: sticky;
+  top: 0;
   z-index: 1000;
 }
 
@@ -23,8 +23,7 @@ header {
   align-items: center;
   margin: 0 auto;
   padding: 0 0px;
-  /*height: 46px;*/
-  height: auto; /* Permite que crezca si hay más de una fila */
+  height: auto;
 }
 
 .left-side-navbar {
@@ -38,12 +37,12 @@ header {
 .logo {
   display: flex;
   height: 40px;
-  justify-content: center; /* Centra horizontalmente */
+  justify-content: center;
   align-items: center;
 }
 /* Estilos para el logo */
 .logo img {
-  height: 40px; /* Ajusta la altura del logo según lo necesites */
+  height: 40px;
   width: auto;
   margin-left: 2px;
 }
@@ -111,7 +110,6 @@ header {
   height: 100%;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidebar {
     padding-top: 15px;

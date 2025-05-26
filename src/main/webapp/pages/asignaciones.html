@@ -9,10 +9,10 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <!-- Scripts -->
-    <!--<script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
-    ></script>-->
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
     <link
@@ -30,10 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <!-- <link rel="stylesheet" href="../styles/usuarios.css" />-->
+    <link rel="stylesheet" href="../styles/clientes.css" />
   </head>
   <body>
-<!--    <div id="loader">
+    <div id="loader">
       <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
@@ -53,7 +53,7 @@
         autoplay
       >
       </dotlottie-player>
-    </div>-->
+    </div>
     <div id="contenido">
       <header>
         <nav class="navbar">
@@ -95,7 +95,7 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
-        <a href="./usuarios.html" class="active">Usuarios</a>
+        <a href="./usuarios.html">Usuarios</a>
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
@@ -104,22 +104,96 @@
         <a href="./servicios.html">Servicios</a>
         <a href="./incidentes.html">Incidentes</a>
         <a href="./placas.html">Placas</a>
-        <a href="./asignaciones.html">Asignaciones</a>
+        <a href="./asignaciones.html" class="active">Asignaciones</a>
       </div>
 
       <div class="container" id="main">
         <main>
           <h1>Gestión de asignaciones</h1>
-          <div style="text-align: center">
-                            <img
-        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
-        alt="Logo"
-        class="logo-load"
-        
-      />
+          <div id="asignacionForm">
+            <div class="form-grid">
+              <div>
+                <label for="idAsignacion">Id:</label><br />
+                <input type="text" id="idAsignacion" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="idClientesSelect">Selecciona cliente:</label><br />
+                <select id="idClientesSelect"></select>
+                <label
+                  for="idClienteError"
+                  id="idClienteError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idEmpleadoSelect">Selecciona empleado:</label><br />
+                <select id="idEmpleadoSelect"></select>
+                <label
+                  for="idEmpleadoError"
+                  id="idEmpleadoError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idVehiculoSelect">Selecciona vehículo:</label><br />
+                <select id="idVehiculoSelect"></select>
+                <label
+                  for="idVehiculoError"
+                  id="idVehiculoError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br />
+                <select id="idTipoEstatus">
+                  <option value="1">Activo</option>
+                  <option value="2">Inactivo</option>
+                </select>
+                <label
+                  for="idTipoEstatusError"
+                  id="idTipoEstatusError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
           </div>
-
-      <h1 style="text-align: center">En construcción</h1>
+          <br /><br />
+          <div class="table-container">
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Estatus asignación</th>
+                    <th>Número de serie</th>
+                    <th>Marca</th>
+                    <th>Tipo</th>
+                    <th>Modelo</th>
+                    <th>Número de trabajador</th>
+                    <th>Nombre</th>
+                    <th>Apellido paterno</th>
+                    <th>Apellido materno</th>
+                    <th>Razón social</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </main>
       </div>
       <script>
@@ -142,21 +216,6 @@
         </div>
       </footer>
     </div>
-    <!--<script src="../js/usuarios.js"></script>-->
-    <script>
-      //teporal
-      function sidebar() {
-  if (flag) {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    flag = false;
-  } else {
-    document.getElementById("mySidebar").style.width = "200px";
-    document.getElementById("main").style.marginLeft = "200px";
-    flag = true;
-  }
-}
-    </script>
+    <script src="../js/asignaciones.js"></script>
   </body>
 </html>
-
