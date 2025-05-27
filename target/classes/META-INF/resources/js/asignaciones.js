@@ -71,9 +71,10 @@ document
       if (!validateNull()) {
         const raw = JSON.stringify({
           idAsignacion: idAsignacion.value,
-          idEmpleado: idEmpleado.value,
-          idTipoEstatus: idTipoEstatus.value,
+          idEmpleado: idEmpleadoSelect.value,
+          idCliente: idClientesSelect.value,
           idVehiculo: idVehiculoSelect.value,
+          idTipoEstatus: idTipoEstatus.value,
         });
         updateAsignacion(raw);
       }
@@ -89,6 +90,7 @@ document
   .getElementById("btnLimpiar")
   .addEventListener("click", function (event) {
     event.preventDefault();
+    idAsignacion.value = "";
     idEmpleadoSelect.innerHTML = "";
     idVehiculoSelect.innerHTML = "";
     getAllClientes();
@@ -146,12 +148,12 @@ function validateNull() {
   }
   return flag;
 }
-function fillSelect(selectElement, items, valorProp, textoProp) {
+function fillSelect(selectElement, items, valorProp, getTexto) {
   selectElement.innerHTML = '<option value="">-- Seleccione --</option>';
   items.forEach((item) => {
     const option = document.createElement("option");
     option.value = item[valorProp];
-    option.textContent = item[textoProp];
+    option.textContent = getTexto(item);
     selectElement.appendChild(option);
   });
 }
@@ -174,8 +176,10 @@ idClientesSelect.addEventListener("change", () => {
   );
 
   // Llena los selects
-  fillSelect(idEmpleadoSelect, empleadosFiltrados, "idEmpleado", "nombre");
-  fillSelect(idVehiculoSelect, vehiculosFiltrados, "idVehiculo", "numeroSerie");
+  fillSelect(idEmpleadoSelect, empleadosFiltrados, "idEmpleado", (asignacion) =>
+    `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`);
+  fillSelect(idVehiculoSelect, vehiculosFiltrados, "idVehiculo", (vehiculo) =>
+    vehiculo.numeroSerie);
 });
 
 function sidebar() {
@@ -201,26 +205,44 @@ function setErrorMsgs(result) {
     idVehiculoError.textContent = result.IdVehiculo;
   }
 }
+function setSelectedByValue(selectElement, value) {
+  for (let i = 0; i < selectElement.options.length; i++) {
+    if (selectElement.options[i].textContent == value) {
+      selectElement.selectedIndex = i;
+      return;
+    }
+  }
+}
 
 function editeAsignacion(asignacionString) {
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;
-  if (asignacion.estatusAsignacion == "activo") {
-    idTipoEstatus.value = 1;
-  } else {
-    idTipoEstatus.value = 2;
-  }
-  const option = document.createElement("option");
-  option.value = asignacion.idVehiculo;
-  option.textContent = `${asignacion.numeroSerie}`;
-  idVehiculoSelect.appendChild(option);
-  idVehiculoSelect.value = asignacion.idVehiculo;
+  idTipoEstatus.value = asignacion.estatusAsignacion === "activo" ? 1 : 2;
+  // idClientesSelect.selectedIndex = asignacion.idAsignacion;
+  idClientesSelect.selectedIndex = 1;
+  const clienteSeleccionado = idClientesSelect.value;
 
-  const option1 = document.createElement("option");
-  option1.value = asignacion.idEmpleado;
-  option1.textContent = `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`;
-  idEmpleadoSelect.appendChild(option);
-  idEmpleadoSelect.value = asignacion.idEmpleado;
+  if (!clienteSeleccionado) {
+    idEmpleadoSelect.innerHTML = "";
+    idVehiculoSelect.innerHTML = "";
+    return;
+  }
+
+  // Filtra empleados y vehículos relacionados
+  const empleadosFiltrados = empleadosData.filter(
+    (e) => e.idCliente == clienteSeleccionado
+  );
+  const vehiculosFiltrados = vehiculosData.filter(
+    (v) => v.idCliente == clienteSeleccionado
+  );
+
+  // Llena los selects
+  fillSelect(idEmpleadoSelect, empleadosFiltrados, "idEmpleado", (asignacion) =>
+    `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`);
+  fillSelect(idVehiculoSelect, vehiculosFiltrados, "idVehiculo", (vehiculo) =>
+    vehiculo.numeroSerie);
+  idEmpleadoSelect.selectedIndex = asignacion.idEmpleado;
+  idVehiculoSelect.selectedIndex = asignacion.idVehiculo;
 
   actualizarButtonIsActive = true;
 }

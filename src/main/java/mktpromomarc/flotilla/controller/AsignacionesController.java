@@ -181,6 +181,7 @@ public class AsignacionesController extends HttpServlet {
                         return;
                     }
                     Asignaciones newAsignacion = new Asignaciones();
+                    newAsignacion.setIdAsignacion(jsonObject.getInt("idAsignacion"));
                     newAsignacion.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
                     newAsignacion.setIdVehiculo(jsonObject.getInt("idVehiculo"));
                     newAsignacion.setIdEmpleado(jsonObject.getInt("idEmpleado"));
