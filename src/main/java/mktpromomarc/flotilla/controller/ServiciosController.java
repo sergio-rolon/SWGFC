@@ -7,19 +7,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mktpromomarc.flotilla.config.Util;
-import mktpromomarc.flotilla.modelo.Asignaciones;
-import mktpromomarc.flotilla.repository.AsignacionesRepository;
+import mktpromomarc.flotilla.modelo.Servicios;
+import mktpromomarc.flotilla.repository.ServiciosRepository;
 import mktpromomarc.flotilla.security.Validator;
-import mktpromomarc.flotilla.service.AsignacionesService;
+import mktpromomarc.flotilla.service.ServiciosService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
 
-@WebServlet(name = "Asignaciones", urlPatterns = {"/asignaciones/*"})
-public class AsignacionesController extends HttpServlet {
+@WebServlet(name = "Servicios", urlPatterns = {"/servicios/*"})
+public class ServiciosController extends HttpServlet {
     private Gson gson = new Gson();
-    AsignacionesRepository asignacionesRepository = new AsignacionesRepository();
-    AsignacionesService asignacionesService = new AsignacionesService(asignacionesRepository);
+    ServiciosRepository serviciosRepository = new ServiciosRepository();
+    ServiciosService serviciosService = new ServiciosService(serviciosRepository);
     String clase = getClass().getSimpleName();
     Boolean isDoPut=false;
 
@@ -39,18 +39,18 @@ public class AsignacionesController extends HttpServlet {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray asignacionesResult = asignacionesService.getAll(isAsesor, emailAsesor);
+                JSONArray serviciosResult = serviciosService.getAll(isAsesor, emailAsesor);
 
-                if (asignacionesResult != null) {
+                if (serviciosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
-                    String successResponse = new Gson().toJson(asignacionesResult);
+                    String successResponse = new Gson().toJson(serviciosResult);
                     out.print(successResponse);
                     out.flush();
-                    Util.logInfo("All asignaciones recovered for "+role+" role and sent in response", clase);
+                    Util.logInfo("All servicios recovered for "+role+" role and sent in response", clase);
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                String errorResponse = "{\"error\": \"No hay asignaciones registrados\"}";
+                String errorResponse = "{\"error\": \"No hay servicios registrados\"}";
                 out.print(errorResponse);
                 Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
                 out.flush();
@@ -98,38 +98,31 @@ public class AsignacionesController extends HttpServlet {
                         out.flush();
                         return;
                     }
-                    Asignaciones newAsignacion = new Asignaciones();
-                    newAsignacion.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
-                    newAsignacion.setIdVehiculo(jsonObject.getInt("idVehiculo"));
-                    newAsignacion.setIdEmpleado(jsonObject.getInt("idEmpleado"));
-                    int idCliente = jsonObject.getInt("idCliente");
-                    Asignaciones asignacionResult = asignacionesService.add(newAsignacion, idCliente);
-                    if (asignacionResult != null) {
-                        if(!(asignacionResult.getIdAsignacion()==-1) && !(asignacionResult.getIdAsignacion()==-2)){
-                            Util.logInfo("Asignación registrada exitosamente", clase);
+                    Servicios newServicio = new Servicios(jsonObject.getBigDecimal("costo")
+                            ,jsonObject.getBigDecimal("comision"));
+                    newServicio.setIdTipoServicio(jsonObject.getInt("idTipoServicio"));
+                    newServicio.setKilometraje(jsonObject.getInt("kilometraje"));
+                    newServicio.setFechaServicio(jsonObject.getString("fechaServicio"));
+                    newServicio.setIdAsignacion(jsonObject.getInt("idAsignacion"));
+
+                    Servicios servicioResult = serviciosService.add(newServicio);
+                    if (servicioResult != null) {
+                        if(!(servicioResult.getIdServicio()==-1)){
+                            Util.logInfo("Servicio registrado exitosamente", clase);
                             response.setStatus(HttpServletResponse.SC_OK);
-                            String successResponse = "{\"success\": \"Asignación registrada exitosamente\"}";
+                            String successResponse = "{\"success\": \"Servicio registrado exitosamente\"}";
                             out.print(successResponse);
                             out.flush();
                             return;
                         }
-                        if(asignacionResult.getIdAsignacion()==-2) {
-                            response.setStatus(HttpServletResponse.SC_CONFLICT);
-                            String errorResponse = "{\"error\": \"Vehículo y/o empleado no pertenecen al mismo cliente.\"}";
-                            out.print(errorResponse);
-                            out.flush();
-                            return;
-                        }
-
-                        //checar esto también
                         response.setStatus(HttpServletResponse.SC_CONFLICT);
-                        String errorResponse = "{\"error\": \"El id de asignación ya está asignado, intenta con otro\"}";
+                        String errorResponse = "{\"error\": \"El número de serie ya está asignado, intenta con otro\"}";
                         out.print(errorResponse);
                         out.flush();
                         return;
                     }
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
-                    String errorResponse = "{\"error\": \"La asignacion ya existe\"}";
+                    String errorResponse = "{\"error\": \"El servicio ya existe\"}";
                     out.print(errorResponse);
                     out.flush();
                     return;
@@ -180,35 +173,28 @@ public class AsignacionesController extends HttpServlet {
                         isDoPut=false;
                         return;
                     }
-                    Asignaciones newAsignacion = new Asignaciones();
-                    newAsignacion.setIdAsignacion(jsonObject.getInt("idAsignacion"));
-                    newAsignacion.setIdTipoEstatus(jsonObject.getInt("idTipoEstatus"));
-                    newAsignacion.setIdVehiculo(jsonObject.getInt("idVehiculo"));
-                    newAsignacion.setIdEmpleado(jsonObject.getInt("idEmpleado"));
-                    int idCliente = jsonObject.getInt("idCliente");
-                    Asignaciones asignacionResult = asignacionesService.update(newAsignacion, idCliente);
+                    Servicios newServicio = new Servicios(jsonObject.getBigDecimal("costo")
+                            ,jsonObject.getBigDecimal("comision"));
+                    newServicio.setIdServicio(jsonObject.getInt("idServicio"));
+                    newServicio.setIdTipoServicio(jsonObject.getInt("idTipoServicio"));
+                    newServicio.setKilometraje(jsonObject.getInt("kilometraje"));
+                    newServicio.setFechaServicio(jsonObject.getString("fechaServicio"));
+                    newServicio.setIdAsignacion(jsonObject.getInt("idAsignacion"));
+
+                    Servicios servicioResult = serviciosService.update(newServicio);
                     isDoPut=false;
-                    if (asignacionResult != null) {
-                        if(asignacionResult.getIdAsignacion()==-2) {
-                            response.setStatus(HttpServletResponse.SC_CONFLICT);
-                            String errorResponse = "{\"error\": \"Vehículo y/o empleado no pertenecen al mismo cliente.\"}";
-                            out.print(errorResponse);
-                            out.flush();
-                            return;
-                        }
-                        Util.logInfo("Asignacion modificada exitosamente", clase);
+                    if (servicioResult != null) {
+                        Util.logInfo("Servicio modificado exitosamente", clase);
                         response.setStatus(HttpServletResponse.SC_OK);
-                        String successResponse = "{\"success\": \"Asignacion modificada exitosamente\"}";
+                        String successResponse = "{\"success\": \"Servicio modificado exitosamente\"}";
                         out.print(successResponse);
                         out.flush();
                         return;
                     }
-
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
-                    String errorResponse = "{\"error\": \"Id asignación ingresado no existe, intentar con otro\"}";
+                    String errorResponse = "{\"error\": \"Número de contrato ingresado ya está asignado, intentar con otro\"}";
                     out.print(errorResponse);
                     out.flush();
-                    return;
                 } catch (IOException ex) {
                     request.setAttribute("message", "There was an error: " + ex.getMessage());
                 }
@@ -245,27 +231,27 @@ public class AsignacionesController extends HttpServlet {
                     String json = sb.toString();
                     JSONObject jsonObject = new JSONObject(json);
 
-                    if (!Validator.isNum("Id asignación",jsonObject.getString("idAsignacion")).contains("success")) {
+                    if (!Validator.isNum("id servicio", jsonObject.getString("idServicio")).contains("success")) {
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        String errorResponse = "{\"error\": \"Id asignación inválido\"}";
+                        String errorResponse = "{\"error\": \"Número de contrato inválido\"}";
                         out.print(errorResponse);
                         out.flush();
                         return;
                     }
 
-                    Asignaciones asignacionToDelete = new Asignaciones();
-                    asignacionToDelete.setIdAsignacion(jsonObject.getInt("idAsignacion"));
+                    Servicios servicioToDelete = new Servicios();
+                    servicioToDelete.setIdServicio(jsonObject.getInt("idServicio"));
 
-                    if (asignacionesService.delete(asignacionToDelete.getIdAsignacion())) {
-                        Util.logInfo("Asignación eliminada correctamente", clase);
+                    if (serviciosService.delete(servicioToDelete.getIdServicio())) {
+                        Util.logInfo("Servicio eliminado correctamente", clase);
                         response.setStatus(HttpServletResponse.SC_OK);
-                        String successResponse = "{\"success\": \"Asignación eliminada exitosamente\"}";
+                        String successResponse = "{\"success\": \"Servicio eliminado exitosamente\"}";
                         out.print(successResponse);
                         out.flush();
                         return;
                     }
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
-                    String errorResponse = "{\"error\": \"Asignación no existe\"}";
+                    String errorResponse = "{\"error\": \"Servicio no existe\"}";
                     out.print(errorResponse);
                     out.flush();
                     return;
@@ -281,12 +267,15 @@ public class AsignacionesController extends HttpServlet {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         if(isDoPut) {
-            sb.append(Validator.isNum("Id asignación",String.valueOf(jsonObject.get("idAsignacion")))).append(",");
+            sb.append(Validator.isNum("Id servicio", jsonObject.getString("idServicio"))).append(",");
         }
-        sb.append(Validator.isNumTwoTypes("Id tipo estatus",String.valueOf(jsonObject.get("idTipoEstatus")))).append(",");
-        sb.append(Validator.isNum("Id empleado",String.valueOf(jsonObject.get("idEmpleado")))).append(",");
-        sb.append(Validator.isNum("Id vehículo",String.valueOf(jsonObject.get("idVehiculo"))));
-        sb.append(Validator.isNum("Id cliente",String.valueOf(jsonObject.get("idCliente"))));
+        sb.append(Validator.isNumThreeTypes("Id tipo servicio", jsonObject.getString("idTipoServicio"))).append(",");
+        sb.append(Validator.isNum("Kilometraje", jsonObject.getString("kilometraje"))).append(",");
+        sb.append(Validator.isAlpha("Fecha de servicio", jsonObject.getString("fechaServicio"))).append(",");
+        sb.append(Validator.isBigDecimal("Costo",jsonObject.getString("costo"))).append(",");
+        sb.append(Validator.isBigDecimal("Comisión",jsonObject.getString("comision"))).append(",");
+        sb.append(Validator.isNum("Año de renovación",String.valueOf(jsonObject.get("anoRenovacion")))).append(",");
+        sb.append(Validator.isNum("Id asignación",String.valueOf(jsonObject.get("idAsignacion"))));
         sb.append("}");
 
         return sb.toString();

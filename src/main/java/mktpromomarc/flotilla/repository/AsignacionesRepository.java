@@ -24,7 +24,7 @@ public class AsignacionesRepository implements ICrudRepository<Asignaciones>{
                 ps = conn.prepareStatement(
                         "SELECT a.\"idAsignacion\", a.\"idVehiculo\", a.\"idEmpleado\", v.\"numeroSerie\", v.\"marca\", v.\"tipo\", v.\"modelo\", " +
                                 "e.\"numeroTrabajador\", e.\"nombre\", e.\"apellidoPaterno\", e.\"apellidoMaterno\", " +
-                                "c.\"razonSocial\", " +
+                                "c.\"razonSocial\", c.\"idCliente\"," +
                                 "te1.\"tipoEstatus\" AS \"estatusAsignacion\" " +
                                 "FROM \"Asignaciones\" a " +
                                 "INNER JOIN \"Vehiculos\" v ON a.\"idVehiculo\" = v.\"idVehiculo\" " +
@@ -40,7 +40,7 @@ public class AsignacionesRepository implements ICrudRepository<Asignaciones>{
                 ps = conn.prepareStatement(
                         "SELECT a.\"idAsignacion\", a.\"idVehiculo\", a.\"idEmpleado\", v.\"numeroSerie\", v.\"marca\", v.\"tipo\", v.\"modelo\", " +
                                 "e.\"numeroTrabajador\", e.\"nombre\", e.\"apellidoPaterno\", e.\"apellidoMaterno\", " +
-                                "c.\"razonSocial\", " +
+                                "c.\"razonSocial\", c.\"idCliente\", " +
                                 "te1.\"tipoEstatus\" AS \"estatusAsignacion\" " +
                                 "FROM \"Asignaciones\" a " +
                                 "INNER JOIN \"Vehiculos\" v ON a.\"idVehiculo\" = v.\"idVehiculo\" " +
@@ -197,6 +197,7 @@ public class AsignacionesRepository implements ICrudRepository<Asignaciones>{
                 ps.setInt(1, asignacion.getIdTipoEstatus());
                 ps.setInt(2, asignacion.getIdVehiculo());
                 ps.setInt(3, asignacion.getIdEmpleado());
+                ps.setInt(4, asignacion.getIdAsignacion());
 
                 ps.executeUpdate();
                 Conexion.endConexion(conn);

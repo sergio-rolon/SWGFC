@@ -46,12 +46,13 @@ public class AsignacionesService implements ICrudService<Asignaciones> {
     }
     @Override
     public Asignaciones update(Asignaciones asignacion){
-        Asignaciones asignacionRecovered = asignacionesRepository.findById(asignacion.getIdAsignacion());
-
-            if(asignacionesRepository.existsById(asignacion.getIdAsignacion())) {
-                return null;
-            }
-        return asignacionesRepository.save(asignacion);
+        return null;
+    }
+    public Asignaciones update(Asignaciones asignacion, int idCliente){
+        if(!asignacionesRepository.existsById(asignacion.getIdAsignacion())) {
+            return null;
+        }
+        return asignacionesRepository.save(asignacion, idCliente);
     }
     @Override
     public boolean delete(String idAsignacion){

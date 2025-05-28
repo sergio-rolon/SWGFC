@@ -93,10 +93,9 @@ document
     idAsignacion.value = "";
     idEmpleadoSelect.innerHTML = "";
     idVehiculoSelect.innerHTML = "";
-    getAllClientes();
-    getAllVehiculos();
-    getAllEmpleados();
-    fillSelect(idClientesSelect, clientesData, "idCliente", "razonSocial");
+    idClientesSelect.selectedIndex = 0;
+
+
     actualizarButtonIsActive = false;
   });
 //************************************** Functions
@@ -218,8 +217,8 @@ function editeAsignacion(asignacionString) {
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;
   idTipoEstatus.value = asignacion.estatusAsignacion === "activo" ? 1 : 2;
-  // idClientesSelect.selectedIndex = asignacion.idAsignacion;
-  idClientesSelect.selectedIndex = 1;
+   idClientesSelect.selectedIndex = asignacion.idCliente;
+
   const clienteSeleccionado = idClientesSelect.value;
 
   if (!clienteSeleccionado) {
