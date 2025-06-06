@@ -28,25 +28,25 @@ public class ServiciosService implements ICrudService<Servicios> {
     @Override
     public Servicios add(Servicios servicio){
         Servicios servicioResult = null;
-        if(!serviciosRepository.existsById(servicio.getIdServicio())) {
-            if (!serviciosRepository.existByNumeroSerie(servicio.getIdVehiculo())) {
-                servicioResult = serviciosRepository.save(servicio);
-            }else{
-                servicioResult=new Servicios();
-                servicioResult.setIdServicio(Integer.parseInt("-1"));
-            }
-        }
+//        if(!serviciosRepository.existsById(servicio.getIdServicio())) {
+//            if (!serviciosRepository.existByNumeroSerie(servicio.getIdVehiculo())) {
+//                servicioResult = serviciosRepository.save(servicio);
+//            }else{
+//                servicioResult=new Servicios();
+//                servicioResult.setIdServicio(Integer.parseInt("-1"));
+//            }
+//        }
         return servicioResult;
     }
 
     @Override
     public Servicios update(Servicios servicio){
         Servicios servicioRecovered = serviciosRepository.findById(servicio.getIdServicio());
-        if(!servicio.getIdServicio().equals(servicioRecovered.getIdServicio())){
-            if(serviciosRepository.existsById(servicio.getIdServicio())) {
-                return null;
-            }
-        }
+//        if(!servicio.getIdServicio().equals(servicioRecovered.getIdServicio())){
+//            if(serviciosRepository.existsById(servicio.getIdServicio())) {
+//                return null;
+//            }
+//        }
         return serviciosRepository.save(servicio);
     }
     @Override

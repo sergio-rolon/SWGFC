@@ -100,7 +100,7 @@ function validateLogin() {
         gridContainer.className = "grid-container";
 
         // Lista de elementos
-        const elementos = [
+        let elementos = [
           {
             src: "https://res.cloudinary.com/dseuvfwyj/image/upload/v1743360169/index/jya9xdjmykyrs1hlf7g5.svg",
             alt: "Usuarios",
@@ -153,8 +153,16 @@ function validateLogin() {
           },
         ];
 
+        if (usuario.role === "operacion" || usuario.role === "asesor") {
+          elementos.shift();
+        }
+        if (usuario.role === "administrador") {
+          elementos=[elementos[0]];
+        }
+
         // Generar las cards dinámicamente
         elementos.forEach((element) => {
+
           const card = document.createElement("div");
           card.className = "card";
 

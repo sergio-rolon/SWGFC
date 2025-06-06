@@ -3,11 +3,24 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  background-color: #fff9f9;
-  height: 100vh;
+  padding: 0;
 }
+
+#contenido {
+  display: flex;
+  flex-direction: column;
+  min-height: 85vh; 
+  visibility: hidden;
+}
+
+main {
+  flex: 1; 
+  padding: 1rem;
+}
+
 
 header {
   background-color: #0056b6;
