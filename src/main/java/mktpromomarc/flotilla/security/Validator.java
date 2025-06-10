@@ -76,14 +76,20 @@ public class Validator {
         return normalizado.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
     }
     public static String isAlpha(String campo, String palabra) {
-        String palabraPattern = "^[a-zA-Z ]+$";
+        String palabraPattern = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$";
         String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
+
         if (palabra.matches(palabraPattern)) {
-            return "\""+campoNoSpacesAndAccents+"\": \"success\"";
+            String soloLetras = palabra.replaceAll("[^a-zA-ZáéíóúÁÉÍÓÚñÑ]", "");
+            if (soloLetras.length() >= 2) {
+                return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
+            } else {
+                validationFailed = true;
+                return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " debe contener al menos dos letras\"";
+            }
         } else {
             validationFailed = true;
-
-            return "\""+campoNoSpacesAndAccents+"\": \""+campo+" solo debe contener letras sin acentos\"";
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " solo debe contener letras y espacios (puede llevar acentos)\"";
         }
     }
 
