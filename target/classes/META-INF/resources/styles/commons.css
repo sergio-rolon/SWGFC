@@ -3,7 +3,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -12,18 +13,19 @@ html, body {
 #contenido {
   display: flex;
   flex-direction: column;
-  min-height: 85vh; 
+  min-height: 85vh;
   visibility: hidden;
 }
 
 main {
-  flex: 1; 
+  flex: 1;
   padding: 1rem;
 }
 
-
 header {
-  background-color: #0056b6;
+  /*background-color: #0056b6;*/
+  background-color: #064995;
+
   padding: 3px 0;
   position: sticky;
   top: 0;
@@ -74,7 +76,7 @@ header {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #0056b6;
+  background-color: #064995;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 50px;
@@ -91,19 +93,19 @@ header {
 
 .sidebar a:hover {
   background-color: #ffbe4a;
-  color: #8b7b7b;
+  color: #000000;
   font-size: 20px;
 }
 
 .sidebar .active {
   background-color: #ffbe4a;
-  color: #8b7b7b;
+  color: #000000;
 }
 
 .openbtn {
   font-size: 40px;
   cursor: pointer;
-  background-color: #0056b6;
+  background-color: #064995;
   color: white;
   padding: 0px;
   border: none;
@@ -114,7 +116,7 @@ header {
 
 .openbtn:hover {
   background-color: #ffbe4a;
-  color: #8b7b7b;
+  color: #000000;
 }
 
 #main {
@@ -154,7 +156,7 @@ header {
 }
 
 .nav-links a:hover {
-  background-color: #555;
+  background-color: #000000;
 }
 
 h1 {
@@ -162,7 +164,7 @@ h1 {
   text-align: center;
   font-weight: bold;
   font-size: 40px;
-  color: #8b7b7b;
+  color: #000000;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -177,7 +179,7 @@ h1 {
 
 .footer {
   text-align: center;
-  background-color: #0056b6;
+  background-color: #064995;
 }
 
 .logo-footer {
