@@ -9,10 +9,10 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <!-- Scripts -->
-    <!--<script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
-    ></script>-->
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
     <link
@@ -30,10 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <!-- <link rel="stylesheet" href="../styles/usuarios.css" />-->
+    <link rel="stylesheet" href="../styles/clientes.css" />
   </head>
   <body>
-<!--    <div id="loader">
+    <div id="loader">
       <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
@@ -53,7 +53,7 @@
         autoplay
       >
       </dotlottie-player>
-    </div>-->
+    </div>
     <div id="contenido">
       <header>
         <nav class="navbar">
@@ -103,22 +103,116 @@
         <a href="./placas.html">Placas</a>
         <a href="./asignaciones.html">Asignaciones</a>
         <a href="./servicios.html">Servicios</a>
-        <a href="./incidentes.html"  class="active">Incidentes</a>
+        <a href="./incidentes.html" class="active">Incidentes</a>
       </div>
 
       <div class="container" id="main">
         <main>
           <h1>Gestión de incidentes</h1>
-          <div style="text-align: center">
-                            <img
-        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
-        alt="Logo"
-        class="logo-load"
-        
-      />
+          <div id="incidenteForm">
+            <div class="form-grid">
+              <div>
+                <label for="idIncidente">Id:</label><br />
+                <input type="text" id="idIncidente" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="idTipoIncidente">Selecciona tipo incidente:</label
+                ><br />
+                <select id="idTipoIncidente">
+                  <option value="1">Menor</option>
+                  <option value="2">Mayor</option>
+                </select>
+                <label
+                  for="idTipoIncidenteError"
+                  id="idTipoIncidenteError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="descripcion">Descripción:</label><br />
+                <input
+                  type="text"
+                  id="descripcion"
+                  placeholder="Ej. Choque por alcance km. 200 carretera transpeninsular"
+                  required
+                /><br />
+                <label
+                  for="descripcionError"
+                  id="descripcionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaIncidente">Fecha de incidente:</label><br />
+                <input type="date" id="fechaIncidente" required /><br />
+                <label
+                  for="fechaIncidenteError"
+                  id="fechaIncidenteError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="idClientesSelect">Selecciona cliente:</label><br />
+                <select id="idClientesSelect"></select>
+                <label
+                  for="idClienteError"
+                  id="idClienteError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idAsignacionSelect">Selecciona asignación:</label
+                ><br />
+                <select id="idAsignacionSelect"></select>
+                <label
+                  for="idAsignacionError"
+                  id="idAsignacionError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
           </div>
-
-      <h1 style="text-align: center">En construcción</h1>
+          <br /><br />
+          <div class="table-container">
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Tipo de incidente</th>
+                    <th>Descripcion</th>
+                    <th>Fecha de incidente</th>
+                    <th>Número de serie</th>
+                    <th>Marca</th>
+                    <th>Tipo</th>
+                    <th>Modelo</th>
+                    <th>Estatus vehículo</th>
+                    <th>Número trabajador</th>
+                    <th>Nombre</th>
+                    <th>Apellido paterno</th>
+                    <th>Apellido materno</th>
+                    <th>Estatus trabajador</th>
+                    <th>Razón social</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </main>
       </div>
       <script>
@@ -126,7 +220,6 @@
         document.getElementById("mySidebar").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
       </script>
-
     </div>
     <footer>
       <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
@@ -142,21 +235,6 @@
         </p>
       </div>
     </footer>
-    <!--<script src="../js/usuarios.js"></script>-->
-    <script>
-      //teporal
-      function sidebar() {
-  if (flag) {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    flag = false;
-  } else {
-    document.getElementById("mySidebar").style.width = "200px";
-    document.getElementById("main").style.marginLeft = "200px";
-    flag = true;
-  }
-}
-    </script>
+    <script src="../js/incidentes.js"></script>
   </body>
 </html>
-

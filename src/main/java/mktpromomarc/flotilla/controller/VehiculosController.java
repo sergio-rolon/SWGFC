@@ -77,7 +77,7 @@ public class VehiculosController extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 String errorResponse = "{\"error\": \"No hay vehículos registrados\"}";
                 out.print(errorResponse);
-                Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
+                Util.logInfo("None vehiculos recovered for "+role+" role and sent in response", clase);
                 out.flush();
                 return;
             } catch (IOException ex) {

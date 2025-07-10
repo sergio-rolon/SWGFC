@@ -1,5 +1,6 @@
 package mktpromomarc.flotilla.service;
 
+import mktpromomarc.flotilla.modelo.Asignaciones;
 import mktpromomarc.flotilla.modelo.Servicios;
 import mktpromomarc.flotilla.repository.ServiciosRepository;
 import org.json.JSONArray;
@@ -28,34 +29,37 @@ public class ServiciosService implements ICrudService<Servicios> {
     @Override
     public Servicios add(Servicios servicio){
         Servicios servicioResult = null;
-//        if(!serviciosRepository.existsById(servicio.getIdServicio())) {
-//            if (!serviciosRepository.existByNumeroSerie(servicio.getIdVehiculo())) {
-//                servicioResult = serviciosRepository.save(servicio);
-//            }else{
-//                servicioResult=new Servicios();
-//                servicioResult.setIdServicio(Integer.parseInt("-1"));
-//            }
-//        }
+        if(!serviciosRepository.existsById(servicio.getIdServicio())) {
+            servicioResult = serviciosRepository.save(servicio);
+        }
         return servicioResult;
     }
 
     @Override
     public Servicios update(Servicios servicio){
-        Servicios servicioRecovered = serviciosRepository.findById(servicio.getIdServicio());
-//        if(!servicio.getIdServicio().equals(servicioRecovered.getIdServicio())){
-//            if(serviciosRepository.existsById(servicio.getIdServicio())) {
-//                return null;
-//            }
-//        }
+
+        if(!serviciosRepository.existsById(servicio.getIdAsignacion())) {
+            return null;
+        }
         return serviciosRepository.save(servicio);
     }
-    @Override
-    public boolean delete(String serieServicio){
-        return serviciosRepository.deleteById(serieServicio);
 
+//    public Asignaciones add(Asignaciones asignacion, int idCliente){
+//        Asignaciones asignacionResult = null;
+//        if(asignacion.getIdAsignacion() ==0){
+//            asignacionResult = asignacionesRepository.save(asignacion, idCliente);
+//        }else if(!asignacionesRepository.existsById(asignacion.getIdAsignacion())) {
+//            asignacionResult = asignacionesRepository.save(asignacion, idCliente);
+//
+//        }
+//        return asignacionResult;
+//    }
+    @Override
+    public boolean delete(String idServicio){
+        return serviciosRepository.deleteById(idServicio);
     }
     @Override
-    public boolean delete(int serieServicio){return false;}
+    public boolean delete(int idServicio){return serviciosRepository.deleteById(idServicio);}
     @Override
     public Servicios getById(int idServicio){return serviciosRepository.findById(idServicio);}
 }

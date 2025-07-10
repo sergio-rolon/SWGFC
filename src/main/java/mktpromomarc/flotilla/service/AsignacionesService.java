@@ -20,7 +20,7 @@ public class AsignacionesService implements ICrudService<Asignaciones> {
     public JSONArray getAll(boolean isAsesor, String emailAsesor){
         return asignacionesRepository.findAll(isAsesor, emailAsesor);
     }
-    // *************Por ver que onda
+
     @Override
     public Asignaciones getById(String idAsignacion){
         return asignacionesRepository.findById(idAsignacion);

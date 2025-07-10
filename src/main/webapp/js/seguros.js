@@ -386,6 +386,10 @@ function validateLogin() {
             headerRow.deleteCell(-1);
             headerRow.deleteCell(-1);
           }
+          const menuLinks = document.querySelectorAll("#mySidebar a");
+          if (menuLinks.length > 0) {
+            menuLinks[0].remove();
+          }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";

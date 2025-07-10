@@ -192,7 +192,7 @@ public class ServiciosController extends HttpServlet {
                         return;
                     }
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
-                    String errorResponse = "{\"error\": \"Número de contrato ingresado ya está asignado, intentar con otro\"}";
+                    String errorResponse = "{\"error\": \"Id de servicio ingresado ya está asignado, intentar con otro\"}";
                     out.print(errorResponse);
                     out.flush();
                 } catch (IOException ex) {
@@ -233,7 +233,7 @@ public class ServiciosController extends HttpServlet {
 
                     if (!Validator.isNum("id servicio", jsonObject.getString("idServicio")).contains("success")) {
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        String errorResponse = "{\"error\": \"Número de contrato inválido\"}";
+                        String errorResponse = "{\"error\": \"Id de servicio inválido\"}";
                         out.print(errorResponse);
                         out.flush();
                         return;
@@ -271,10 +271,9 @@ public class ServiciosController extends HttpServlet {
         }
         sb.append(Validator.isNumThreeTypes("Id tipo servicio", jsonObject.getString("idTipoServicio"))).append(",");
         sb.append(Validator.isNum("Kilometraje", jsonObject.getString("kilometraje"))).append(",");
-        sb.append(Validator.isAlpha("Fecha de servicio", jsonObject.getString("fechaServicio"))).append(",");
+        sb.append(Validator.isDate("Fecha de servicio", jsonObject.getString("fechaServicio"))).append(",");
         sb.append(Validator.isBigDecimal("Costo",jsonObject.getString("costo"))).append(",");
         sb.append(Validator.isBigDecimal("Comisión",jsonObject.getString("comision"))).append(",");
-        sb.append(Validator.isNum("Año de renovación",String.valueOf(jsonObject.get("anoRenovacion")))).append(",");
         sb.append(Validator.isNum("Id asignación",String.valueOf(jsonObject.get("idAsignacion"))));
         sb.append("}");
 

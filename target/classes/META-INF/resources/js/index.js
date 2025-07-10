@@ -56,7 +56,7 @@ let urlIncidentes =
 
 const contenedor = document.getElementById("contenedor");
 
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -153,16 +153,19 @@ function validateLogin() {
           },
         ];
 
-        if (usuario.role === "operacion" || usuario.role === "asesor") {
+        if (usuario.role === "operacion") {
+          elementos.shift();
+        }
+        if (usuario.role === "asesor") {
+          elementos.shift();
           elementos.shift();
         }
         if (usuario.role === "administrador") {
-          elementos=[elementos[0]];
+          elementos = [elementos[0]];
         }
 
         // Generar las cards dinámicamente
         elementos.forEach((element) => {
-
           const card = document.createElement("div");
           card.className = "card";
 

@@ -1,29 +1,27 @@
-let placasData = [];
+let incidentesData = [];
+let clientesData = [];
+let asignacionesData = [];
 let urlLogged = "/api/usuarios/logged";
-let url = "/api/placas";
-let urlVehiculos = "/api/vehiculos/getVehiculosSinPlaca";
+let url = "/api/incidentes";
+let urlAsignaciones = "/api/asignaciones/getAsignacionesParaIncidentes";
+let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
 
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
-const seriePlacaError = document.getElementById("seriePlacaError");
-const estadoError = document.getElementById("estadoError");
-const costoError = document.getElementById("costoError");
-const comisionError = document.getElementById("comisionError");
-const anoRenovacionError = document.getElementById("anoRenovacionError");
-const idTipoEstatusError = document.getElementById("idTipoEstatusError");
-const idVehiculoError = document.getElementById("idVehiculoError");
+const idTipoIncidenteError = document.getElementById("idTipoIncidenteError");
+const descripcionError = document.getElementById("descripcionError");
+const fechaIncidenteError = document.getElementById("fechaIncidenteError");
+const idAsignacionError = document.getElementById("idAsignacionError");
 
-const idPlaca = document.getElementById("idPlaca");
-const seriePlaca = document.getElementById("seriePlaca");
-const estado = document.getElementById("estado");
-const costo = document.getElementById("costo");
-const comision = document.getElementById("comision");
-const anoRenovacion = document.getElementById("anoRenovacion");
-const idVehiculo = document.getElementById("idVehiculo");
-const idTipoEstatus = document.getElementById("idTipoEstatus");
-const idVehiculoSelect = document.getElementById("idVehiculoSelect");
+const idIncidente = document.getElementById("idIncidente");
+const idTipoIncidente = document.getElementById("idTipoIncidente");
+const fechaIncidente = document.getElementById("fechaIncidente");
+const descripcion = document.getElementById("descripcion");
+
+const idEmpleadoSelect = document.getElementById("idEmpleadoSelect");
+const idAsignacionSelect = document.getElementById("idAsignacionSelect");
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
@@ -32,9 +30,9 @@ window.addEventListener("pageshow", function (event) {
 });
 
 validateLogin();
-getAllPlacas();
-getAllVehiculos();
-
+getAllIncidentes();
+getAllClientes();
+getAllAsignaciones();
 // ************************************** Events
 document
   .getElementById("clickToLogOut")
@@ -51,16 +49,13 @@ document
     clearErrors();
     if (!validateNull()) {
       const raw = JSON.stringify({
-        seriePlaca: seriePlaca.value,
-        estado: estado.value,
-        costo: costo.value,
-        comision: comision.value,
-        anoRenovacion: anoRenovacion.value,
-        idTipoEstatus: idTipoEstatus.value,
-        idVehiculo: idVehiculoSelect.value,
+        idTipoIncidente: idTipoIncidente.value,
+        descripcion: descripcion.value,
+        fechaIncidente: getFormattedDate("fechaIncidente"),
+        idAsignacion: idAsignacionSelect.value,
       });
 
-      registerPlaca(raw);
+      registerIncidente(raw);
     }
   });
 
@@ -72,54 +67,143 @@ document
     if (actualizarButtonIsActive) {
       if (!validateNull()) {
         const raw = JSON.stringify({
-          idPlaca: idPlaca.value,
-          seriePlaca: seriePlaca.value,
-          estado: estado.value,
-          costo: costo.value,
-          comision: comision.value,
-          anoRenovacion: anoRenovacion.value,
-          idTipoEstatus: idTipoEstatus.value,
-          idVehiculo: idVehiculoSelect.value,
+          idIncidente: idIncidente.value,
+          idTipoIncidente: idTipoIncidente.value,
+          descripcion: descripcion.value,
+          fechaIncidente: getFormattedDate("fechaIncidente"),
+          idAsignacion: idAsignacionSelect.value,
         });
-        updatePlaca(raw);
+        updateIncidente(raw);
       }
     } else {
       Swal.fire({
         title: "Operación inválida",
-        text: "Elige primero un placa para editar",
+        text: "Elige primero un incidente para editar",
         icon: "error",
       });
     }
   });
-
 document
   .getElementById("btnLimpiar")
   .addEventListener("click", function (event) {
     event.preventDefault();
     clearAll();
+
     actualizarButtonIsActive = false;
   });
-//fechaInicioElement.addEventListener("change", dateValidation);
-//fechaTerminoElement.addEventListener("change", dateValidation);
+
 //************************************** Functions
-function dateValidation() {
-  fechaTerminoError.textContent = "";
-  document.getElementById("fechaTermino").style.border = "";
 
-  const inicio = fechaInicioElement.value;
-  const termino = fechaTerminoElement.value;
-
-  if (inicio && termino) {
-    const fechaInicio = new Date(inicio);
-    const fechaTermino = new Date(termino);
-
-    if (fechaTermino < fechaInicio) {
-      fechaTerminoError.textContent =
-        "Fecha de término debe ser mayor a fecha de inicio.";
-      document.getElementById("fechaTermino").style.border = "2px solid red";
-    }
-  }
+function formatDateForCalendar(fechaObj) {
+  const fecha = fechaObj.toString();
+  const year = fecha.substring(0, 4);
+  const month = fecha.substring(4, 6);
+  const day = fecha.substring(6, 8);
+  return `${year}-${month}-${day}`;
 }
+function getFormattedDate(elementId) {
+  const dateValue = document.getElementById(elementId).value;
+  if (!dateValue) return "";
+
+  const date = new Date(dateValue);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}${month}${day}`;
+}
+
+function clearAll() {
+  clearErrors();
+  clearForm();
+}
+
+function clearErrors() {
+  idTipoIncidenteError.textContent = "";
+  idTipoIncidente.classList.remove("borde-rojo");
+
+  descripcionError.textContent = "";
+  descripcion.classList.remove("borde-rojo");
+
+  fechaIncidenteError.textContent = "";
+  document.getElementById("fechaIncidente").style.border = "";
+
+  idAsignacionError.textContent = "";
+  idAsignacionSelect.classList.remove("borde-rojo");
+
+  idClienteError.textContent = "";
+  idClientesSelect.classList.remove("borde-rojo");
+}
+function clearForm() {
+  idIncidente.value = "";
+  idTipoIncidente.selectedIndex = 1;
+  descripcion.value = "";
+  fechaIncidente.value = "";
+  idAsignacionSelect.innerHTML = "";
+  idClientesSelect.selectedIndex = 0;
+}
+function validateNull() {
+  let flag = false;
+  if (!idClientesSelect.value || idClientesSelect.value.trim() === "") {
+    idClienteError.textContent = "Cliente no puede ser nulo";
+    idClientesSelect.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!idAsignacionSelect.value || idAsignacionSelect.value.trim() === "") {
+    idAsignacionError.textContent = "Asignación no puede ser nulo";
+    idAsignacionSelect.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!idTipoIncidente.value || idTipoIncidente.value.trim() === "") {
+    idTipoIncidenteError.textContent = "Tipo de incidente no puede ser nulo";
+    idTipoIncidente.classList.add("borde-rojo");
+    flag = true;
+  }
+  if (!fechaIncidente.value || fechaIncidente.value.trim() === "") {
+    fechaIncidenteError.textContent = "Fecha de incidente no puede ser nulo";
+    document.getElementById("fechaIncidente").style.border = "2px solid red";
+    flag = true;
+  }
+  if (!descripcion.value || descripcion.value.trim() === "") {
+    descripcionError.textContent = "Descripcion no puede ser nulo";
+    descripcion.classList.add("borde-rojo");
+    flag = true;
+  }
+  return flag;
+}
+function fillSelect(selectElement, items, valorProp, getTexto) {
+  selectElement.innerHTML = '<option value="">-- Seleccione --</option>';
+  items.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item[valorProp];
+    option.textContent = getTexto(item);
+    selectElement.appendChild(option);
+  });
+}
+
+idClientesSelect.addEventListener("change", () => {
+  const clienteSeleccionado = idClientesSelect.value;
+
+  if (!clienteSeleccionado) {
+    idAsignacionSelect.innerHTML = "";
+    return;
+  }
+
+  // Filtra asignaciones relacionados
+  const asignacionesFiltradas = asignacionesData.filter(
+    (a) => a.idCliente == clienteSeleccionado
+  );
+
+  // Llena los selects
+  fillSelect(
+    idAsignacionSelect,
+    asignacionesFiltradas,
+    "idAsignacion",
+    (asignacion) =>
+      `${asignacion.numeroSerie} - ${asignacion.numeroTrabajador} `
+  );
+});
+
 function sidebar() {
   if (flag) {
     document.getElementById("mySidebar").style.width = "0";
@@ -131,163 +215,87 @@ function sidebar() {
     flag = true;
   }
 }
-
-function clearAll() {
-  clearErrors();
-  clearForm();
-}
-
-function clearErrors() {
-  seriePlacaError.textContent = "";
-  seriePlaca.classList.remove("borde-rojo");
-
-  estadoError.textContent = "";
-  estado.classList.remove("borde-rojo");
-
-  costoError.textContent = "";
-  costo.classList.remove("borde-rojo");
-
-  comisionError.textContent = "";
-  comision.classList.remove("borde-rojo");
-
-  anoRenovacionError.textContent = "";
-  anoRenovacion.classList.remove("borde-rojo");
-}
-
-function validateNull() {
-  let flag = false;
-  if (!seriePlaca.value || seriePlaca.value.trim() === "") {
-    seriePlacaError.textContent = "Número de poliza no puede ser nulo";
-    seriePlaca.classList.add("borde-rojo");
-    flag = true;
-  }
-  if (!estado.value || estado.value.trim() === "") {
-    estadoError.textContent = "Estado no puede ser nulo";
-    estado.classList.add("borde-rojo");
-    flag = true;
-  }
-
-  if (!costo.value || costo.value.trim() === "") {
-    costoError.textContent = "Costo no puede ser nulo";
-    costo.classList.add("borde-rojo");
-    flag = true;
-  }
-  if (!comision.value || comision.value.trim() === "") {
-    comisionError.textContent = "Comisión no puede ser nulo";
-    comision.classList.add("borde-rojo");
-    flag = true;
-  }
-  if (!anoRenovacion.value || anoRenovacion.value.trim() === "") {
-    anoRenovacionError.textContent = "Año renovacion no puede ser nulo";
-    anoRenovacion.classList.add("borde-rojo");
-    flag = true;
-  }
-  return flag;
-}
-
-function clearForm() {
-  seriePlaca.value = "";
-  estado.value = "";
-  costo.value = "";
-  comision.value = "";
-  anoRenovacion.value = "";
-  idTipoEstatus.value = "1";
-  if (idVehiculoSelect.options.length > 0) {
-    idVehiculoSelect.selectedIndex = 0;
-  }
-  idPlaca.value = "";
-  actualizarButtonIsActive = false;
-}
-
+//========AQUI VAMOS
 function setErrorMsgs(result) {
-  if (result["seriePlaca"] && result.seriePlaca != "success") {
-    seriePlacaError.textContent = result.seriePlaca;
+  if (result["IdTipoIncidente"] && result.IdTipoIncidente != "success") {
+    idTipoIncidenteError.textContent = result.IdTipoIncidente;
   }
-  if (result["Estado"] && result.Estado != "success") {
-    estadoError.textContent = result.Estado;
+  if (result["Descripcion"] && result.Descripcion != "success") {
+    descripcionError.textContent = result.Descripcion;
   }
-
-  if (result["Anoderenovacion"] && result.Anoderenovacion != "success") {
-    anoRenovacionError.textContent = result.Anoderenovacion;
+  if (result["FechaDeIncidente"] && result.FechaDeIncidente != "success") {
+    fechaIncidenteError.textContent = result.FechaDeIncidente;
   }
-  if (result["Comision"] && result.Comision != "success") {
-    comisionError.textContent = result.Comision;
-  }
-  if (result["Costo"] && result.Costo != "success") {
-    costoError.textContent = result.Costo;
-  }
-  if (result["IdTipoEstatus"] && result.IdTipoEstatus != "success") {
-    idTipoEstatusError.textContent = result.IdTipoEstatus;
-  }
-  if (result["IdVehiculo"] && result.IdVehiculo != "success") {
-    idVehiculoError.textContent = result.IdVehiculo;
+  if (result["IdAsignacion"] && result.IdAsignacion != "success") {
+    idAsignacionError.textContent = result.IdAsignacion;
   }
 }
 
-function editePlaca(placaString) {
+function editeIncidente(incidenteString) {
   clearAll();
-  const placa = JSON.parse(placaString);
-  idPlaca.value = placa.idPlaca;
-  seriePlaca.value = placa.seriePlaca;
-  estado.value = placa.estado;
-  costo.value = placa.costo;
-  comision.value = placa.comision;
-  anoRenovacion.value = placa.anoRenovacion;
-  if (placa.estatusPlaca == "activo") {
-    idTipoEstatus.value = 1;
-  } else {
-    idTipoEstatus.value = 2;
-  }
-  const option = document.createElement("option");
-  option.value = placa.idVehiculo;
-  option.textContent = `${placa.numeroSerie}`;
-  idVehiculoSelect.appendChild(option);
-  idVehiculoSelect.value = placa.idVehiculo;
+  const incidente = JSON.parse(incidenteString);
+  idIncidente.value = incidente.idIncidente;
+  descripcion.value = incidente.descripcion;
+  idClientesSelect.selectedIndex = incidente.idCliente;
 
+  const clienteSeleccionado = idClientesSelect.value;
+
+  if (!clienteSeleccionado) {
+    idAsignacionSelect.innerHTML = "";
+    return;
+  }
+
+  // Filtra empleados y vehículos relacionados
+  const asignacionesFiltradas = asignacionesData.filter(
+    (a) => a.idCliente == clienteSeleccionado
+  );
+
+  // Llena los selects
+  fillSelect(
+    idAsignacionSelect,
+    asignacionesFiltradas,
+    "idAsignacion",
+    (asignacion) =>
+      `${asignacion.numeroSerie} - ${asignacion.numeroTrabajador} `
+  );
+
+  idTipoIncidente.selectedIndex = incidente.idTipoIncidente;
+  fechaIncidente.value = formatDateForCalendar(incidente.fechaIncidente);
+  idAsignacionSelect.selectedIndex = incidente.idAsignacion;
   actualizarButtonIsActive = true;
 }
 
-function createTable(placas) {
+function createTable(incidentes) {
   tbody.innerHTML = "";
-  placas.forEach((placa) => {
+  incidentes.forEach((incidente) => {
     const row = document.createElement("tr");
-    const placaString = JSON.stringify(placa).replace(/"/g, "&quot;");
+    const incidenteString = JSON.stringify(incidente).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${placa.idPlaca}</td>
-          <td>${placa.seriePlaca}</td>
-          <td>${placa.estado}</td>
-          <td>${placa.costo}</td>
-          <td>${placa.comision}</td>
-          <td>${placa.total}</td>
-          <td>${placa.totalConIva}</td>
-          <td>${placa.anoRenovacion}</td>
-          <td>${placa.estatusPlaca}</td>
-          <td>${placa.numeroSerie}</td>
-          <td>${placa.estatusVehiculo}</td>
+          <td>${incidente.idIncidente}</td>
+          <td>${incidente.tipoIncidente}</td>
+          <td>${incidente.descripcion}</td>
+          <td>${incidente.fechaIncidente}</td>
+          <td>${incidente.numeroSerie}</td>
+          <td>${incidente.marca}</td>
+          <td>${incidente.tipo}</td>
+          <td>${incidente.modelo}</td>
+          <td>${incidente.estatusVehiculo}</td>
+          <td>${incidente.numeroTrabajador}</td>
+          <td>${incidente.nombre}</td>  
+          <td>${incidente.apellidoPaterno}</td>  
+          <td>${incidente.apellidoMaterno}</td>  
+          <td>${incidente.estatusTrabajador}</td>  
+          <td>${incidente.razonSocial}</td>
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editePlaca('${placaString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deletePlaca('${placa.seriePlaca}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeIncidente('${incidenteString}')">Editar</button></td>
+                       <td><button class="delete-btn" onclick="deleteIncidente('${incidente.idIncidente}')">Eliminar</button></td>`
                 }
               `;
 
     tbody.appendChild(row);
   });
-}
-
-function showActivePlacas() {
-  const activos = placasData.filter((u) => u.estatusPlaca === "activo");
-  createTable(activos);
-}
-
-function showInactivePlacas() {
-  const noActivos = placasData.filter((u) => u.estatusPlaca === "inactivo");
-  createTable(noActivos);
-}
-
-function showAllPlacas() {
-  createTable(placasData);
 }
 
 function validateLogin() {
@@ -325,8 +333,8 @@ function validateLogin() {
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else if (usuario.role === "asesor") {
-          const placaForm = document.getElementById("placaForm");
-          if (placaForm) placaForm.remove();
+          const incidenteForm = document.getElementById("incidenteForm");
+          if (incidenteForm) incidenteForm.remove();
           window.asesorMode = true;
           const tableHeader = document.getElementById("tableHeader");
           if (tableHeader && tableHeader.rows.length > 0) {
@@ -352,7 +360,7 @@ function validateLogin() {
     });
 }
 
-function getAllPlacas() {
+function getAllIncidentes() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -382,8 +390,8 @@ function getAllPlacas() {
     })
     .then((result) => {
       if (result) {
-        placasData = result.myArrayList.map((item) => item.map);
-        createTable(placasData);
+        incidentesData = result.myArrayList.map((item) => item.map);
+        createTable(incidentesData);
       }
     })
     .catch((error) => {
@@ -391,7 +399,7 @@ function getAllPlacas() {
     });
 }
 
-function getAllVehiculos() {
+function getAllAsignaciones() {
   const myHeaders = new Headers();
 
   myHeaders.append(
@@ -405,7 +413,7 @@ function getAllVehiculos() {
     redirect: "follow",
   };
 
-  fetch(urlVehiculos, requestOptions)
+  fetch(urlAsignaciones, requestOptions)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -421,13 +429,53 @@ function getAllVehiculos() {
     })
     .then((result) => {
       if (result) {
-        idVehiculoSelect.innerHTML = "";
-        let vehiculos = result.myArrayList.map((item) => item.map);
-        vehiculos.forEach((vehiculo) => {
+        asignacionesData = result.myArrayList.map((item) => item.map);
+      }
+    })
+    .catch((error) => {
+      let errorMsg = error;
+    });
+}
+
+function getAllClientes() {
+  const myHeaders = new Headers();
+
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  fetch(urlClientes, requestOptions)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status === 403) {
+        window.location.href = "/index.html";
+        return;
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/pages/login.html";
+      } else {
+        throw new Error("Algo salió mal con la respuesta del servidor");
+      }
+    })
+    .then((result) => {
+      if (result) {
+        idClientesSelect.innerHTML = "";
+        idClientesSelect.innerHTML =
+          '<option value="">-- Seleccione --</option>';
+        clientesData = result.myArrayList.map((item) => item.map);
+        clientesData.forEach((cliente) => {
           const option = document.createElement("option");
-          option.value = vehiculo.idVehiculo;
-          option.textContent = `${vehiculo.numeroSerie}`;
-          idVehiculoSelect.appendChild(option);
+          option.value = cliente.idCliente;
+          option.textContent = `${cliente.razonSocial}`;
+          idClientesSelect.appendChild(option);
         });
       }
     })
@@ -436,7 +484,7 @@ function getAllVehiculos() {
     });
 }
 
-function registerPlaca(raw) {
+function registerIncidente(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -482,8 +530,9 @@ function registerPlaca(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllPlacas();
-        getAllVehiculos();
+        getAllIncidentes();
+        getAllClientes();
+        getAllAsignaciones();
         clearAll();
       }
     })
@@ -492,9 +541,9 @@ function registerPlaca(raw) {
     });
 }
 
-function deletePlaca(seriePlaca) {
+function deleteIncidente(idIncidente) {
   Swal.fire({
-    title: "¿Quieres eliminar este placa?",
+    title: "¿Quieres eliminar este incidente?",
     text: "Esta acción no podrá revertirse.",
     icon: "warning",
     showCancelButton: true,
@@ -504,7 +553,7 @@ function deletePlaca(seriePlaca) {
     cancelButtonText: `Cancelar`,
   }).then((result) => {
     if (result.isConfirmed) {
-      const raw = JSON.stringify({ seriePlaca: seriePlaca });
+      const raw = JSON.stringify({ idIncidente: idIncidente });
 
       const myHeaders = new Headers();
 
@@ -541,8 +590,11 @@ function deletePlaca(seriePlaca) {
               text: result.success,
               icon: "success",
             });
-            getAllPlacas();
-            getAllVehiculos();
+
+            getAllIncidentes();
+            getAllClientes();
+            getAllAsignaciones();
+            clearAll();
           }
         })
         .catch((error) => {
@@ -552,7 +604,7 @@ function deletePlaca(seriePlaca) {
   });
 }
 
-function updatePlaca(raw) {
+function updateIncidente(raw) {
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -596,8 +648,9 @@ function updatePlaca(raw) {
     })
     .then((result) => {
       if (result) {
-        getAllPlacas();
-        getAllVehiculos();
+        getAllIncidentes();
+        getAllClientes();
+        getAllAsignaciones();
         clearAll();
         actualizarButtonIsActive = false;
       }

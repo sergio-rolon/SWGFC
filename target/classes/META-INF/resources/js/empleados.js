@@ -11,7 +11,9 @@ const numeroTrabajadorError = document.getElementById("numeroTrabajadorError");
 const nombreError = document.getElementById("nombreError");
 const apellidoPaternoError = document.getElementById("apellidoPaternoError");
 const apellidoMaternoError = document.getElementById("apellidoMaternoError");
-const municipioAsignadoError = document.getElementById("municipioAsignadoError");
+const municipioAsignadoError = document.getElementById(
+  "municipioAsignadoError"
+);
 const estadoAsignadoError = document.getElementById("estadoAsignadoError");
 const cantidadGasolinaError = document.getElementById("cantidadGasolinaError");
 const idTipoEstatusError = document.getElementById("idTipoEstatusError");
@@ -29,7 +31,7 @@ const idCliente = document.getElementById("idCliente");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idClienteSelect = document.getElementById("idClienteSelect");
 // *********************Execution at start
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -55,15 +57,15 @@ document
     clearErrors();
     if (!validateNull()) {
       const raw = JSON.stringify({
-      numeroTrabajador: numeroTrabajador.value,
-      nombre: nombre.value,
-      apellidoPaterno: apellidoPaterno.value,
-      apellidoMaterno: apellidoMaterno.value,
-      municipioAsignado: municipioAsignado.value,
-      estadoAsignado: estadoAsignado.value,
-      cantidadGasolina: cantidadGasolina.value,
-      idTipoEstatus: idTipoEstatus.value,
-      idCliente: idClienteSelect.value,
+        numeroTrabajador: numeroTrabajador.value,
+        nombre: nombre.value,
+        apellidoPaterno: apellidoPaterno.value,
+        apellidoMaterno: apellidoMaterno.value,
+        municipioAsignado: municipioAsignado.value,
+        estadoAsignado: estadoAsignado.value,
+        cantidadGasolina: cantidadGasolina.value,
+        idTipoEstatus: idTipoEstatus.value,
+        idCliente: idClienteSelect.value,
       });
 
       registerEmpleado(raw);
@@ -78,7 +80,7 @@ document
     if (actualizarButtonIsActive) {
       if (!validateNull()) {
         const raw = JSON.stringify({
-        idEmpleado: idEmpleado.value,
+          idEmpleado: idEmpleado.value,
           numeroTrabajador: numeroTrabajador.value,
           nombre: nombre.value,
           apellidoPaterno: apellidoPaterno.value,
@@ -152,7 +154,8 @@ function clearErrors() {
 function validateNull() {
   let flag = false;
   if (!numeroTrabajador.value || numeroTrabajador.value.trim() === "") {
-    numeroTrabajadorError.textContent = "Número de trabajador no puede ser nulo";
+    numeroTrabajadorError.textContent =
+      "Número de trabajador no puede ser nulo";
     numeroTrabajador.classList.add("borde-rojo");
     flag = true;
   }
@@ -198,9 +201,9 @@ function clearForm() {
   estadoAsignado.value = "";
   cantidadGasolina.value = "";
   idTipoEstatus.value = "1";
-    if (idClienteSelect.options.length > 0) {
-      idClienteSelect.selectedIndex = 0;
-    }
+  if (idClienteSelect.options.length > 0) {
+    idClienteSelect.selectedIndex = 0;
+  }
   idEmpleado.value = "";
   actualizarButtonIsActive = false;
 }
@@ -239,9 +242,9 @@ function editeEmpleado(empleadoString) {
   clearAll();
   const empleado = JSON.parse(empleadoString);
   idEmpleado.value = empleado.idEmpleado;
-  numeroTrabajador.value=empleado.numeroTrabajador;
-  nombre.value=empleado.nombre;
-  apellidoPaterno.value=empleado.apellidoPaterno;
+  numeroTrabajador.value = empleado.numeroTrabajador;
+  nombre.value = empleado.nombre;
+  apellidoPaterno.value = empleado.apellidoPaterno;
   apellidoMaterno.value = empleado.apellidoMaterno;
   municipioAsignado.value = empleado.municipioAsignado;
   estadoAsignado.value = empleado.estadoAsignado;
@@ -292,7 +295,9 @@ function showActiveEmpleados() {
 }
 
 function showInactiveEmpleados() {
-  const noActivos = empleadosData.filter((u) => u.estatusEmpleado === "inactivo");
+  const noActivos = empleadosData.filter(
+    (u) => u.estatusEmpleado === "inactivo"
+  );
   createTable(noActivos);
 }
 
@@ -329,28 +334,32 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-
         if (usuario.role === "asesor") {
-          document.getElementById("emailUserLogged").textContent = usuario.email;
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if(usuario.role === "operacion"){
+        } else if (usuario.role === "operacion") {
           const empleadoForm = document.getElementById("empleadoForm");
           if (empleadoForm) empleadoForm.remove();
           window.operacionMode = true;
           const tableHeader = document.getElementById("tableHeader");
-            if (tableHeader && tableHeader.rows.length > 0) {
-              const headerRow = tableHeader.rows[0];
-              headerRow.deleteCell(-1);
-              headerRow.deleteCell(-1);
-            }
-          document.getElementById("emailUserLogged").textContent = usuario.email;
+          if (tableHeader && tableHeader.rows.length > 0) {
+            const headerRow = tableHeader.rows[0];
+            headerRow.deleteCell(-1);
+            headerRow.deleteCell(-1);
+          }
+          const menuLinks = document.querySelectorAll("#mySidebar a");
+          if (menuLinks.length > 0) {
+            menuLinks[0].remove();
+          }
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else {
-         window.location.href = "/index.html";
+          window.location.href = "/index.html";
         }
-
       }
     })
     .catch((error) => {

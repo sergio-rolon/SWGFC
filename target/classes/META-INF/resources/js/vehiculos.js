@@ -25,7 +25,7 @@ const idCliente = document.getElementById("idCliente");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idClienteSelect = document.getElementById("idClienteSelect");
 // *********************Execution at start
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -51,13 +51,13 @@ document
     clearErrors();
     if (!validateNull()) {
       const raw = JSON.stringify({
-      numeroSerie: numeroSerie.value,
-      marca: marca.value,
-      tipo: tipo.value,
-      modelo: modelo.value,
-      accesorios: accesorios.value,
-      idTipoEstatus: idTipoEstatus.value,
-      idCliente: idClienteSelect.value,
+        numeroSerie: numeroSerie.value,
+        marca: marca.value,
+        tipo: tipo.value,
+        modelo: modelo.value,
+        accesorios: accesorios.value,
+        idTipoEstatus: idTipoEstatus.value,
+        idCliente: idClienteSelect.value,
       });
 
       registerVehiculo(raw);
@@ -72,7 +72,7 @@ document
     if (actualizarButtonIsActive) {
       if (!validateNull()) {
         const raw = JSON.stringify({
-        idVehiculo: idVehiculo.value,
+          idVehiculo: idVehiculo.value,
           numeroSerie: numeroSerie.value,
           marca: marca.value,
           tipo: tipo.value,
@@ -172,9 +172,9 @@ function clearForm() {
   modelo.value = "";
   accesorios.value = "";
   idTipoEstatus.value = "1";
-    if (idClienteSelect.options.length > 0) {
-      idClienteSelect.selectedIndex = 0;
-    }
+  if (idClienteSelect.options.length > 0) {
+    idClienteSelect.selectedIndex = 0;
+  }
   idVehiculo.value = "";
   actualizarButtonIsActive = false;
 }
@@ -207,9 +207,9 @@ function editeVehiculo(vehiculoString) {
   clearAll();
   const vehiculo = JSON.parse(vehiculoString);
   idVehiculo.value = vehiculo.idVehiculo;
-  numeroSerie.value=vehiculo.numeroSerie;
-  marca.value=vehiculo.marca;
-  tipo.value=vehiculo.tipo;
+  numeroSerie.value = vehiculo.numeroSerie;
+  marca.value = vehiculo.marca;
+  tipo.value = vehiculo.tipo;
   modelo.value = vehiculo.modelo;
   accesorios.value = vehiculo.accesorios;
   if (vehiculo.estatusVehiculo == "activo") {
@@ -256,7 +256,9 @@ function showActiveVehiculos() {
 }
 
 function showInactiveVehiculos() {
-  const noActivos = vehiculosData.filter((u) => u.estatusVehiculo === "inactivo");
+  const noActivos = vehiculosData.filter(
+    (u) => u.estatusVehiculo === "inactivo"
+  );
   createTable(noActivos);
 }
 
@@ -293,28 +295,32 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-
         if (usuario.role === "operacion") {
-          document.getElementById("emailUserLogged").textContent = usuario.email;
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if(usuario.role === "asesor"){
+        } else if (usuario.role === "asesor") {
           const vehiculoForm = document.getElementById("vehiculoForm");
           if (vehiculoForm) vehiculoForm.remove();
           window.asesorMode = true;
           const tableHeader = document.getElementById("tableHeader");
-            if (tableHeader && tableHeader.rows.length > 0) {
-              const headerRow = tableHeader.rows[0];
-              headerRow.deleteCell(-1);
-              headerRow.deleteCell(-1);
-            }
-          document.getElementById("emailUserLogged").textContent = usuario.email;
+          if (tableHeader && tableHeader.rows.length > 0) {
+            const headerRow = tableHeader.rows[0];
+            headerRow.deleteCell(-1);
+            headerRow.deleteCell(-1);
+          }
+          const menuLinks = document.querySelectorAll("#mySidebar a");
+          if (menuLinks.length > 0) {
+            menuLinks[0].remove();
+          }
+          document.getElementById("emailUserLogged").textContent =
+            usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else {
-         window.location.href = "/index.html";
+          window.location.href = "/index.html";
         }
-
       }
     })
     .catch((error) => {

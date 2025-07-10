@@ -6,6 +6,7 @@ import mktpromomarc.flotilla.modelo.Servicios;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class ServiciosRepository implements ICrudRepository<Servicios>{
 
@@ -19,34 +20,42 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
         try{
             PreparedStatement ps;
             if(isAsesor){
-                ps = conn.prepareStatement("SELECT s.\"idServicio\", s.\"idTipoServicio\", s.\"kilometraje\", " +
-                        "s.\"fechaServicio\", s.\"costo\", s.\"comision\", s.\"total\", " +
-                        "s.\"totalConIva\",s.\"idAsignacion\", "+
-                        "v.\"numeroSerie\"," +
-                        "te1.\"tipoEstatus\" AS \"estatusServicio\", " +
-                        "te2.\"tipoEstatus\" AS \"tipoServicio\" " +
-                        "FROM \"Servicios\" a " +
-                        "INNER JOIN \"Vehiculos\" v ON a.\"idAsignacion\" = v.\"idAsignacion\""+
-                        "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\" " +
-                        "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\" " +
-                        "INNER JOIN \"TipoEstatus\" te1 ON a.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
-                        "INNER JOIN \"TipoEstatus\" te2 ON v.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
-                        "WHERE u.\"email\" = ? " +
-                        "ORDER BY a.\"idServicio\" ASC"
+                ps = conn.prepareStatement(
+                        "SELECT s.\"idServicio\", s.\"kilometraje\", s.\"idTipoServicio\", s.\"fechaServicio\", " +
+                                "s.\"costo\", s.\"comision\", s.\"total\", s.\"totalConIva\", s.\"idAsignacion\", " +
+                                "v.\"numeroSerie\", v.\"marca\", v.\"tipo\", v.\"modelo\", " +
+                                "e.\"numeroTrabajador\", e.\"nombre\", e.\"apellidoPaterno\", e.\"apellidoMaterno\", " +
+                                "c.\"razonSocial\", c.\"idCliente\", ts.\"tipoServicio\" AS \"tipoServicio\", " +
+                                "te1.\"tipoEstatus\" AS \"estatusVehiculo\", te2.\"tipoEstatus\" AS \"estatusTrabajador\"  "+
+                                "FROM \"Servicios\" s " +
+                                "INNER JOIN \"Asignaciones\" a ON s.\"idAsignacion\" = a.\"idAsignacion\" " +
+                                "INNER JOIN \"Vehiculos\" v ON a.\"idVehiculo\" = v.\"idVehiculo\" " +
+                                "INNER JOIN \"Empleados\" e ON a.\"idEmpleado\" = e.\"idEmpleado\" " +
+                                "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\" " +
+                                "INNER JOIN \"Usuarios\" u ON c.\"idUsuario\" = u.\"idUsuario\" " +
+                                "INNER JOIN \"TipoServicio\" ts ON s.\"idTipoServicio\" = ts.\"idTipoServicio\" " +
+                                "INNER JOIN \"TipoEstatus\" te1 ON v.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
+                                "INNER JOIN \"TipoEstatus\" te2 ON e.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
+                                "WHERE u.\"email\" = ? " +
+                                "ORDER BY s.\"idServicio\" ASC"
                 );
                 ps.setString(1,emailAsesor);
             }else{
-                ps = conn.prepareStatement("SELECT a.\"idServicio\", a.\"idTipoServicio\", a.\"kilometraje\", " +
-                        "a.\"costo\", a.\"comision\", a.\"total\", " +
-                        "a.\"totalConIva\",a.\"anoRenovacion\", "+
-                        "v.\"numeroSerie\",v.\"idAsignacion\"," +
-                        "te1.\"tipoEstatus\" AS \"estatusServicio\", " +
-                        "te2.\"tipoEstatus\" AS \"estatusVehiculo\" " +
-                        "FROM \"Servicios\" a " +
-                        "INNER JOIN \"Vehiculos\" v ON a.\"idAsignacion\" = v.\"idAsignacion\""+
-                        "INNER JOIN \"TipoEstatus\" te1 ON a.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
-                        "INNER JOIN \"TipoEstatus\" te2 ON v.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
-                        "ORDER BY a.\"idServicio\" ASC"
+                ps = conn.prepareStatement("SELECT s.\"idServicio\", s.\"idTipoServicio\", s.\"kilometraje\", s.\"fechaServicio\", " +
+                        "s.\"costo\", s.\"comision\", s.\"total\", s.\"totalConIva\", s.\"idAsignacion\", " +
+                        "v.\"numeroSerie\", v.\"marca\", v.\"tipo\", v.\"modelo\", " +
+                        "e.\"numeroTrabajador\", e.\"nombre\", e.\"apellidoPaterno\", e.\"apellidoMaterno\", " +
+                        "c.\"razonSocial\", c.\"idCliente\", ts.\"tipoServicio\" AS \"tipoServicio\", " +
+                        "te1.\"tipoEstatus\" AS \"estatusVehiculo\", te2.\"tipoEstatus\" AS \"estatusTrabajador\"  "+
+                        "FROM \"Servicios\" s " +
+                        "INNER JOIN \"Asignaciones\" a ON s.\"idAsignacion\" = a.\"idAsignacion\" " +
+                        "INNER JOIN \"Vehiculos\" v ON a.\"idVehiculo\" = v.\"idVehiculo\" " +
+                        "INNER JOIN \"Empleados\" e ON a.\"idEmpleado\" = e.\"idEmpleado\" " +
+                        "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\" " +
+                        "INNER JOIN \"TipoServicio\" ts ON s.\"idTipoServicio\" = ts.\"idTipoServicio\" " +
+                        "INNER JOIN \"TipoEstatus\" te1 ON v.\"idTipoEstatus\" = te1.\"idTipoEstatus\" " +
+                        "INNER JOIN \"TipoEstatus\" te2 ON e.\"idTipoEstatus\" = te2.\"idTipoEstatus\" " +
+                        "ORDER BY s.\"idServicio\" ASC"
                 );
             }
             ResultSet rs = ps.executeQuery();
@@ -75,18 +84,19 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
     }
 
     @Override
-    public Servicios findById(String idTipoServicio){
+    public Servicios findById(String idServicio){
         Servicios servicio = null;
         Connection conn = Conexion.getConexion();
         try{
-            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Servicios\" where \"idTipoServicio\" = ?");
-            ps.setString(1,idTipoServicio);
+            PreparedStatement ps = conn.prepareStatement("SELECT*FROM public.\"Servicios\" where \"idServicio\" = ?");
+            ps.setString(1,idServicio);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 servicio = new Servicios();
                 servicio.setIdServicio(rs.getInt("idServicio"));
                 servicio.setIdTipoServicio(rs.getInt("idTipoServicio"));
                 servicio.setKilometraje(rs.getInt("kilometraje"));
+                servicio.setFechaServicio(rs.getString("fechaServicio"));
                 servicio.setCosto(rs.getBigDecimal("costo"));
                 servicio.setComision(rs.getBigDecimal("comision"));
                 servicio.setTotal(rs.getBigDecimal("total"));
@@ -104,12 +114,15 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
     }
 
     @Override
-    public boolean existsById(String idTipoServicio){
+    public boolean existsById(String idServicio){
+        return false;
+    }
+    public boolean existsById(int idServicio){
         boolean result = false;
         Connection conn = Conexion.getConexion();
         try{
-            PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM public.\"Servicios\" where \"idTipoServicio\" = ?");
-            ps.setString(1,idTipoServicio);
+            PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM public.\"Servicios\" where \"idServicio\" = ?");
+            ps.setInt(1,idServicio);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 result = rs.getBoolean(1);
@@ -123,33 +136,33 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
         }
         return result;
     }
-
     @Override
-    public Servicios save(Servicios Servicio){
-        Servicios ServicioResult = null;
+    public Servicios save(Servicios servicio){
+        Servicios servicioResult = null;
         // Validar si Servicio.idServicio es diferente de null entonces es un update
         // si no es un insert
         Connection conn = Conexion.getConexion();
-        if(Servicio.getIdServicio()!=0){
+        if(servicio.getIdServicio()!=0){
             //update
             try {
                 PreparedStatement ps = conn.prepareStatement("UPDATE public.\"Servicios\" SET " +
-                        "\"idTipoServicio\"=?,\"kilometraje\"=?,\"costo\"=?," +
-                        "\"comision\"=?,\"total\"=?,\"totalConIva\"=?,\"anoRenovacion\"=?,\"idTipoEstatus\"=?," +
+                        "\"idTipoServicio\"=?,\"kilometraje\"=?,\"fechaServicio\"=?,\"costo\"=?," +
+                        "\"comision\"=?,\"total\"=?,\"totalConIva\"=?," +
                         "\"idAsignacion\"=? where \"idServicio\"=?;");
-                ps.setInt(1, Servicio.getIdTipoServicio());
-                ps.setInt(2, Servicio.getKilometraje());
-                ps.setBigDecimal(3,Servicio.getCosto());
-                ps.setBigDecimal(4, Servicio.getComision());
-                ps.setBigDecimal(5, Servicio.getTotal());
-                ps.setBigDecimal(6, Servicio.getTotalConIva());
-                ps.setInt(7, Servicio.getIdAsignacion());
-                ps.setInt(8, Servicio.getIdServicio());
+                ps.setInt(1, servicio.getIdTipoServicio());
+                ps.setInt(2, servicio.getKilometraje());
+                ps.setString(3, servicio.getFechaServicio());
+                ps.setBigDecimal(4,servicio.getCosto());
+                ps.setBigDecimal(5, servicio.getComision());
+                ps.setBigDecimal(6, servicio.getTotal());
+                ps.setBigDecimal(7, servicio.getTotalConIva());
+                ps.setInt(8, servicio.getIdAsignacion());
+                ps.setInt(9, servicio.getIdServicio());
 
                 ps.executeUpdate();
                 Conexion.endConexion(conn);
 
-                return Servicio;
+                return servicio;
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -160,37 +173,53 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
             //insert
             try {
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO public.\"Servicios\" (\"idServicio\", " +
-                        "\"idTipoServicio\", \"kilometraje\",\"costo\"," +
-                        "\"comision\",\"total\",\"totalConIva\",\"anoRenovacion\",\"idTipoEstatus\",\"idAsignacion\") " +
-                        "VALUES (DEFAULT,?,?,?,?,?,?,?,?,?)");
-                ps.setInt(1, Servicio.getIdTipoServicio());
-                ps.setInt(2, Servicio.getKilometraje());
-                ps.setBigDecimal(3,Servicio.getCosto());
-                ps.setBigDecimal(4, Servicio.getComision());
-                ps.setBigDecimal(5, Servicio.getTotal());
-                ps.setBigDecimal(6, Servicio.getTotalConIva());
-                ps.setInt(7, Servicio.getIdAsignacion());
+                        "\"idTipoServicio\", \"kilometraje\",\"fechaServicio\",\"costo\"," +
+                        "\"comision\",\"total\",\"totalConIva\",\"idAsignacion\") " +
+                        "VALUES (DEFAULT,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    ps.setInt(1, servicio.getIdTipoServicio());
+                    ps.setInt(2, servicio.getKilometraje());
+                    ps.setString(3, servicio.getFechaServicio());
+                    ps.setBigDecimal(4,servicio.getCosto());
+                    ps.setBigDecimal(5, servicio.getComision());
+                    ps.setBigDecimal(6, servicio.getTotal());
+                    ps.setBigDecimal(7, servicio.getTotalConIva());
+                    ps.setInt(8, servicio.getIdAsignacion());
 
-                ps.executeUpdate();
+                int rowsInserted = ps.executeUpdate();
+
+                int idGenerated = -1;
+
+                if(rowsInserted>0){
+                    ResultSet rs = ps.getGeneratedKeys();
+                    if (rs.next()) {
+                        idGenerated = rs.getInt(1);
+                    }
+                    rs.close();
+                }
+               servicio.setIdServicio(idGenerated);
                 Conexion.endConexion(conn);
 
-                ServicioResult = findById(Servicio.getIdTipoServicio());
-
+                servicioResult = servicio;
             } catch (Exception e) {
                 System.out.println(e);
                 Conexion.endConexion(conn);
             }
         }
-        return ServicioResult;
+        return servicioResult;
     }
 
     @Override
     public boolean deleteById(String idTipoServicio){
+        return false;
+    }
+
+    @Override
+    public boolean deleteById(int idServicio){
         boolean result=false;
         Connection conn = Conexion.getConexion();
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM public.\"Servicios\" where \"idTipoServicio\"=?");
-            ps.setString(1, idTipoServicio);
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM public.\"Servicios\" where \"idServicio\"=?");
+            ps.setInt(1, idServicio);
 
             ps.executeUpdate();
 
@@ -203,11 +232,6 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
             Conexion.endConexion(conn);
         }
         return result;
-    }
-
-    @Override
-    public boolean deleteById(int id){
-        return false;
     }
     @Override
     public Servicios findById(int id) {
@@ -222,6 +246,7 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
                 servicio.setIdServicio(rs.getInt("idServicio"));
                 servicio.setIdTipoServicio(rs.getInt("idTipoServicio"));
                 servicio.setKilometraje(rs.getInt("kilometraje"));
+                servicio.setFechaServicio(rs.getString("fechaServicio"));
                 servicio.setCosto(rs.getBigDecimal("costo"));
                 servicio.setComision(rs.getBigDecimal("comision"));
                 servicio.setTotal(rs.getBigDecimal("total"));
@@ -236,26 +261,5 @@ public class ServiciosRepository implements ICrudRepository<Servicios>{
             Conexion.endConexion(conn);
         }
         return servicio;
-    }
-
-    public boolean existByNumeroSerie(int idAsignacion){
-        boolean result = false;
-        Connection conn = Conexion.getConexion();
-        try{
-            PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM public.\"Servicios\" where \"idAsignacion\" = ?" +
-                    "AND idTipoEstatus=1");
-            ps.setInt(1,idAsignacion);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                result = rs.getBoolean(1);
-                System.out.println("Id vehículo asignado a un servicio? "+result);
-            }
-            Conexion.endConexion(conn);
-            return result;
-        }catch (Exception e){
-            System.out.println(e);
-            Conexion.endConexion(conn);
-        }
-        return result;
     }
 }

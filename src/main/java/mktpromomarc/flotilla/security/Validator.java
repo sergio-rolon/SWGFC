@@ -60,6 +60,7 @@ public class Validator {
         }
     }
 
+
     public static String isEmail(String email) {
         String emailPattern = "^[a-zA-Z0-9._%+-]+@asesorenservicios\\.com$";
 
@@ -90,6 +91,18 @@ public class Validator {
         } else {
             validationFailed = true;
             return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " solo debe contener letras y espacios (puede llevar acentos)\"";
+        }
+    }
+
+    public static String isString(String campo, String palabra) {
+
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
+
+        if (palabra != null) {
+           return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
+        } else {
+            validationFailed = true;
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " no es un text válido\"";
         }
     }
 

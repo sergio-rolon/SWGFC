@@ -35,7 +35,6 @@ getAllAsignaciones();
 getAllClientes();
 getAllVehiculos();
 getAllEmpleados();
-fillSelect(idClientesSelect, clientesData, "idCliente", "razonSocial");
 // ************************************** Events
 document
   .getElementById("clickToLogOut")
@@ -90,11 +89,7 @@ document
   .getElementById("btnLimpiar")
   .addEventListener("click", function (event) {
     event.preventDefault();
-    idAsignacion.value = "";
-    idEmpleadoSelect.innerHTML = "";
-    idVehiculoSelect.innerHTML = "";
-    idClientesSelect.selectedIndex = 0;
-
+    clearAll();
 
     actualizarButtonIsActive = false;
   });
@@ -121,7 +116,7 @@ function clearForm() {
   idAsignacion.value = "";
   idEmpleadoSelect.innerHTML = "";
   idVehiculoSelect.innerHTML = "";
-  fillSelect(idClientesSelect, clientesData, "idCliente", "razonSocial");
+  idClientesSelect.selectedIndex = 0;
 }
 function validateNull() {
   let flag = false;
@@ -175,10 +170,19 @@ idClientesSelect.addEventListener("change", () => {
   );
 
   // Llena los selects
-  fillSelect(idEmpleadoSelect, empleadosFiltrados, "idEmpleado", (asignacion) =>
-    `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`);
-  fillSelect(idVehiculoSelect, vehiculosFiltrados, "idVehiculo", (vehiculo) =>
-    vehiculo.numeroSerie);
+  fillSelect(
+    idEmpleadoSelect,
+    empleadosFiltrados,
+    "idEmpleado",
+    (empleado) =>
+      `${empleado.numeroTrabajador} - ${empleado.nombre} ${empleado.apellidoPaterno} ${empleado.apellidoMaterno}`
+  );
+  fillSelect(
+    idVehiculoSelect,
+    vehiculosFiltrados,
+    "idVehiculo",
+    (vehiculo) => vehiculo.numeroSerie
+  );
 });
 
 function sidebar() {
@@ -204,20 +208,21 @@ function setErrorMsgs(result) {
     idVehiculoError.textContent = result.IdVehiculo;
   }
 }
-function setSelectedByValue(selectElement, value) {
+/*function setSelectedByValue(selectElement, value) {
   for (let i = 0; i < selectElement.options.length; i++) {
     if (selectElement.options[i].textContent == value) {
       selectElement.selectedIndex = i;
       return;
     }
   }
-}
+}*/
 
 function editeAsignacion(asignacionString) {
+  clearAll();
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;
   idTipoEstatus.value = asignacion.estatusAsignacion === "activo" ? 1 : 2;
-   idClientesSelect.selectedIndex = asignacion.idCliente;
+  idClientesSelect.selectedIndex = asignacion.idCliente;
 
   const clienteSeleccionado = idClientesSelect.value;
 
@@ -236,10 +241,19 @@ function editeAsignacion(asignacionString) {
   );
 
   // Llena los selects
-  fillSelect(idEmpleadoSelect, empleadosFiltrados, "idEmpleado", (asignacion) =>
-    `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`);
-  fillSelect(idVehiculoSelect, vehiculosFiltrados, "idVehiculo", (vehiculo) =>
-    vehiculo.numeroSerie);
+  fillSelect(
+    idEmpleadoSelect,
+    empleadosFiltrados,
+    "idEmpleado",
+    (asignacion) =>
+      `${asignacion.numeroTrabajador} - ${asignacion.nombre} ${asignacion.apellidoPaterno} ${asignacion.apellidoMaterno}`
+  );
+  fillSelect(
+    idVehiculoSelect,
+    vehiculosFiltrados,
+    "idVehiculo",
+    (vehiculo) => vehiculo.numeroSerie
+  );
   idEmpleadoSelect.selectedIndex = asignacion.idEmpleado;
   idVehiculoSelect.selectedIndex = asignacion.idVehiculo;
 
@@ -318,6 +332,10 @@ function validateLogin() {
             const headerRow = tableHeader.rows[0];
             headerRow.deleteCell(-1);
             headerRow.deleteCell(-1);
+          }
+          const menuLinks = document.querySelectorAll("#mySidebar a");
+          if (menuLinks.length > 0) {
+            menuLinks[0].remove();
           }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
@@ -442,9 +460,9 @@ function getAllClientes() {
       if (result) {
         idClientesSelect.innerHTML = "";
         idClientesSelect.innerHTML =
-          '<option value="">-- Seleccione --</option>';
-        let clientes = result.myArrayList.map((item) => item.map);
-        clientes.forEach((cliente) => {
+          '<option value="0">-- Seleccione --</option>';
+        clientesData = result.myArrayList.map((item) => item.map);
+        clientesData.forEach((cliente) => {
           const option = document.createElement("option");
           option.value = cliente.idCliente;
           option.textContent = `${cliente.razonSocial}`;
@@ -546,7 +564,6 @@ function registerAsignacion(raw) {
         getAllVehiculos();
         getAllEmpleados();
         clearAll();
-        fillSelect(idClientesSelect, clientesData, "idCliente", "razonSocial");
       }
     })
     .catch((error) => {
@@ -608,12 +625,6 @@ function deleteAsignacion(idAsignacion) {
             getAllClientes();
             getAllVehiculos();
             getAllEmpleados();
-            fillSelect(
-              idClientesSelect,
-              clientesData,
-              "idCliente",
-              "razonSocial"
-            );
             clearAll();
           }
         })
@@ -672,7 +683,6 @@ function updateAsignacion(raw) {
         getAllClientes();
         getAllVehiculos();
         getAllEmpleados();
-        fillSelect(idClientesSelect, clientesData, "idCliente", "razonSocial");
         clearAll();
         actualizarButtonIsActive = false;
       }

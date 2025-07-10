@@ -75,7 +75,39 @@ public class AsignacionesRepository implements ICrudRepository<Asignaciones>{
     public JSONArray findAllObjects() {
         return null;
     }
-
+    public JSONArray findAllObjects(String pathInfo) {
+        JSONArray allAsignaciones = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps=null;
+            if(pathInfo.equals("/getAsignacionesParaServicios")||pathInfo.equals("/getAsignacionesParaIncidentes")) {
+                ps = conn.prepareStatement(
+                        "SELECT a.\"idAsignacion\", a.\"idTipoEstatus\", a.\"idVehiculo\"," +
+                                "a.\"idEmpleado\", v.\"numeroSerie\", e.\"numeroTrabajador\", c.\"idCliente\" " +
+                                " FROM \"Asignaciones\" a " +
+                                "INNER JOIN \"Vehiculos\" v ON a.\"idVehiculo\" = v.\"idVehiculo\" "+
+                                "INNER JOIN \"Empleados\" e ON a.\"idEmpleado\" = e.\"idEmpleado\" "+
+                                "INNER JOIN \"Clientes\" c ON v.\"idCliente\" = c.\"idCliente\" "+
+                        "WHERE a.\"idTipoEstatus\"=1 ORDER BY a.\"idAsignacion\" ASC"
+                );
+            }
+            ResultSet rs = ps.executeQuery();
+            allAsignaciones = new JSONArray();
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject asignacion = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    asignacion.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allAsignaciones.put(asignacion);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allAsignaciones;
+    }
     @Override
     public Asignaciones findById(String idAsignacion){
         return null;
