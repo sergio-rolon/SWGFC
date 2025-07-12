@@ -14,6 +14,7 @@
       type="module"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Poppins"
@@ -180,12 +181,33 @@
               <button class="btn-no-filter" onclick="showAllClientes()">
                 Sin filtro
               </button>
-              <button class="btn-active" onclick="showActiveClientes()">
-                Activos
-              </button>
-              <button class="btn-inactive" onclick="showInactiveClientes()">
-                Inactivos
-              </button>
+              <div class="dropdown">
+                <button class="btn-filter">Estatus</button>
+                <div class="dropdown-content">
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="activo"
+                      checked
+                    />
+                    Activo </label
+                  ><br />
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="inactivo"
+                      checked
+                    />
+                    Inactivo
+                  </label>
+                </div>
+              </div>
+              <div class="dropdown">
+                <button class="btn-filter">Asesor</button>
+                <div class="dropdown-content" id="secondDropdown"></div>
+              </div>
             </div>
             <div class="table-wrapper">
               <table class="responsive-table">
@@ -207,7 +229,12 @@
                 <tbody id="tableBody"></tbody>
               </table>
             </div>
+            <br />
           </div>
+          <div id="paginationDiv" class="pagination-container"></div>
+          <button class="btn-export" onclick="exportToXlsx()">
+            Exportar a excel
+          </button>
         </main>
       </div>
       <script>

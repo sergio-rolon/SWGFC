@@ -117,16 +117,6 @@ public class Validator {
         }
     }
 
-    public static String isDouble(String campo, String numero) {
-        try {
-            double isDouble = Double.parseDouble(numero);
-            return "\""+campo+"\": \"success\"";
-        } catch (NumberFormatException e) {
-            validationFailed = true;
-            return "\""+campo+"\": \""+campo+" solo debe contener números válidos\"";
-        }
-    }
-
     public static String isNum(String campo, String numero) {
         String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         try {

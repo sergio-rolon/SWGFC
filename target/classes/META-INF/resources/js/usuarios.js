@@ -2,7 +2,8 @@ let usuariosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/usuarios";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -26,7 +27,7 @@ const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idTipoUsuario = document.getElementById("idTipoUsuario");
 
 // *********************Execution at start
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -102,6 +103,82 @@ document
   });
 
 //************************************** Functions
+
+function exportToXlsx() {
+  const headers = [
+    "Id Usuario",
+    "Email",
+    "Nombre",
+    "Apellido paterno",
+    "Apellido materno",
+    "Número trabajador",
+    "Estatus",
+    "Tipo usuario",
+  ];
+
+  const rows = usuariosData.map((usuario) => [
+    usuario.idUsuario,
+    usuario.email,
+    usuario.nombre,
+    usuario.apellidoPaterno,
+    usuario.apellidoMaterno,
+    usuario.numeroTrabajador,
+    usuario.estatus,
+    usuario.tipoUsuario,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Usuarios");
+
+  XLSX.writeFile(workBook, "usuarios_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueTipoUsuario = [
+    ...new Set(usuariosData.map((u) => `${u.tipoUsuario}`)),
+  ];
+
+  uniqueTipoUsuario.forEach((usuario) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${usuario}" checked /> ${usuario}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedTipoUsuario = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = usuariosData.filter(
+    (usuario) =>
+      selectedEstatus.includes(usuario.estatus) &&
+      selectedTipoUsuario.includes(usuario.tipoUsuario)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function sidebar() {
   if (flag) {
     document.getElementById("mySidebar").style.width = "0";
@@ -222,6 +299,13 @@ function setErrorMsgs(result) {
 }
 
 function editeUsuario(usuarioString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const usuario = JSON.parse(usuarioString);
   idUsuario.value = usuario.idUsuario;
@@ -247,9 +331,14 @@ function editeUsuario(usuarioString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(usuarios) {
+function createTable(usuarios, page = 1) {
   tbody.innerHTML = "";
-  usuarios.forEach((usuario) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedUsuarios = usuarios.slice(startIndex, endIndex);
+
+  paginatedUsuarios.forEach((usuario) => {
     const row = document.createElement("tr");
     const usuarioString = JSON.stringify(usuario).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -268,8 +357,46 @@ function createTable(usuarios) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(usuarios, page);
 }
 
+function renderPagination(usuarios, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(usuarios.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(usuarios, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(usuarios, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(usuarios, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
+}
 function showActiveUsers() {
   const activos = usuariosData.filter((u) => u.estatus === "activo");
   createTable(activos);
@@ -282,6 +409,7 @@ function showInactiveUsers() {
 
 function showAllUsers() {
   createTable(usuariosData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -360,6 +488,7 @@ function getAllUsuarios() {
       if (result) {
         usuariosData = result.myArrayList.map((item) => item.map);
         createTable(usuariosData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {

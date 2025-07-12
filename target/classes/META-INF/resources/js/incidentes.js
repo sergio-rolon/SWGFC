@@ -6,7 +6,8 @@ let url = "/api/incidentes";
 let urlAsignaciones = "/api/asignaciones/getAsignacionesParaIncidentes";
 let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -232,6 +233,13 @@ function setErrorMsgs(result) {
 }
 
 function editeIncidente(incidenteString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const incidente = JSON.parse(incidenteString);
   idIncidente.value = incidente.idIncidente;
@@ -265,9 +273,14 @@ function editeIncidente(incidenteString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(incidentes) {
+function createTable(incidentes, page = 1) {
   tbody.innerHTML = "";
-  incidentes.forEach((incidente) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginationIncidentes = incidentes.slice(startIndex, endIndex);
+
+  paginationIncidentes.forEach((incidente) => {
     const row = document.createElement("tr");
     const incidenteString = JSON.stringify(incidente).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -296,6 +309,45 @@ function createTable(incidentes) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(incidentes, page);
+}
+
+function renderPagination(incidentes, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(incidentes.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(incidentes, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(incidentes, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(incidentes, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function validateLogin() {

@@ -3,7 +3,8 @@ let urlLogged = "/api/usuarios/logged";
 let url = "/api/vehiculos";
 let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -101,6 +102,85 @@ document
   });
 
 //************************************** Functions
+function exportToXlsx() {
+  const headers = [
+    "Id Vehículo",
+    "Número de serie",
+    "Marca",
+    "Tipo",
+    "Modelo",
+    "Accesorios",
+    "Estatus vehículo",
+    "RFC",
+    "Razón social",
+    "Estatus cliente",
+  ];
+
+  const rows = vehiculosData.map((vehiculo) => [
+    vehiculo.idVehiculo,
+    vehiculo.numeroSerie,
+    vehiculo.marca,
+    vehiculo.tipo,
+    vehiculo.modelo,
+    vehiculo.accesorios,
+    vehiculo.estatusVehiculo,
+    vehiculo.rfc,
+    vehiculo.razonSocial,
+    vehiculo.estatusCliente,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Vehículos");
+
+  XLSX.writeFile(workBook, "vehiculos_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueRazonSocial = [
+    ...new Set(vehiculosData.map((v) => `${v.razonSocial}`)),
+  ];
+
+  uniqueRazonSocial.forEach((razonSocial) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${razonSocial}" checked /> ${razonSocial}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedRazonSocial = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = vehiculosData.filter(
+    (vehiculo) =>
+      selectedEstatus.includes(vehiculo.estatusCliente) &&
+      selectedRazonSocial.includes(vehiculo.razonSocial)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function sidebar() {
   if (flag) {
     document.getElementById("mySidebar").style.width = "0";
@@ -204,6 +284,13 @@ function setErrorMsgs(result) {
 }
 
 function editeVehiculo(vehiculoString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const vehiculo = JSON.parse(vehiculoString);
   idVehiculo.value = vehiculo.idVehiculo;
@@ -222,9 +309,14 @@ function editeVehiculo(vehiculoString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(vehiculos) {
+function createTable(vehiculos, page = 1) {
   tbody.innerHTML = "";
-  vehiculos.forEach((vehiculo) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedVehiculos = vehiculos.slice(startIndex, endIndex);
+
+  paginatedVehiculos.forEach((vehiculo) => {
     const row = document.createElement("tr");
     const vehiculoString = JSON.stringify(vehiculo).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -248,6 +340,45 @@ function createTable(vehiculos) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(vehiculos, page);
+}
+
+function renderPagination(vehiculos, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(vehiculos.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(vehiculos, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(vehiculos, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(vehiculos, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function showActiveVehiculos() {
@@ -264,6 +395,7 @@ function showInactiveVehiculos() {
 
 function showAllVehiculos() {
   createTable(vehiculosData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -360,6 +492,7 @@ function getAllVehiculos() {
       if (result) {
         vehiculosData = result.myArrayList.map((item) => item.map);
         createTable(vehiculosData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {

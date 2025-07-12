@@ -1,9 +1,11 @@
 let segurosData = [];
+let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/seguros";
-let urlVehiculos = "/api/vehiculos/getVehiculosSinSeguro";
+let urlVehiculos = "/api/vehiculos/getVehiculosActivos";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -110,6 +112,101 @@ document
 fechaInicioElement.addEventListener("change", dateValidation);
 fechaTerminoElement.addEventListener("change", dateValidation);
 //************************************** Functions
+function populateVehiculoSelect() {
+  idVehiculoSelect.innerHTML = "";
+  vehiculosData.forEach((vehiculo) => {
+    const option = document.createElement("option");
+    option.value = vehiculo.idVehiculo;
+    option.textContent = `${vehiculo.numeroSerie}`;
+    idVehiculoSelect.appendChild(option);
+  });
+}
+
+function exportToXlsx() {
+  const headers = [
+    "Id Seguro",
+    "Número de póliza",
+    "Aseguradora",
+    "Fecha de inicio",
+    "Fecha de término",
+    "Mensualidad",
+    "Comisión",
+    "Total",
+    "Total con IVA",
+    "Número de meses",
+    "Estatus seguro",
+    "Número de serie",
+    "Estatus vehículo",
+  ];
+
+  const rows = segurosData.map((seguro) => [
+    seguro.idSeguro,
+    seguro.numeroPoliza,
+    seguro.aseguradora,
+    seguro.fechaInicio,
+    seguro.fechaTermino,
+    seguro.mensualidad,
+    seguro.comision,
+    seguro.total,
+    seguro.totalConIva,
+    seguro.numeroMeses,
+    seguro.estatusSeguro,
+    seguro.numeroSerie,
+    seguro.estatusVehiculo,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Seguros");
+
+  XLSX.writeFile(workBook, "seguros_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueAseguradora = [
+    ...new Set(segurosData.map((s) => `${s.aseguradora}`)),
+  ];
+
+  uniqueAseguradora.forEach((aseguradora) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${aseguradora}" checked /> ${aseguradora}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedAseguradora = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = segurosData.filter(
+    (seguro) =>
+      selectedEstatus.includes(seguro.estatusSeguro) &&
+      selectedAseguradora.includes(seguro.aseguradora)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function dateValidation() {
   fechaTerminoError.textContent = "";
   document.getElementById("fechaTermino").style.border = "";
@@ -235,11 +332,9 @@ function clearForm() {
   comision.value = "";
   numeroMeses.value = "";
   idTipoEstatus.value = "1";
-  if (idVehiculoSelect.options.length > 0) {
-    idVehiculoSelect.selectedIndex = 0;
-  }
   idSeguro.value = "";
   actualizarButtonIsActive = false;
+  populateVehiculoSelect();
 }
 
 function setErrorMsgs(result) {
@@ -273,6 +368,13 @@ function setErrorMsgs(result) {
 }
 
 function editeSeguro(seguroString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const seguro = JSON.parse(seguroString);
   idSeguro.value = seguro.idSeguro;
@@ -297,9 +399,14 @@ function editeSeguro(seguroString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(seguros) {
+function createTable(seguros, page = 1) {
   tbody.innerHTML = "";
-  seguros.forEach((seguro) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedSeguros = seguros.slice(startIndex, endIndex);
+
+  paginatedSeguros.forEach((seguro) => {
     const row = document.createElement("tr");
     const seguroString = JSON.stringify(seguro).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -326,6 +433,44 @@ function createTable(seguros) {
 
     tbody.appendChild(row);
   });
+  renderPagination(seguros, page);
+}
+
+function renderPagination(seguros, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(seguros.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(seguros, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(seguros, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(seguros, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function showActiveSeguros() {
@@ -340,6 +485,7 @@ function showInactiveSeguros() {
 
 function showAllSeguros() {
   createTable(segurosData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -436,6 +582,7 @@ function getAllSeguros() {
       if (result) {
         segurosData = result.myArrayList.map((item) => item.map);
         createTable(segurosData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {
@@ -473,14 +620,8 @@ function getAllVehiculos() {
     })
     .then((result) => {
       if (result) {
-        idVehiculoSelect.innerHTML = "";
-        let vehiculos = result.myArrayList.map((item) => item.map);
-        vehiculos.forEach((vehiculo) => {
-          const option = document.createElement("option");
-          option.value = vehiculo.idVehiculo;
-          option.textContent = `${vehiculo.numeroSerie}`;
-          idVehiculoSelect.appendChild(option);
-        });
+        vehiculosData = result.myArrayList.map((item) => item.map);
+        populateVehiculoSelect();
       }
     })
     .catch((error) => {

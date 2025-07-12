@@ -6,7 +6,8 @@ let url = "/api/servicios";
 let urlAsignaciones = "/api/asignaciones/getAsignacionesParaServicios";
 let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -272,6 +273,13 @@ function setErrorMsgs(result) {
 }*/
 
 function editeServicio(servicioString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const servicio = JSON.parse(servicioString);
   idServicio.value = servicio.idServicio;
@@ -307,9 +315,14 @@ function editeServicio(servicioString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(servicios) {
+function createTable(servicios, page = 1) {
   tbody.innerHTML = "";
-  servicios.forEach((servicio) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedServicios = servicios.slice(startIndex, endIndex);
+
+  paginatedServicios.forEach((servicio) => {
     const row = document.createElement("tr");
     const servicioString = JSON.stringify(servicio).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -342,6 +355,44 @@ function createTable(servicios) {
 
     tbody.appendChild(row);
   });
+  renderPagination(servicios, page);
+}
+
+function renderPagination(servicios, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(servicios.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(servicios, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(servicios, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(servicios, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function validateLogin() {

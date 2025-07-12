@@ -3,7 +3,8 @@ let urlLogged = "/api/usuarios/logged";
 let url = "/api/empleados";
 let urlClientes = "/api/clientes/getAllClientes";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -111,6 +112,89 @@ document
   });
 
 //************************************** Functions
+function exportToXlsx() {
+  const headers = [
+    "Id empleado",
+    "Número de trabajador",
+    "Nombre",
+    "Apellido paterno",
+    "Apellido materno",
+    "Municipio asignado",
+    "Estado asignado",
+    "Cantidad gasolina",
+    "Estatus empleado",
+    "RFC",
+    "Razón social",
+    "Estatus cliente",
+  ];
+
+  const rows = empleadosData.map((empleado) => [
+    empleado.idEmpleado,
+    empleado.numeroTrabajador,
+    empleado.nombre,
+    empleado.apellidoPaterno,
+    empleado.apellidoMaterno,
+    empleado.municipioAsignado,
+    empleado.estadoAsignado,
+    empleado.cantidadGasolina,
+    empleado.estatusEmpleado,
+    empleado.rfc,
+    empleado.razonSocial,
+    empleado.estatusCliente,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Empleados");
+
+  XLSX.writeFile(workBook, "empleados_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueRazonSocial = [
+    ...new Set(empleadosData.map((v) => `${v.razonSocial}`)),
+  ];
+
+  uniqueRazonSocial.forEach((razonSocial) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${razonSocial}" checked /> ${razonSocial}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedRazonSocial = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = empleadosData.filter(
+    (empleado) =>
+      selectedEstatus.includes(empleado.estatusCliente) &&
+      selectedRazonSocial.includes(empleado.razonSocial)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function sidebar() {
   if (flag) {
     document.getElementById("mySidebar").style.width = "0";
@@ -239,6 +323,13 @@ function setErrorMsgs(result) {
 }
 
 function editeEmpleado(empleadoString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const empleado = JSON.parse(empleadoString);
   idEmpleado.value = empleado.idEmpleado;
@@ -259,9 +350,14 @@ function editeEmpleado(empleadoString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(empleados) {
+function createTable(empleados, page = 1) {
   tbody.innerHTML = "";
-  empleados.forEach((empleado) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedEmpleados = empleados.slice(startIndex, endIndex);
+
+  paginatedEmpleados.forEach((empleado) => {
     const row = document.createElement("tr");
     const empleadoString = JSON.stringify(empleado).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -287,6 +383,45 @@ function createTable(empleados) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(empleados, page);
+}
+
+function renderPagination(empleados, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(empleados.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(empleados, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(empleados, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(empleados, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function showActiveEmpleados() {
@@ -303,6 +438,7 @@ function showInactiveEmpleados() {
 
 function showAllEmpleados() {
   createTable(empleadosData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -339,6 +475,10 @@ function validateLogin() {
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
+          const menuLinks = document.querySelectorAll("#mySidebar a");
+          if (menuLinks.length > 0) {
+            menuLinks[0].remove();
+          }
         } else if (usuario.role === "operacion") {
           const empleadoForm = document.getElementById("empleadoForm");
           if (empleadoForm) empleadoForm.remove();
@@ -349,10 +489,7 @@ function validateLogin() {
             headerRow.deleteCell(-1);
             headerRow.deleteCell(-1);
           }
-          const menuLinks = document.querySelectorAll("#mySidebar a");
-          if (menuLinks.length > 0) {
-            menuLinks[0].remove();
-          }
+
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -399,6 +536,7 @@ function getAllEmpleados() {
       if (result) {
         empleadosData = result.myArrayList.map((item) => item.map);
         createTable(empleadosData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {

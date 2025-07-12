@@ -1,6 +1,5 @@
 package mktpromomarc.flotilla.repository;
 
-import mktpromomarc.flotilla.controller.VehiculosController;
 import mktpromomarc.flotilla.modelo.Vehiculos;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,22 +83,21 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
                                 "SELECT 1 FROM \"Arrendamientos\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
                                 ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
                 );
-            }else if(pathInfo.equals("/getVehiculosSinSeguro")){
+            }else if(pathInfo.equals("/getVehiculosActivos")){
                 ps = conn.prepareStatement(
                         "SELECT * FROM \"Vehiculos\" v " +
-                                "WHERE NOT EXISTS (" +
-                                "SELECT 1 FROM \"Seguros\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
-                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                                "WHERE v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
                 );
 
-            }else if(pathInfo.equals("/getVehiculosSinPlaca")){
-                ps = conn.prepareStatement(
-                        "SELECT * FROM \"Vehiculos\" v " +
-                                "WHERE NOT EXISTS (" +
-                                "SELECT 1 FROM \"Placas\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
-                                "AND a.\"idTipoEstatus\"=1" +
-                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
-                );
+//            }
+//            else if(pathInfo.equals("/getVehiculosSinPlaca")){
+//                ps = conn.prepareStatement(
+//                        "SELECT * FROM \"Vehiculos\" v " +
+//                                "WHERE NOT EXISTS (" +
+//                                "SELECT 1 FROM \"Placas\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+//                                "AND a.\"idTipoEstatus\"=1" +
+//                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+//                );
 
             }else if(pathInfo.equals("/getVehiculosParaAsignacion")){
                 ps = conn.prepareStatement("SELECT \"idVehiculo\", \"numeroSerie\", \"idCliente\"" +

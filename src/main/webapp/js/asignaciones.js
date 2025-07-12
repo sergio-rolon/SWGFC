@@ -8,7 +8,8 @@ let urlVehiculos = "/api/vehiculos/getVehiculosParaAsignacion";
 let urlClientes = "/api/clientes/getAllClientes";
 let urlEmpleados = "/api/empleados/getEmpleadosParaAsignacion";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -218,6 +219,13 @@ function setErrorMsgs(result) {
 }*/
 
 function editeAsignacion(asignacionString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;

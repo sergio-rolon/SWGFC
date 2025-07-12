@@ -1,9 +1,11 @@
 let placasData = [];
+let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/placas";
-let urlVehiculos = "/api/vehiculos/getVehiculosSinPlaca";
+let urlVehiculos = "/api/vehiculos/getVehiculosActivos";
 let actualizarButtonIsActive = false;
-
+let currentPage = 1;
+const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
@@ -102,6 +104,96 @@ document
 //fechaInicioElement.addEventListener("change", dateValidation);
 //fechaTerminoElement.addEventListener("change", dateValidation);
 //************************************** Functions
+function populateVehiculoSelect() {
+  idVehiculoSelect.innerHTML = "";
+  vehiculosData.forEach((vehiculo) => {
+    const option = document.createElement("option");
+    option.value = vehiculo.idVehiculo;
+    option.textContent = `${vehiculo.numeroSerie}`;
+    idVehiculoSelect.appendChild(option);
+  });
+}
+function exportToXlsx() {
+  const headers = [
+    "Id Placa",
+    "Serie de placa",
+    "Estado",
+    "Costo",
+    "Comisión",
+    "Total",
+    "Total con IVA",
+    "Año renovación",
+    "Estatus placa",
+    "Número de serie",
+    "Estatus vehículo",
+  ];
+
+  const rows = placasData.map((placa) => [
+    placa.idPlaca,
+    placa.seriePlaca,
+    placa.estado,
+    placa.costo,
+    placa.comision,
+    placa.total,
+    placa.totalConIva,
+    placa.anoRenovacion,
+    placa.estatusPlaca,
+    placa.numeroSerie,
+    placa.estatusVehiculo,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Placas");
+
+  XLSX.writeFile(workBook, "placas_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueAnoRenovacion = [
+    ...new Set(placasData.map((p) => `${p.anoRenovacion}`)),
+  ];
+
+  uniqueAnoRenovacion.forEach((anoRenovacion) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${anoRenovacion}" checked /> ${anoRenovacion}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedAnoRenovacion = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = placasData.filter(
+    (placa) =>
+      selectedEstatus.includes(placa.estatusPlaca) &&
+      selectedAnoRenovacion.includes(String(placa.anoRenovacion))
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function dateValidation() {
   fechaTerminoError.textContent = "";
   document.getElementById("fechaTermino").style.border = "";
@@ -192,11 +284,9 @@ function clearForm() {
   comision.value = "";
   anoRenovacion.value = "";
   idTipoEstatus.value = "1";
-  if (idVehiculoSelect.options.length > 0) {
-    idVehiculoSelect.selectedIndex = 0;
-  }
   idPlaca.value = "";
   actualizarButtonIsActive = false;
+  populateVehiculoSelect();
 }
 
 function setErrorMsgs(result) {
@@ -225,6 +315,13 @@ function setErrorMsgs(result) {
 }
 
 function editePlaca(placaString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const placa = JSON.parse(placaString);
   idPlaca.value = placa.idPlaca;
@@ -247,9 +344,14 @@ function editePlaca(placaString) {
   actualizarButtonIsActive = true;
 }
 
-function createTable(placas) {
+function createTable(placas, page = 1) {
   tbody.innerHTML = "";
-  placas.forEach((placa) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedPlacas = placas.slice(startIndex, endIndex);
+
+  paginatedPlacas.forEach((placa) => {
     const row = document.createElement("tr");
     const placaString = JSON.stringify(placa).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -274,6 +376,44 @@ function createTable(placas) {
 
     tbody.appendChild(row);
   });
+  renderPagination(placas, page);
+}
+
+function renderPagination(placas, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(placas.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(placas, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(placas, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(placas, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function showActivePlacas() {
@@ -288,6 +428,7 @@ function showInactivePlacas() {
 
 function showAllPlacas() {
   createTable(placasData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -384,6 +525,7 @@ function getAllPlacas() {
       if (result) {
         placasData = result.myArrayList.map((item) => item.map);
         createTable(placasData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {
@@ -421,14 +563,8 @@ function getAllVehiculos() {
     })
     .then((result) => {
       if (result) {
-        idVehiculoSelect.innerHTML = "";
-        let vehiculos = result.myArrayList.map((item) => item.map);
-        vehiculos.forEach((vehiculo) => {
-          const option = document.createElement("option");
-          option.value = vehiculo.idVehiculo;
-          option.textContent = `${vehiculo.numeroSerie}`;
-          idVehiculoSelect.appendChild(option);
-        });
+        vehiculosData = result.myArrayList.map((item) => item.map);
+        populateVehiculoSelect();
       }
     })
     .catch((error) => {

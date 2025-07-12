@@ -3,6 +3,8 @@ let urlLogged = "/api/usuarios/logged";
 let url = "/api/clientes";
 let urlAsesores = "/api/usuarios/getAllAsesores";
 let actualizarButtonIsActive = false;
+let currentPage = 1;
+const rowsPerPage = 5;
 
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
@@ -19,7 +21,7 @@ const idUsuario = document.getElementById("idUsuario");
 const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idUsuarioSelect = document.getElementById("idUsuarioSelect");
 // *********************Execution at start
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -88,6 +90,99 @@ document
   });
 
 //************************************** Functions
+/* function exportPageToXlsx() {
+  const table = document.querySelector(".responsive-table");
+  const workBook = XLSX.utils.book_new();
+
+  const workSheet = XLSX.utils.table_to_sheet(table);
+
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Clientes ");
+
+  XLSX.writeFile(workBook, "clientes_reporte.xlsx");
+} */
+function exportToXlsx() {
+  const headers = [
+    "Id Cliente",
+    "Razón Social",
+    "RFC",
+    "Estatus Cliente",
+    "Número Trabajador",
+    "Nombre",
+    "Apellido Paterno",
+    "Apellido Materno",
+    "Estatus Usuario",
+  ];
+
+  const rows = clientesData.map((cliente) => [
+    cliente.idCliente,
+    cliente.razonSocial,
+    cliente.rfc,
+    cliente.estatusCliente,
+    cliente.numeroTrabajador,
+    cliente.nombre,
+    cliente.apellidoPaterno,
+    cliente.apellidoMaterno,
+    cliente.estatusUsuario,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Clientes");
+
+  XLSX.writeFile(workBook, "clientes_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueAsesores = [
+    ...new Set(
+      clientesData.map(
+        (c) => `${c.numeroTrabajador} - ${c.nombre} ${c.apellidoPaterno}`
+      )
+    ),
+  ];
+
+  uniqueAsesores.forEach((asesor) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${asesor}" checked /> ${asesor}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedAsesores = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = clientesData.filter(
+    (cliente) =>
+      selectedEstatus.includes(cliente.estatusCliente) &&
+      selectedAsesores.includes(
+        `${cliente.numeroTrabajador} - ${cliente.nombre} ${cliente.apellidoPaterno}`
+      )
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function sidebar() {
   if (flag) {
     document.getElementById("mySidebar").style.width = "0";
@@ -154,6 +249,13 @@ function setErrorMsgs(result) {
 }
 
 function editeCliente(clienteString) {
+  const elementTop =
+    document.getElementById("main").getBoundingClientRect().top +
+    window.scrollY;
+  window.scrollTo({
+    top: elementTop - 46,
+    behavior: "smooth",
+  });
   clearAll();
   const cliente = JSON.parse(clienteString);
   idCliente.value = cliente.idCliente;
@@ -164,16 +266,19 @@ function editeCliente(clienteString) {
   } else {
     idTipoEstatus.value = 2;
   }
-  if (idUsuarioSelect.options.length > 0) {
-     idUsuarioSelect.selectedIndex = 0;
-  }
+  idUsuarioSelect.value = cliente.idUsuario;
 
   actualizarButtonIsActive = true;
 }
 
-function createTable(clientes) {
+function createTable(clientes, page = 1) {
   tbody.innerHTML = "";
-  clientes.forEach((cliente) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedClientes = clientes.slice(startIndex, endIndex);
+
+  paginatedClientes.forEach((cliente) => {
     const row = document.createElement("tr");
     const clienteString = JSON.stringify(cliente).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -192,6 +297,45 @@ function createTable(clientes) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(clientes, page);
+}
+
+function renderPagination(clientes, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(clientes.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(clientes, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(clientes, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(clientes, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function showActiveClientes() {
@@ -206,6 +350,7 @@ function showInactiveClientes() {
 
 function showAllClientes() {
   createTable(clientesData);
+  populateSecondDropdown();
 }
 
 function validateLogin() {
@@ -284,6 +429,7 @@ function getAllClientes() {
       if (result) {
         clientesData = result.myArrayList.map((item) => item.map);
         createTable(clientesData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {
