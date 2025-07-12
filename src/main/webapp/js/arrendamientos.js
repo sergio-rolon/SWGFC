@@ -142,8 +142,8 @@ function exportToXlsx() {
     arrendamiento.idArrendamiento,
     arrendamiento.numeroContrato,
     arrendamiento.arrendadora,
-    arrendamiento.fechaInicio,
-    arrendamiento.fechaTermino,
+    formatDateForTable(arrendamiento.fechaInicio),
+    formatDateForTable(arrendamiento.fechaTermino),
     arrendamiento.mensualidad,
     arrendamiento.comision,
     arrendamiento.total,
@@ -230,6 +230,13 @@ function formatDateForCalendar(fechaObj) {
   const month = fecha.substring(4, 6);
   const day = fecha.substring(6, 8);
   return `${year}-${month}-${day}`;
+}
+function formatDateForTable(fechaObj) {
+  const fecha = fechaObj.toString();
+  const year = fecha.substring(0, 4);
+  const month = fecha.substring(4, 6);
+  const day = fecha.substring(6, 8);
+  return `${day}/${month}/${year}`;
 }
 function getFormattedDate(elementId) {
   const dateValue = document.getElementById(elementId).value;
@@ -415,8 +422,8 @@ function createTable(arrendamientos, page = 1) {
           <td>${arrendamiento.idArrendamiento}</td>
           <td>${arrendamiento.numeroContrato}</td>
           <td>${arrendamiento.arrendadora}</td>
-          <td>${arrendamiento.fechaInicio}</td>
-          <td>${arrendamiento.fechaTermino}</td>
+          <td>${formatDateForTable(arrendamiento.fechaInicio)}</td>
+          <td>${formatDateForTable(arrendamiento.fechaTermino)}</td>
           <td>${arrendamiento.mensualidad}</td>
           <td>${arrendamiento.comision}</td>
           <td>${arrendamiento.total}</td>

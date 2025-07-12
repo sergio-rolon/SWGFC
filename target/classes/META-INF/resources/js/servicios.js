@@ -110,6 +110,13 @@ function formatDateForCalendar(fechaObj) {
   const day = fecha.substring(6, 8);
   return `${year}-${month}-${day}`;
 }
+function formatDateForTable(fechaObj) {
+  const fecha = fechaObj.toString();
+  const year = fecha.substring(0, 4);
+  const month = fecha.substring(4, 6);
+  const day = fecha.substring(6, 8);
+  return `${day}/${month}/${year}`;
+}
 function getFormattedDate(elementId) {
   const dateValue = document.getElementById(elementId).value;
   if (!dateValue) return "";
@@ -329,7 +336,7 @@ function createTable(servicios, page = 1) {
           <td>${servicio.idServicio}</td>
           <td>${servicio.tipoServicio}</td>
           <td>${servicio.kilometraje}</td>
-          <td>${servicio.fechaServicio}</td>
+          <td>${formatDateForTable(servicio.fecha)}</td>
           <td>${servicio.costo}</td>
           <td>${servicio.comision}</td>
           <td>${servicio.total}</td>

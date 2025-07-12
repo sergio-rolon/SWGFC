@@ -11,7 +11,6 @@ public class Validator {
     public static boolean validationFailed;
 
     public static String isRfc (String rfc){
-            // Expresión regular
             String rfcPattern = "^[a-zA-Z0-9]{12,13}$";
             if (rfc.matches(rfcPattern)) {
                 return "\"rfc\": \"success\"";
@@ -22,7 +21,6 @@ public class Validator {
     }
 
     public static String isNumeroSerie (String numeroSerie){
-        // Expresión regular
         String numeroSeriePattern = "^[a-zA-Z0-9]{17}$";
         if (numeroSerie.matches(numeroSeriePattern)) {
             return "\"numeroSerie\": \"success\"";
@@ -33,7 +31,6 @@ public class Validator {
     }
 
     public static String isAlphaNumSpecial (String contrasena){
-        // Expresión regular
         String contrasenaPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%_^&*(),.?\":{}|<>]).{8,}$";
         try{
         if (contrasena.matches(contrasenaPattern) || new Encoder().decrypt(contrasena).matches(contrasenaPattern)) {
@@ -50,7 +47,6 @@ public class Validator {
     }
 
     public static String isStringNumeric (String numeroTrabajador){
-        // Expresión regular
         String numeroTrabajadorPattern = "^\\d{6}$";
         if (numeroTrabajador.matches(numeroTrabajadorPattern)) {
             return "\"numeroTrabajador\": \"success\"";
@@ -158,7 +154,6 @@ public class Validator {
         }
     }
     public static String isNumeroContrato (String numeroContrato){
-        // Expresión regular
         String numeroContratoPattern = "^[a-zA-Z0-9]{8}$";
         if (numeroContrato.matches(numeroContratoPattern)) {
             return "\"numeroContrato\": \"success\"";
@@ -168,7 +163,6 @@ public class Validator {
         }
     }
     public static String isSeriePlaca (String seriePlaca){
-        // Expresión regular
         String seriePlacaPattern = "^[a-zA-Z0-9]{7}$";
         if (seriePlaca.matches(seriePlacaPattern)) {
             return "\"seriePlaca\": \"success\"";
@@ -178,7 +172,6 @@ public class Validator {
         }
     }
     public static String isNumeroPoliza (String numeroPoliza){
-        // Expresión regular
         String numeroPolizaPattern = "^[a-zA-Z0-9]{10}$";
         if (numeroPoliza.matches(numeroPolizaPattern)) {
             return "\"numeroPoliza\": \"success\"";
@@ -190,7 +183,7 @@ public class Validator {
     public static String isBigDecimal(String campo, String numero) {
         String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
         try {
-            new BigDecimal(numero); // Intentamos parsear el número
+            new BigDecimal(numero);
             return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
         } catch (NumberFormatException e) {
             validationFailed = true;

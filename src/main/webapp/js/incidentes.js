@@ -102,6 +102,13 @@ function formatDateForCalendar(fechaObj) {
   const day = fecha.substring(6, 8);
   return `${year}-${month}-${day}`;
 }
+function formatDateForTable(fechaObj) {
+  const fecha = fechaObj.toString();
+  const year = fecha.substring(0, 4);
+  const month = fecha.substring(4, 6);
+  const day = fecha.substring(6, 8);
+  return `${day}/${month}/${year}`;
+}
 function getFormattedDate(elementId) {
   const dateValue = document.getElementById(elementId).value;
   if (!dateValue) return "";
@@ -287,7 +294,7 @@ function createTable(incidentes, page = 1) {
           <td>${incidente.idIncidente}</td>
           <td>${incidente.tipoIncidente}</td>
           <td>${incidente.descripcion}</td>
-          <td>${incidente.fechaIncidente}</td>
+          <td>${formatDateForTable(incidente.fechaIncidente)}</td>
           <td>${incidente.numeroSerie}</td>
           <td>${incidente.marca}</td>
           <td>${incidente.tipo}</td>

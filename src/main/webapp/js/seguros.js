@@ -143,8 +143,8 @@ function exportToXlsx() {
     seguro.idSeguro,
     seguro.numeroPoliza,
     seguro.aseguradora,
-    seguro.fechaInicio,
-    seguro.fechaTermino,
+    formatDateForTable(seguro.fechaInicio),
+    formatDateForTable(seguro.fechaTermino),
     seguro.mensualidad,
     seguro.comision,
     seguro.total,
@@ -231,6 +231,13 @@ function formatDateForCalendar(fechaObj) {
   const month = fecha.substring(4, 6);
   const day = fecha.substring(6, 8);
   return `${year}-${month}-${day}`;
+}
+function formatDateForTable(fechaObj) {
+  const fecha = fechaObj.toString();
+  const year = fecha.substring(0, 4);
+  const month = fecha.substring(4, 6);
+  const day = fecha.substring(6, 8);
+  return `${day}/${month}/${year}`;
 }
 function getFormattedDate(elementId) {
   const dateValue = document.getElementById(elementId).value;
@@ -413,8 +420,8 @@ function createTable(seguros, page = 1) {
           <td>${seguro.idSeguro}</td>
           <td>${seguro.numeroPoliza}</td>
           <td>${seguro.aseguradora}</td>
-          <td>${seguro.fechaInicio}</td>
-          <td>${seguro.fechaTermino}</td>
+          <td>${formatDateForTable(seguro.fechaInicio)}</td>
+          <td>${formatDateForTable(seguro.fechaTermino)}</td>
           <td>${seguro.mensualidad}</td>
           <td>${seguro.comision}</td>
           <td>${seguro.total}</td>
