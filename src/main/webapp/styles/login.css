@@ -102,7 +102,7 @@
 }
 #btnLogIn {
   justify-content: center;
-  color: #ffffff;
+  color: #000000;
   background-color: #ffbd4a;
   border-radius: 20px;
   padding: 7px;
@@ -110,7 +110,6 @@
   margin-top: 0px;
   font-family: "Roboto";
   font-size: 24px;
-  font-style: italic;
   cursor: pointer;
 }
 
