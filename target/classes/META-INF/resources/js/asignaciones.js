@@ -95,6 +95,87 @@ document
     actualizarButtonIsActive = false;
   });
 //************************************** Functions
+function exportToXlsx() {
+  const headers = [
+    "Id Asignación",
+    "Estatus asignación",
+    "Número de serie",
+    "Marca",
+    "Tipo",
+    "Modelo",
+    "Número de trabajador",
+    "Nombre",
+    "Apellido paterno",
+    "Apellido materno",
+    "Razón social",
+  ];
+
+  const rows = asignacionesData.map((asignacion) => [
+    asignacion.idAsignacion,
+    asignacion.estatusAsignacion,
+    asignacion.numeroSerie,
+    asignacion.marca,
+    asignacion.tipo,
+    asignacion.modelo,
+    asignacion.numeroTrabajador,
+    asignacion.nombre,
+    asignacion.apellidoPaterno,
+    asignacion.apellidoMaterno,
+    asignacion.razonSocial,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Asignaciones");
+
+  XLSX.writeFile(workBook, "asignaciones_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueRazonSocial = [
+    ...new Set(asignacionesData.map((a) => `${a.razonSocial}`)),
+  ];
+
+  uniqueRazonSocial.forEach((razonSocial) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${razonSocial}" checked /> ${razonSocial}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedRazonSocial = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = asignacionesData.filter(
+    (asignacion) =>
+      selectedEstatus.includes(asignacion.estatusAsignacion) &&
+      selectedRazonSocial.includes(asignacion.razonSocial)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
+
 function clearAll() {
   clearErrors();
   clearForm();
@@ -230,7 +311,7 @@ function editeAsignacion(asignacionString) {
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;
   idTipoEstatus.value = asignacion.estatusAsignacion === "activo" ? 1 : 2;
-  idClientesSelect.selectedIndex = asignacion.idCliente;
+  idClientesSelect.value = asignacion.idCliente;
 
   const clienteSeleccionado = idClientesSelect.value;
 
@@ -262,15 +343,20 @@ function editeAsignacion(asignacionString) {
     "idVehiculo",
     (vehiculo) => vehiculo.numeroSerie
   );
-  idEmpleadoSelect.selectedIndex = asignacion.idEmpleado;
-  idVehiculoSelect.selectedIndex = asignacion.idVehiculo;
+  idEmpleadoSelect.value = asignacion.idEmpleado;
+  idVehiculoSelect.value = asignacion.idVehiculo;
 
   actualizarButtonIsActive = true;
 }
 
-function createTable(asignaciones) {
+function createTable(asignaciones, page = 1) {
   tbody.innerHTML = "";
-  asignaciones.forEach((asignacion) => {
+
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedAsignaciones = asignaciones.slice(startIndex, endIndex);
+
+  paginatedAsignaciones.forEach((asignacion) => {
     const row = document.createElement("tr");
     const asignacionString = JSON.stringify(asignacion).replace(/"/g, "&quot;");
     row.innerHTML = `
@@ -295,6 +381,45 @@ function createTable(asignaciones) {
 
     tbody.appendChild(row);
   });
+
+  renderPagination(asignaciones, page);
+}
+
+function renderPagination(asignaciones, page) {
+  const paginationContainer = document.getElementById("paginationDiv");
+  paginationContainer.innerHTML = "";
+
+  const pageCount = Math.ceil(asignaciones.length / rowsPerPage);
+
+  if (page > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "Anterior";
+    prevButton.addEventListener("click", () => {
+      createTable(asignaciones, page - 1);
+    });
+    paginationContainer.appendChild(prevButton);
+  }
+
+  for (let i = 1; i <= pageCount; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.textContent = i;
+    if (i === page) {
+      pageButton.classList.add("active");
+    }
+    pageButton.addEventListener("click", () => {
+      createTable(asignaciones, i);
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+
+  if (page < pageCount) {
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Siguiente";
+    nextButton.addEventListener("click", () => {
+      createTable(vehiculos, page + 1);
+    });
+    paginationContainer.appendChild(nextButton);
+  }
 }
 
 function validateLogin() {
@@ -391,6 +516,7 @@ function getAllAsignaciones() {
       if (result) {
         asignacionesData = result.myArrayList.map((item) => item.map);
         createTable(asignacionesData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {
@@ -578,7 +704,10 @@ function registerAsignacion(raw) {
       let errorMsg = error;
     });
 }
-
+function showAllAsignaciones() {
+  createTable(asignacionesData);
+  populateSecondDropdown();
+}
 function deleteAsignacion(idAsignacion) {
   Swal.fire({
     title: "¿Quieres eliminar este asignacion?",

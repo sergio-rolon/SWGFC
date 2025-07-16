@@ -27,6 +27,16 @@ const comision = document.getElementById("comision");
 
 const idEmpleadoSelect = document.getElementById("idEmpleadoSelect");
 const idAsignacionSelect = document.getElementById("idAsignacionSelect");
+
+const today = new Date();
+
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, "0");
+const dd = String(today.getDate()).padStart(2, "0");
+const dateToday = `${yyyy}-${mm}-${dd}`;
+
+fechaServicio.max = dateToday;
+
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
@@ -102,6 +112,102 @@ document
   });
 
 //************************************** Functions
+function exportToXlsx() {
+  const headers = [
+    "Id Servicio",
+    "Tipo servicio",
+    "Kilometraje",
+    "Fecha de servicio",
+    "Costo",
+    "Comisión",
+    "Total",
+    "Total con IVA",
+    "Número de serie",
+    "Marca",
+    "Tipo",
+    "Modelo",
+    "Estatus vehículo",
+    "Número trabajador",
+    "Nombre",
+    "Apellido paterno",
+    "Apellido materno",
+    "Estatus trabajador",
+    "Razón social",
+  ];
+
+  const rows = serviciosData.map((servicio) => [
+    servicio.idServicio,
+    servicio.idTipoServicio,
+    servicio.kilometraje,
+    servicio.fechaServicio,
+    servicio.costo,
+    servicio.comision,
+    servicio.total,
+    servicio.totalConIva,
+    servicio.numeroSerie,
+    servicio.marca,
+    servicio.tipo,
+    servicio.modelo,
+    servicio.estatusVehiculo,
+    servicio.numeroTrabajador,
+    servicio.nombre,
+    servicio.apellidoPaterno,
+    servicio.apellidoMaterno,
+    servicio.estatusTrabajador,
+    servicio.razonSocial,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Servicios");
+
+  XLSX.writeFile(workBook, "servicios_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueRazonSocial = [
+    ...new Set(serviciosData.map((s) => `${s.razonSocial}`)),
+  ];
+
+  uniqueRazonSocial.forEach((razonSocial) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${razonSocial}" checked /> ${razonSocial}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedRazonSocial = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = serviciosData.filter(
+    (servicio) =>
+      selectedEstatus.includes(servicio.tipoServicio) &&
+      selectedRazonSocial.includes(servicio.razonSocial)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
 
 function formatDateForCalendar(fechaObj) {
   const fecha = fechaObj.toString();
@@ -291,7 +397,7 @@ function editeServicio(servicioString) {
   const servicio = JSON.parse(servicioString);
   idServicio.value = servicio.idServicio;
   kilometraje.value = servicio.kilometraje;
-  idClientesSelect.selectedIndex = servicio.idCliente;
+  idClientesSelect.value = servicio.idCliente;
 
   const clienteSeleccionado = idClientesSelect.value;
 
@@ -318,7 +424,7 @@ function editeServicio(servicioString) {
   fechaServicio.value = formatDateForCalendar(servicio.fechaServicio);
   costo.value = servicio.costo;
   comision.value = servicio.comision;
-  idAsignacionSelect.selectedIndex = servicio.idAsignacion;
+  idAsignacionSelect.value = servicio.idAsignacion;
   actualizarButtonIsActive = true;
 }
 
@@ -336,7 +442,7 @@ function createTable(servicios, page = 1) {
           <td>${servicio.idServicio}</td>
           <td>${servicio.tipoServicio}</td>
           <td>${servicio.kilometraje}</td>
-          <td>${formatDateForTable(servicio.fecha)}</td>
+          <td>${formatDateForTable(servicio.fechaServicio)}</td>
           <td>${servicio.costo}</td>
           <td>${servicio.comision}</td>
           <td>${servicio.total}</td>
@@ -496,6 +602,7 @@ function getAllServicios() {
       if (result) {
         serviciosData = result.myArrayList.map((item) => item.map);
         createTable(serviciosData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {
@@ -644,7 +751,10 @@ function registerServicio(raw) {
       let errorMsg = error;
     });
 }
-
+function showAllServicios() {
+  createTable(serviciosData);
+  populateSecondDropdown();
+}
 function deleteServicio(idServicio) {
   Swal.fire({
     title: "¿Quieres eliminar este servicio?",

@@ -23,6 +23,18 @@ const descripcion = document.getElementById("descripcion");
 
 const idEmpleadoSelect = document.getElementById("idEmpleadoSelect");
 const idAsignacionSelect = document.getElementById("idAsignacionSelect");
+
+const fechaServicioInput = document.getElementById("fechaServicio");
+
+const today = new Date();
+
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, "0");
+const dd = String(today.getDate()).padStart(2, "0");
+const dateToday = `${yyyy}-${mm}-${dd}`;
+
+fechaIncidente.max = dateToday;
+
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
@@ -94,6 +106,94 @@ document
   });
 
 //************************************** Functions
+function exportToXlsx() {
+  const headers = [
+    "Id Incidente",
+    "Tipo incidente",
+    "Descripción",
+    "Fecha de incidente",
+    "Número de serie",
+    "Marca",
+    "Tipo",
+    "Modelo",
+    "Estatus vehículo",
+    "Número trabajador",
+    "Nombre",
+    "Apellido paterno",
+    "Apellido materno",
+    "Estatus trabajador",
+    "Razón social",
+  ];
+
+  const rows = incidentesData.map((incidente) => [
+    incidente.idIncidente,
+    incidente.tipoIncidente,
+    incidente.descripcion,
+    incidente.fechaIncidente,
+    incidente.numeroSerie,
+    incidente.marca,
+    incidente.tipo,
+    incidente.modelo,
+    servicio.estatusVehiculo,
+    servicio.numeroTrabajador,
+    servicio.nombre,
+    servicio.apellidoPaterno,
+    servicio.apellidoMaterno,
+    servicio.estatusTrabajador,
+    servicio.razonSocial,
+  ]);
+
+  const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  const workBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workBook, workSheet, "Incidentes");
+
+  XLSX.writeFile(workBook, "incidentes_reporte.xlsx");
+}
+
+function populateSecondDropdown() {
+  const secondDropdown = document.getElementById("secondDropdown");
+  secondDropdown.innerHTML = "";
+
+  const uniqueRazonSocial = [
+    ...new Set(incidentesData.map((i) => `${i.razonSocial}`)),
+  ];
+
+  uniqueRazonSocial.forEach((razonSocial) => {
+    const label = document.createElement("label");
+    label.innerHTML = `
+      <input type="checkbox" class="second-filter" value="${razonSocial}" checked /> ${razonSocial}
+    `;
+    secondDropdown.appendChild(label);
+    secondDropdown.appendChild(document.createElement("br"));
+  });
+}
+
+function filterSelection() {
+  const selectedEstatus = Array.from(
+    document.querySelectorAll(".estatus-filter:checked")
+  ).map((cb) => cb.value);
+  const selectedRazonSocial = Array.from(
+    document.querySelectorAll(".second-filter:checked")
+  ).map((cb) => cb.value);
+
+  const filteredSelection = incidentesData.filter(
+    (incidente) =>
+      selectedEstatus.includes(incidente.tipoIncidente) &&
+      selectedRazonSocial.includes(incidente.razonSocial)
+  );
+
+  createTable(filteredSelection);
+}
+
+document.addEventListener("change", (event) => {
+  if (
+    event.target.classList.contains("estatus-filter") ||
+    event.target.classList.contains("second-filter")
+  ) {
+    filterSelection();
+  }
+});
 
 function formatDateForCalendar(fechaObj) {
   const fecha = fechaObj.toString();
@@ -251,7 +351,7 @@ function editeIncidente(incidenteString) {
   const incidente = JSON.parse(incidenteString);
   idIncidente.value = incidente.idIncidente;
   descripcion.value = incidente.descripcion;
-  idClientesSelect.selectedIndex = incidente.idCliente;
+  idClientesSelect.value = incidente.idCliente;
 
   const clienteSeleccionado = idClientesSelect.value;
 
@@ -276,7 +376,7 @@ function editeIncidente(incidenteString) {
 
   idTipoIncidente.selectedIndex = incidente.idTipoIncidente;
   fechaIncidente.value = formatDateForCalendar(incidente.fechaIncidente);
-  idAsignacionSelect.selectedIndex = incidente.idAsignacion;
+  idAsignacionSelect.value = incidente.idAsignacion;
   actualizarButtonIsActive = true;
 }
 
@@ -451,6 +551,7 @@ function getAllIncidentes() {
       if (result) {
         incidentesData = result.myArrayList.map((item) => item.map);
         createTable(incidentesData);
+        populateSecondDropdown();
       }
     })
     .catch((error) => {

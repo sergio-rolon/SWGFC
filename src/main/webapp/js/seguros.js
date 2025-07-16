@@ -30,6 +30,17 @@ const idTipoEstatus = document.getElementById("idTipoEstatus");
 const idVehiculoSelect = document.getElementById("idVehiculoSelect");
 const fechaInicioElement = document.getElementById("fechaInicio");
 const fechaTerminoElement = document.getElementById("fechaTermino");
+
+const today = new Date();
+
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, "0");
+const dd = String(today.getDate()).padStart(2, "0");
+const dateToday = `${yyyy}-${mm}-${dd}`;
+
+fechaInicio.max = dateToday;
+fechaTermino.max = dateToday;
+
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
