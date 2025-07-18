@@ -54,6 +54,21 @@ let urlIncidentes =
     ? "http://localhost:8080/pages/incidentes.html"
     : "https://flotilla-mktpromomarc.onrender.com/pages/incidentes.html";
 
+if (window.location.hostname === "3.137.179.158") {
+  urlIncidentes = "http://3.137.179.158:8080/pages/incidentes.html";
+  urlServicios = "http://3.137.179.158:8080/pages/servicios.html";
+  urlAsignaciones = "http://3.137.179.158:8080/pages/asignaciones.html";
+  urlLogged ="http://3.137.179.158:8080/api/usuarios/logged";
+  urlClientes ="http://3.137.179.158:8080/pages/clientes.html";
+  urlUsuarios ="http://3.137.179.158:8080/pages/usuarios.html";
+  urlEmpleados ="http://3.137.179.158:8080/pages/empleados.html";
+  urlVehiculos ="http://3.137.179.158:8080/pages/vehiculos.html";
+  urlArrendamientos ="http://3.137.179.158:8080/pages/arrendamientos.html";
+  urlPlacas ="http://3.137.179.158:8080/pages/placas.html";
+  urlSeguros ="http://3.137.179.158:8080/pages/seguros.html";
+}
+
+
 const contenedor = document.getElementById("contenedor");
 
 window.addEventListener("pageshow", function (event) {

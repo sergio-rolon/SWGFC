@@ -15,8 +15,9 @@ import java.util.Properties;
         private ConfigLoader() {
 
             properties = new Properties();
-
-           try (InputStream input = new FileInputStream("E:\\°°Proyecto SWGFV - MKT\\SWGFC\\config.properties")) {
+            //for ubuntu
+            try (InputStream input = new FileInputStream("/tmp/config.properties")) {
+//           try (InputStream input = new FileInputStream("D:\\°°Proyecto SWGFV - MKT\\SWGFC\\config.properties")) {
                if (input == null) {
                    Util.logInfo("Config.properties not found, using prod config", clase);
                     return;

@@ -1,22 +1,55 @@
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\config\ConfigLoader.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\controller\ClientesController.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\controller\FilterLogin.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\controller\LoginController.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\controller\UsuariosController.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\dto\Credentials.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\dto\RecaptchaResponse.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\dto\Token.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\Main.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Clientes.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Usuarios.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\repository\ClientesRepository.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\repository\Conexion.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\repository\CrudRepository.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\repository\UsuariosRepository.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\security\Encoder.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\security\JwtGenerator.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\security\RecaptchaVerifier.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\security\Validator.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\service\ClientesService.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\service\CrudService.java
-D:\°°Proyecto SWGFV - MKT\SWGFC repository\SWGFC\src\main\java\mktpromomarc\flotilla\service\UsuariosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\config\ConfigLoader.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\config\Util.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\ArrendamientosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\AsignacionesController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\ClientesController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\EmpleadosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\FilterLogin.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\IncidentesController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\LoginController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\PlacasController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\SegurosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\ServiciosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\UsuariosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\controller\VehiculosController.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\dto\Credentials.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\dto\RecaptchaResponse.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\dto\Token.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\Main.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Arrendamientos.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Asignaciones.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Clientes.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Empleados.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Incidentes.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Placas.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Seguros.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Servicios.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Usuarios.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\modelo\Vehiculos.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\ArrendamientosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\AsignacionesRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\ClientesRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\Conexion.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\EmpleadosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\ICrudRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\IncidentesRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\PlacasRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\SegurosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\ServiciosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\UsuariosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\repository\VehiculosRepository.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\security\Encoder.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\security\JwtGenerator.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\security\RecaptchaVerifier.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\security\Validator.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\ArrendamientosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\AsignacionesService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\ClientesService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\EmpleadosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\ICrudService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\IncidentesService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\PlacasService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\SegurosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\ServiciosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\UsuariosService.java
+D:\°°Proyecto SWGFV - MKT\SWGFC\src\main\java\mktpromomarc\flotilla\service\VehiculosService.java
