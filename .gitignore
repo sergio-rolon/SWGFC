@@ -37,5 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-src/main/resources/config.properties
-E:\°°Proyecto SWGFV - MKT\SWGFC
+config.properties
