@@ -1,0 +1,207 @@
+/* Estilos generales para el navbar */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#contenido {
+  display: flex;
+  flex-direction: column;
+  min-height: 85vh;
+  visibility: hidden;
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+}
+
+header {
+  /*background-color: #0056b6;*/
+  background-color: #064995;
+
+  padding: 3px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 0px;
+  height: auto;
+}
+
+.left-side-navbar {
+  display: flex;
+  height: 40px;
+}
+.right-side-navbar {
+  display: flex;
+  height: 40px;
+}
+.logo {
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+/* Estilos para el logo */
+.logo img {
+  height: 40px;
+  width: auto;
+  margin-left: 2px;
+}
+
+.text-logout {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+}
+.clickToCloseSession:hover {
+  cursor: pointer;
+}
+.sidebar {
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #064995;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 50px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 20px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #ffffff;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #ffbe4a;
+  color: #000000;
+  font-size: 20px;
+}
+
+.sidebar .active {
+  background-color: #ffbe4a;
+  color: #000000;
+}
+
+.openbtn {
+  font-size: 40px;
+  cursor: pointer;
+  background-color: #064995;
+  color: white;
+  padding: 0px;
+  border: none;
+  padding-inline: 0px;
+  padding-block: 0px;
+  line-height: 0%;
+}
+
+.openbtn:hover {
+  background-color: #ffbe4a;
+  color: #064995;
+}
+
+#main {
+  transition: margin-left 0.5s;
+  padding: 16px;
+  height: 100%;
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
+}
+
+/* Estilos para los enlaces de navegación */
+.nav-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-family: "Poppins";
+}
+
+.nav-links a:hover {
+  background-color: #000000;
+}
+
+h1 {
+  font-family: "Poppins";
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  color: #000000;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+/* Footer*/
+.pre-footer {
+  text-align: center;
+  background-color: #ffbe4a;
+  font-family: "Poppins";
+  font-size: 25px;
+  margin: 0px 0px;
+}
+
+.footer {
+  text-align: center;
+  background-color: #022d5e;
+}
+
+.logo-footer {
+  margin-top: 15px;
+  width: 116px;
+  height: 62px;
+}
+
+.post-footer {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+  color: white;
+}
+.clickToCloseSession {
+  height: 40px;
+}
+@media (max-width: 768px) {
+  #textToLogOut {
+    visibility: hidden;
+  }
+  .text-logout {
+    word-break: break-word;
+    font-size: 14px;
+  }
+}

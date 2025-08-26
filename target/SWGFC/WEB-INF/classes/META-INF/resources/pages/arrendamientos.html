@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arrendamientos</title>
+    <link
+      rel="icon"
+      href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+    />
+    <!-- Scripts -->
+    <script
+      src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/commons.css" />
+    <link rel="stylesheet" href="../styles/clientes.css" />
+  </head>
+  <body>
+    <div id="loader">
+      <br />
+      <img
+        src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
+        alt="Logo"
+        class="logo-load"
+        style="text-align: center"
+      />
+      <h1 style="margin-top: 0px; margin-bottom: 0px">
+        Estamos preparando su página
+      </h1>
+      <dotlottie-player
+        src="https://lottie.host/9d9a67b5-625f-4b1e-836e-2e06ed497016/bNmBXjwbE4.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        loop
+        autoplay
+      >
+      </dotlottie-player>
+    </div>
+    <div id="contenido">
+      <header>
+        <nav class="navbar">
+          <div class="left-side-navbar">
+            <button class="openbtn" onclick="sidebar()">☰</button>
+            <div class="logo">
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                alt="Logo"
+                class="logo-img"
+              />
+            </div>
+            <div class="logo">
+              <img
+                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
+                alt="user logged"
+                class="logo-img"
+              />
+              <div class="logo">
+                <span class="text-logout" id="emailUserLogged"></span>
+              </div>
+            </div>
+          </div>
+          <div class="right-side-navbar">
+            <div class="logo">
+              <span class="text-logout" id="textToLogOut">Cerrar sesión</span>
+            </div>
+            <div class="logo">
+              <a class="clickToCloseSession">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/nykh4uyvouqyv2sjyepw.svg"
+                  alt="logout"
+                  class="logo-img"
+                  id="clickToLogOut"
+                />
+              </a>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div id="mySidebar" class="sidebar">
+        <a href="./clientes.html">Clientes</a>
+        <a href="./empleados.html">Empleados</a>
+        <a href="./vehiculos.html">Vehículos</a>
+        <a href="./arrendamientos.html" class="active">Arrendamientos</a>
+        <a href="./seguros.html">Seguros</a>
+        <a href="./placas.html">Placas</a>
+        <a href="./asignaciones.html">Asignaciones</a>
+        <a href="./servicios.html">Servicios</a>
+        <a href="./incidentes.html">Incidentes</a>
+      </div>
+
+      <div class="container" id="main">
+        <main>
+          <h1>Gestión de arrendamientos</h1>
+          <div id="arrendamientoForm">
+            <div class="form-grid">
+              <div>
+                <label for="idArrendamiento">Id:</label><br />
+                <input type="text" id="idArrendamiento" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="numeroContrato">Número de contrato:</label><br />
+                <input
+                  type="text"
+                  id="numeroContrato"
+                  placeholder="Ej. A0012031"
+                  required
+                /><br />
+                <label
+                  for="numeroContratoError"
+                  id="numeroContratoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="arrendadora">Arrendadora:</label><br />
+                <input
+                  type="text"
+                  id="arrendadora"
+                  placeholder="Ej. Nissan Leasing"
+                  required
+                /><br />
+                <label
+                  for="arrendadoraError"
+                  id="arrendadoraError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaInicio">Fecha de inicio:</label><br />
+                <input type="date" id="fechaInicio" required /><br />
+                <label
+                  for="fechaInicioError"
+                  id="fechaInicioError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaTermino">Fecha de término:</label><br />
+                <input
+                  type="date"
+                  id="fechaTermino"
+                  placeholder="Ej. 04/05/2025"
+                  required
+                /><br />
+                <label
+                  for="fechaTerminoError"
+                  id="fechaTerminoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="mensualidad">Mensualidad:</label><br />
+                <input
+                  type="number"
+                  id="mensualidad"
+                  placeholder="Ej. 25000"
+                  required
+                /><br />
+                <label
+                  for="mensualidadError"
+                  id="mensualidadError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="comision">Comisión:</label><br />
+                <input
+                  type="number"
+                  id="comision"
+                  placeholder="Ej. 4.5"
+                  required
+                /><br />
+                <label
+                  for="comisionError"
+                  id="comisionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="numeroMeses">Número de meses:</label><br />
+                <input
+                  type="number"
+                  id="numeroMeses"
+                  placeholder="Ej. 36"
+                  required
+                /><br />
+                <label
+                  for="numeroMesesError"
+                  id="numeroMesesError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="idTipoEstatus">Selecciona estatus:</label><br />
+                <select id="idTipoEstatus">
+                  <option value="1">Activo</option>
+                  <option value="2">Inactivo</option>
+                </select>
+                <label
+                  for="idTipoEstatusError"
+                  id="idTipoEstatusError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div>
+                <label for="idVehiculoSelect">Selecciona vehículo:</label><br />
+                <select id="idVehiculoSelect"></select>
+                <label
+                  for="idVehiculoError"
+                  id="idVehiculoError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
+          </div>
+          <br /><br />
+          <div class="table-container">
+            <div class="filter-button-group">
+              <button class="btn-no-filter" onclick="showAllArrendamientos()">
+                Sin filtro
+              </button>
+              <div class="dropdown">
+                <button class="btn-filter">Estatus</button>
+                <div class="dropdown-content">
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="activo"
+                      checked
+                    />
+                    Activo </label
+                  ><br />
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="inactivo"
+                      checked
+                    />
+                    Inactivo
+                  </label>
+                </div>
+              </div>
+              <div class="dropdown">
+                <button class="btn-filter">Arrendadora</button>
+                <div class="dropdown-content" id="secondDropdown"></div>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Número de contrato</th>
+                    <th>Arrendadora</th>
+                    <th>Fecha de inicio</th>
+                    <th>Fecha de término</th>
+                    <th>Mensualidad</th>
+                    <th>Comisión</th>
+                    <th>Total</th>
+                    <th>Total con IVA</th>
+                    <th>Número de meses</th>
+                    <th>Estatus arrendamiento</th>
+                    <th>Número de serie</th>
+                    <th>Estatus vehículo</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+              <br />
+            </div>
+          </div>
+          <div id="paginationDiv" class="pagination-container"></div>
+          <button class="btn-export" onclick="exportToXlsx()">
+            Exportar a excel
+          </button>
+        </main>
+      </div>
+      <script>
+        flag = false;
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      </script>
+    </div>
+    <footer>
+      <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+      <div class="footer">
+        <image
+          src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+          alt="logo"
+          class="logo-footer"
+        ></image>
+        <p class="post-footer">
+          Términos del sitio web | Política de privacidad | Declaración de
+          accesibilidad | Código de conducta para usuarios
+        </p>
+      </div>
+    </footer>
+    <script src="../js/arrendamientos.js"></script>
+  </body>
+</html>
