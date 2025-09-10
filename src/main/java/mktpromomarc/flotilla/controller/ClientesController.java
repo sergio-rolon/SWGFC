@@ -55,8 +55,8 @@ public class ClientesController extends HttpServlet {
                 Util.logInfo("None users recovered for operacion role and sent in response", clase);
                 out.flush();
 
-            } catch (IOException ex) {
-                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            } catch (IOException e){
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
             }//try
 
         }
@@ -214,8 +214,7 @@ public class ClientesController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String contentType = request.getContentType();
             if (!("application/json".equals(contentType))) {
-                response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
-                        + "content type");
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Error en el servidor");
                 return;
             }
 
@@ -251,7 +250,11 @@ public class ClientesController extends HttpServlet {
                 String errorResponse = "{\"error\": \"Cliente no existe\"}";
                 out.print(errorResponse);
                 out.flush();
+            }catch (IOException e){
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
             }
+        }catch (IOException e){
+            response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
         }
     }
 

@@ -9,10 +9,10 @@
       href="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
     />
     <!-- Scripts -->
-    <!--<script
+    <script
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
-    ></script>-->
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fonts -->
     <link
@@ -30,10 +30,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <!-- <link rel="stylesheet" href="../styles/usuarios.css" />-->
+    <link rel="stylesheet" href="../styles/clientes.css" />
   </head>
   <body>
-    <!--    <div id="loader">
+    <div id="loader">
       <br />
       <img
         src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
@@ -53,8 +53,8 @@
         autoplay
       >
       </dotlottie-player>
-    </div>-->
-    <div id="contenido" style="visibility: visible">
+    </div>
+    <div id="contenido">
       <header>
         <nav class="navbar">
           <div class="left-side-navbar">
@@ -95,30 +95,165 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
-        <a href="./usuarios.html" class="active">Usuarios</a>
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
         <a href="./arrendamientos.html">Arrendamientos</a>
         <a href="./seguros.html">Seguros</a>
-        <a href="./servicios.html">Servicios</a>
-        <a href="./incidentes.html">Incidentes</a>
         <a href="./placas.html">Placas</a>
         <a href="./asignaciones.html">Asignaciones</a>
+        <a href="./servicios.html" class="active">Servicios</a>
+        <a href="./incidentes.html">Incidentes</a>
       </div>
 
       <div class="container" id="main">
         <main>
           <h1>Gestión de servicios</h1>
-          <div style="text-align: center">
-            <img
-              src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439789/rnmoosiqswvstvm4weey.png"
-              alt="Logo"
-              class="logo-load"
-            />
+          <div id="servicioForm">
+            <div class="form-grid">
+              <div>
+                <label for="idServicio">Id:</label><br />
+                <input type="text" id="idServicio" disabled /><br />
+                <br />
+              </div>
+              <div>
+                <label for="idTipoServicio">Selecciona tipo servicio:</label
+                ><br />
+                <select id="idTipoServicio">
+                  <option value="1">Preventivo</option>
+                  <option value="2">Correctivo</option>
+                  <option value="3">Llantas</option>
+                </select>
+                <label
+                  for="idTipoServicioError"
+                  id="idTipoServicioError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="kilometraje">Kilometraje:</label><br />
+                <input
+                  type="number"
+                  id="kilometraje"
+                  placeholder="Ej. 20000"
+                  required
+                /><br />
+                <label
+                  for="kilometrajeError"
+                  id="kilometrajeError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="fechaServicio">Fecha de servicio:</label><br />
+                <input type="date" id="fechaServicio" required /><br />
+                <label
+                  for="fechaServicioError"
+                  id="fechaServicioError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="costo">Costo:</label><br />
+                <input
+                  type="number"
+                  id="costo"
+                  placeholder="Ej. 5000"
+                  required
+                /><br />
+                <label
+                  for="costoError"
+                  id="costoError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="comision">Comisión:</label><br />
+                <input
+                  type="number"
+                  id="comision"
+                  placeholder="Ej. 4.5"
+                  required
+                /><br />
+                <label
+                  for="comisionError"
+                  id="comisionError"
+                  class="label-error"
+                ></label
+                ><br />
+              </div>
+              <div>
+                <label for="idClientesSelect">Selecciona cliente:</label><br />
+                <select id="idClientesSelect"></select>
+                <label
+                  for="idClienteError"
+                  id="idClienteError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div>
+                <label for="idAsignacionSelect">Selecciona asignación:</label
+                ><br />
+                <select id="idAsignacionSelect"></select>
+                <label
+                  for="idAsignacionError"
+                  id="idAsignacionError"
+                  class="label-error"
+                ></label>
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div class="button-group">
+                <button id="btnRegistrar">Registrar</button>
+                <button id="btnActualizar">Actualizar</button>
+                <button id="btnLimpiar">Limpiar</button>
+              </div>
+            </div>
           </div>
-
-          <h1 style="text-align: center">En construcción</h1>
+          <br /><br />
+          <div class="table-container">
+            <div class="table-wrapper">
+              <table class="responsive-table">
+                <thead id="tableHeader">
+                  <tr>
+                    <th>Id</th>
+                    <th>Tipo de servicio</th>
+                    <th>Kilometraje</th>
+                    <th>Fecha de servicio</th>
+                    <th>Costo</th>
+                    <th>Comisión</th>
+                    <th>Total</th>
+                    <th>Total con IVA</th>
+                    <th>Número de serie</th>
+                    <th>Marca</th>
+                    <th>Tipo</th>
+                    <th>Modelo</th>
+                    <th>Estatus vehículo</th>
+                    <th>Número trabajador</th>
+                    <th>Nombre</th>
+                    <th>Apellido paterno</th>
+                    <th>Apellido materno</th>
+                    <th>Estatus trabajador</th>
+                    <th>Razón social</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+            <br />
+          </div>
+          <div id="paginationDiv" class="pagination-container"></div>
+          <button class="btn-export" onclick="exportToXlsx()">
+            Exportar a excel
+          </button>
         </main>
       </div>
       <script>
@@ -126,35 +261,21 @@
         document.getElementById("mySidebar").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
       </script>
-      <footer>
-        <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
-        <div class="footer">
-          <image
-            src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
-            alt="logo"
-            class="logo-footer"
-          ></image>
-          <p class="post-footer">
-            Términos del sitio web | Política de privacidad | Declaración de
-            accesibilidad | Código de conducta para usuarios
-          </p>
-        </div>
-      </footer>
     </div>
-    <!--<script src="../js/usuarios.js"></script>-->
-    <script>
-      //teporal
-      function sidebar() {
-        if (flag) {
-          document.getElementById("mySidebar").style.width = "0";
-          document.getElementById("main").style.marginLeft = "0";
-          flag = false;
-        } else {
-          document.getElementById("mySidebar").style.width = "200px";
-          document.getElementById("main").style.marginLeft = "200px";
-          flag = true;
-        }
-      }
-    </script>
+    <footer>
+      <div><p class="pre-footer">MKT PROMOMARC S.A. DE C.V.</p></div>
+      <div class="footer">
+        <image
+          src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+          alt="logo"
+          class="logo-footer"
+        ></image>
+        <p class="post-footer">
+          Términos del sitio web | Política de privacidad | Declaración de
+          accesibilidad | Código de conducta para usuarios
+        </p>
+      </div>
+    </footer>
+    <script src="../js/servicios.js"></script>
   </body>
 </html>

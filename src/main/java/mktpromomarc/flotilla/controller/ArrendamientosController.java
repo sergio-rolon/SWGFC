@@ -56,7 +56,7 @@ public class ArrendamientosController extends HttpServlet {
                 out.flush();
                 return;
             } catch (IOException ex) {
-                request.setAttribute("message", "There was an error: " + ex.getMessage());
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
             }
         }
         Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
@@ -223,8 +223,7 @@ public class ArrendamientosController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
-                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
-                            + "content type");
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
                     return;
                 }
 
@@ -261,6 +260,8 @@ public class ArrendamientosController extends HttpServlet {
                     out.print(errorResponse);
                     out.flush();
                     return;
+                }catch (IOException ex) {
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
                 }
             }
         }
