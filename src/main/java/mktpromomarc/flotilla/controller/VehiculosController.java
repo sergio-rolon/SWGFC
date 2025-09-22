@@ -33,6 +33,7 @@ public class VehiculosController extends HttpServlet {
         boolean isAsesor = role.equals("asesor");
         String emailAsesor="";
         Util.logInfo("Se ejecutó DoGet", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -94,6 +95,7 @@ public class VehiculosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoPost", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -162,6 +164,7 @@ public class VehiculosController extends HttpServlet {
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoPut", clase);
         isDoPut=true;
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -233,6 +236,7 @@ public class VehiculosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoDelete", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -299,7 +303,7 @@ public class VehiculosController extends HttpServlet {
         sb.append(Validator.isAlphaNum("Marca",jsonObject.getString("marca"))).append(",");
         sb.append(Validator.isAlphaNum("Tipo",jsonObject.getString("tipo"))).append(",");
         sb.append(Validator.isNum("Modelo",jsonObject.getString("modelo"))).append(",");
-        sb.append(Validator.isAlphaNum("Accesorios",jsonObject.getString("accesorios"))).append(",");
+        sb.append(Validator.isAlphaWithCommas("Accesorios",jsonObject.getString("accesorios"))).append(",");
         sb.append(Validator.isNumTwoTypes("Id Tipo Estatus",String.valueOf(jsonObject.get("idTipoEstatus")))).append(",");
         sb.append(Validator.isNum("Id Cliente",String.valueOf(jsonObject.get("idCliente"))));
         sb.append("}");

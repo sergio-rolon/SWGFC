@@ -31,6 +31,7 @@ public class ClientesController extends HttpServlet {
         String role = (String) request.getAttribute("role");
         String requestUrl = request.getRequestURI();
         Util.logInfo("Se ejecutó DoGet", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
        boolean isAsesor=role.equals("asesor");
@@ -92,6 +93,7 @@ public class ClientesController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Util.logInfo("Se ejecutó DoPost", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -149,6 +151,7 @@ public class ClientesController extends HttpServlet {
             throws ServletException, IOException {
         Util.logInfo("Se ejecutó DoPut", clase);
         isDoPut=true;
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -209,6 +212,7 @@ public class ClientesController extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Util.logInfo("Se ejecutó DoDelete", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {

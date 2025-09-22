@@ -592,7 +592,7 @@ function getAllClientes() {
 function registerEmpleado(raw) {
   const myHeaders = new Headers();
 
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Content-Type", "application/json;charset=UTF-8");
   myHeaders.append(
     "Authorization",
     `Bearer: ${sessionStorage.getItem("token")}`
@@ -660,7 +660,7 @@ function deleteEmpleado(numeroTrabajador) {
 
       const myHeaders = new Headers();
 
-      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Content-Type", "application/json;charset=UTF-8");
       myHeaders.append(
         "Authorization",
         `Bearer: ${sessionStorage.getItem("token")}`
@@ -706,7 +706,7 @@ function deleteEmpleado(numeroTrabajador) {
 function updateEmpleado(raw) {
   const myHeaders = new Headers();
 
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Content-Type", "application/json;charset=UTF-8");
   myHeaders.append(
     "Authorization",
     `Bearer: ${sessionStorage.getItem("token")}`

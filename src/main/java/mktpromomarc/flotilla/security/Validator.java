@@ -89,7 +89,23 @@ public class Validator {
             return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " solo debe contener letras y espacios (puede llevar acentos)\"";
         }
     }
+    public static String isAlphaWithCommas(String campo, String palabra) {
+        String palabraPattern = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+(, [a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$";
+        String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);
 
+        if (palabra.matches(palabraPattern)) {
+            String soloLetras = palabra.replaceAll("[^a-zA-ZáéíóúÁÉÍÓÚñÑ]", "");
+            if (soloLetras.length() >= 2) {
+                return "\"" + campoNoSpacesAndAccents + "\": \"success\"";
+            } else {
+                validationFailed = true;
+                return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " debe contener al menos dos letras\"";
+            }
+        } else {
+            validationFailed = true;
+            return "\"" + campoNoSpacesAndAccents + "\": \"" + campo + " solo debe contener letras con/sin acentos y comas con un espacio\"";
+        }
+    }
     public static String isString(String campo, String palabra) {
 
         String campoNoSpacesAndAccents = Validator.replaceSpacesAndAccents(campo);

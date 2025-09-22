@@ -31,6 +31,7 @@ public class SegurosController extends HttpServlet {
 
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoGet", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         boolean isAsesor=role.equals("asesor");
@@ -69,6 +70,7 @@ public class SegurosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoPost", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -76,8 +78,7 @@ public class SegurosController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
-                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
-                            + "content type");
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,"Error en el servidor");
                     return;
                 }
 
@@ -130,8 +131,10 @@ public class SegurosController extends HttpServlet {
                     out.flush();
                     return;
                 } catch (IOException ex) {
-                    request.setAttribute("message", "There was an error: " + ex.getMessage());
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
                 }
+            }catch (IOException ex){
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
             }
         }
         Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
@@ -145,6 +148,7 @@ public class SegurosController extends HttpServlet {
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoPut", clase);
         isDoPut=true;
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -152,8 +156,7 @@ public class SegurosController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
-                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
-                            + "content type");
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Error en el servidor");
                     isDoPut=false;
                     return;
                 }
@@ -202,8 +205,10 @@ public class SegurosController extends HttpServlet {
                     out.print(errorResponse);
                     out.flush();
                 } catch (IOException ex) {
-                    request.setAttribute("message", "There was an error: " + ex.getMessage());
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en el servidor");
                 }
+            }catch (IOException ex) {
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en el servidor");
             }
         }
         Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
@@ -216,6 +221,7 @@ public class SegurosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         Util.logInfo("Se ejecutó DoDelete", clase);
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -223,8 +229,7 @@ public class SegurosController extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
-                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Invalid"
-                            + "content type");
+                    response.sendError(javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Error en el servidor");
                     return;
                 }
 
@@ -262,6 +267,8 @@ public class SegurosController extends HttpServlet {
                     out.flush();
                     return;
                 }
+            } catch (IOException ex) {
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error en el servidor");
             }
         }
         Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
