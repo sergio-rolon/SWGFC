@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <link rel="stylesheet" href="../styles/clientes.css" />
+    <link rel="stylesheet" href="../styles/others.css" />
   </head>
   <body>
     <div id="loader">
@@ -113,7 +113,7 @@
           <div id="empleadoForm">
             <div class="form-grid">
               <div>
-                <label for="idEmpleado">Id:</label><br />
+                <label for="idEmpleado">No.:</label><br />
                 <input type="text" id="idEmpleado" disabled /><br />
                 <br />
               </div>
@@ -258,43 +258,51 @@
           </div>
           <br /><br />
           <div class="table-container">
-            <div class="filter-button-group">
-              <button class="btn-no-filter" onclick="showAllEmpleados()">
-                Sin filtro
-              </button>
-              <div class="dropdown">
-                <button class="btn-filter">Estatus</button>
-                <div class="dropdown-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="activo"
-                      checked
-                    />
-                    Activo </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="inactivo"
-                      checked
-                    />
-                    Inactivo
-                  </label>
+            <div class="filter-container">
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllEmpleados()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Estatus</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Activo"
+                        checked
+                      />
+                      Activo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Inactivo"
+                        checked
+                      />
+                      Inactivo
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Cliente</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button class="btn-filter">Cliente</button>
-                <div class="dropdown-content" id="secondDropdown"></div>
+              <div>
+                <label for="searchInput" style="color: black"
+                  >Buscar por número de trabajador:</label
+                >
+                <input type="text" id="searchInput" placeholder="Ej. 040001" />
               </div>
             </div>
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead id="tableHeader">
                   <tr>
-                    <th>Id</th>
+                    <th>No.</th>
                     <th>Número de trabajador</th>
                     <th>Nombre</th>
                     <th>Apellido paterno</th>

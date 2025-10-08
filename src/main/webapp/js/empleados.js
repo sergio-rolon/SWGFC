@@ -1,4 +1,5 @@
 let empleadosData = [];
+let rowsFiltered = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/empleados";
 let urlClientes = "/api/clientes/getAllClientes";
@@ -340,7 +341,7 @@ function editeEmpleado(empleadoString) {
   municipioAsignado.value = empleado.municipioAsignado;
   estadoAsignado.value = empleado.estadoAsignado;
   cantidadGasolina.value = empleado.cantidadGasolina;
-  if (empleado.estatusEmpleado == "activo") {
+  if (empleado.estatusEmpleado == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -425,13 +426,13 @@ function renderPagination(empleados, page) {
 }
 
 function showActiveEmpleados() {
-  const activos = empleadosData.filter((u) => u.estatusEmpleado === "activo");
+  const activos = empleadosData.filter((u) => u.estatusEmpleado === "Activo");
   createTable(activos);
 }
 
 function showInactiveEmpleados() {
   const noActivos = empleadosData.filter(
-    (u) => u.estatusEmpleado === "inactivo"
+    (u) => u.estatusEmpleado === "Inactivo"
   );
   createTable(noActivos);
 }
@@ -470,7 +471,7 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "asesor") {
+        if (usuario.role === "Asesor") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -479,7 +480,7 @@ function validateLogin() {
           if (menuLinks.length > 0) {
             menuLinks[0].remove();
           }
-        } else if (usuario.role === "operacion") {
+        } else if (usuario.role === "Operación") {
           const empleadoForm = document.getElementById("empleadoForm");
           if (empleadoForm) empleadoForm.remove();
           window.operacionMode = true;
@@ -535,6 +536,7 @@ function getAllEmpleados() {
     .then((result) => {
       if (result) {
         empleadosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...empleadosData];
         createTable(empleadosData);
         populateSecondDropdown();
       }
@@ -756,3 +758,16 @@ function updateEmpleado(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = empleadosData.filter((empleado) =>
+    empleado.numeroTrabajador.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

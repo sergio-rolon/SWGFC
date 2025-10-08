@@ -37,9 +37,9 @@ public class EmpleadosController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        boolean isAsesor=role.equals("asesor");
+        boolean isAsesor=role.equals("Asesor");
         String emailAsesor="";
-        if(role.equals("operacion") || isAsesor) {
+        if(role.equals("Operación") || isAsesor) {
             emailAsesor=isAsesor?email:"";
 
             try (PrintWriter out = response.getWriter()) {
@@ -65,7 +65,7 @@ public class EmpleadosController extends HttpServlet {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
         }
-        if(role.equals("operacion") && !pathInfo.isEmpty()){
+        if(role.equals("Operación") && !pathInfo.isEmpty()){
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray empleadosResult = empleadosRepository.findAllObjects(pathInfo);
@@ -102,7 +102,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("asesor")) {
+        if(role.equals("Asesor")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -173,7 +173,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("asesor")) {
+        if(role.equals("Asesor")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -248,7 +248,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("asesor")) {
+        if(role.equals("Asesor")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {

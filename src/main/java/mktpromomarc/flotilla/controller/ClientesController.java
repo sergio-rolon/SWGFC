@@ -34,9 +34,9 @@ public class ClientesController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-       boolean isAsesor=role.equals("asesor");
+       boolean isAsesor=role.equals("Asesor");
        String emailAsesor="";
-        if((role.equals("operacion") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
+        if((role.equals("Operación") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -47,13 +47,13 @@ public class ClientesController extends HttpServlet {
                     String successResponse = new Gson().toJson(clientesResult);
                     out.print(successResponse);
                     out.flush();
-                    Util.logInfo("All clients recovered for operacion role and sent in response", clase);
+                    Util.logInfo("All clients recovered for Operación role and sent in response", clase);
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 String errorResponse = "{\"error\": \"No hay clientes registrados\"}";
                 out.print(errorResponse);
-                Util.logInfo("None users recovered for operacion role and sent in response", clase);
+                Util.logInfo("None users recovered for Operación role and sent in response", clase);
                 out.flush();
 
             } catch (IOException e){
@@ -62,7 +62,7 @@ public class ClientesController extends HttpServlet {
 
         }
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray clientesResult = clientesService.getAll();
@@ -72,7 +72,7 @@ public class ClientesController extends HttpServlet {
                     String successResponse = new Gson().toJson(clientesResult);
                     out.print(successResponse);
                     out.flush();
-                    Util.logInfo("All clientes recovered for operacion role and sent in response", clase);
+                    Util.logInfo("All clientes recovered for Operación role and sent in response", clase);
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);

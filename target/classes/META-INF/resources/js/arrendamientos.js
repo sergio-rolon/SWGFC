@@ -1,5 +1,6 @@
 let arrendamientosData = [];
 let vehiculosData = [];
+let rowsFiltered = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/arrendamientos";
 let urlVehiculos = "/api/vehiculos/getVehiculosSinArrendamiento";
@@ -402,7 +403,7 @@ function editeArrendamiento(arrendamientoString) {
   mensualidad.value = arrendamiento.mensualidad;
   comision.value = arrendamiento.comision;
   numeroMeses.value = arrendamiento.numeroMeses;
-  if (arrendamiento.estatusArrendamiento == "activo") {
+  if (arrendamiento.estatusArrendamiento == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -495,14 +496,14 @@ function renderPagination(arrendamientos, page) {
 
 function showActiveArrendamientos() {
   const activos = arrendamientosData.filter(
-    (u) => u.estatusArrendamiento === "activo"
+    (u) => u.estatusArrendamiento === "Activo"
   );
   createTable(activos);
 }
 
 function showInactiveArrendamientos() {
   const noActivos = arrendamientosData.filter(
-    (u) => u.estatusArrendamiento === "inactivo"
+    (u) => u.estatusArrendamiento === "Inactivo"
   );
   createTable(noActivos);
 }
@@ -541,12 +542,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const arrendamientoForm =
             document.getElementById("arrendamientoForm");
           if (arrendamientoForm) arrendamientoForm.remove();
@@ -606,6 +607,7 @@ function getAllArrendamientos() {
     .then((result) => {
       if (result) {
         arrendamientosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...arrendamientosData];
         createTable(arrendamientosData);
         populateSecondDropdown();
       }
@@ -824,3 +826,16 @@ function updateArrendamiento(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = arrendamientosData.filter((arrendamiento) =>
+    arrendamiento.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

@@ -1,4 +1,5 @@
 let asignacionesData = [];
+let rowsFiltered = [];
 let clientesData = [];
 let empleadosData = [];
 let vehiculosData = [];
@@ -310,7 +311,7 @@ function editeAsignacion(asignacionString) {
   clearAll();
   const asignacion = JSON.parse(asignacionString);
   idAsignacion.value = asignacion.idAsignacion;
-  idTipoEstatus.value = asignacion.estatusAsignacion === "activo" ? 1 : 2;
+  idTipoEstatus.value = asignacion.estatusAsignacion === "Activo" ? 1 : 2;
   idClientesSelect.value = asignacion.idCliente;
 
   const clienteSeleccionado = idClientesSelect.value;
@@ -451,12 +452,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const asignacionForm = document.getElementById("asignacionForm");
           if (asignacionForm) asignacionForm.remove();
           window.asesorMode = true;
@@ -515,6 +516,7 @@ function getAllAsignaciones() {
     .then((result) => {
       if (result) {
         asignacionesData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...asignacionesData];
         createTable(asignacionesData);
         populateSecondDropdown();
       }
@@ -828,3 +830,16 @@ function updateAsignacion(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = asignacionesData.filter((asignacion) =>
+    asignacion.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

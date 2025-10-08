@@ -34,9 +34,9 @@ public class PlacasController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
-        boolean isAsesor=role.equals("asesor");
+        boolean isAsesor=role.equals("Asesor");
         String emailAsesor="";
-        if(role.equals("operacion") || isAsesor) {
+        if(role.equals("Operación") || isAsesor) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -74,7 +74,7 @@ public class PlacasController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -150,7 +150,7 @@ public class PlacasController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -221,7 +221,7 @@ public class PlacasController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {

@@ -1,4 +1,5 @@
 let incidentesData = [];
+let rowsFiltered = [];
 let clientesData = [];
 let asignacionesData = [];
 let urlLogged = "/api/usuarios/logged";
@@ -134,13 +135,13 @@ function exportToXlsx() {
     incidente.marca,
     incidente.tipo,
     incidente.modelo,
-    servicio.estatusVehiculo,
-    servicio.numeroTrabajador,
-    servicio.nombre,
-    servicio.apellidoPaterno,
-    servicio.apellidoMaterno,
-    servicio.estatusTrabajador,
-    servicio.razonSocial,
+    incidente.estatusVehiculo,
+    incidente.numeroTrabajador,
+    incidente.nombre,
+    incidente.apellidoPaterno,
+    incidente.apellidoMaterno,
+    incidente.estatusTrabajador,
+    incidente.razonSocial,
   ]);
 
   const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
@@ -486,12 +487,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const incidenteForm = document.getElementById("incidenteForm");
           if (incidenteForm) incidenteForm.remove();
           window.asesorMode = true;
@@ -550,6 +551,7 @@ function getAllIncidentes() {
     .then((result) => {
       if (result) {
         incidentesData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...incidentesData];
         createTable(incidentesData);
         populateSecondDropdown();
       }
@@ -819,3 +821,16 @@ function updateIncidente(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = incidentesData.filter((incidente) =>
+    incidente.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

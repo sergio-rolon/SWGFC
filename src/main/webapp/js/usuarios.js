@@ -1,4 +1,5 @@
 let usuariosData = [];
+let rowsFiltered = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/usuarios";
 let actualizarButtonIsActive = false;
@@ -315,14 +316,14 @@ function editeUsuario(usuarioString) {
   apellidoMaterno.value = usuario.apellidoMaterno;
   numeroTrabajador.value = usuario.numeroTrabajador;
   contrasena.value = usuario.contrasena;
-  if (usuario.estatus == "activo") {
+  if (usuario.estatus == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
   }
-  if (usuario.tipoUsuario == "administrador") {
+  if (usuario.tipoUsuario == "Administrador") {
     idTipoUsuario.value = 1;
-  } else if (usuario.tipoUsuario == "operacion") {
+  } else if (usuario.tipoUsuario == "Operación") {
     idTipoUsuario.value = 2;
   } else {
     idTipoUsuario.value = 3;
@@ -398,12 +399,12 @@ function renderPagination(usuarios, page) {
   }
 }
 function showActiveUsers() {
-  const activos = usuariosData.filter((u) => u.estatus === "activo");
+  const activos = usuariosData.filter((u) => u.estatus === "Activo");
   createTable(activos);
 }
 
 function showInactiveUsers() {
-  const noActivos = usuariosData.filter((u) => u.estatus === "inactivo");
+  const noActivos = usuariosData.filter((u) => u.estatus === "Inactivo");
   createTable(noActivos);
 }
 
@@ -441,7 +442,7 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "administrador") {
+        if (usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -487,6 +488,7 @@ function getAllUsuarios() {
     .then((result) => {
       if (result) {
         usuariosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...usuariosData];
         createTable(usuariosData);
         populateSecondDropdown();
       }
@@ -663,3 +665,15 @@ function updateUsuario(raw) {
       let errorMsg = error;
     });
 }
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = usuariosData.filter((usuario) =>
+    usuario.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

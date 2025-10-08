@@ -51,7 +51,7 @@ public class UsuariosController extends HttpServlet {
         }//Only for login validation
 
 
-        if(role.equals("administrador")) {
+        if(role.equals("Administrador")) {
                 try (PrintWriter out = response.getWriter()) {
 
                     JSONArray usuariosResult = usuariosService.getAll();
@@ -75,7 +75,7 @@ public class UsuariosController extends HttpServlet {
                 }//try
             }
 
-        if(role.equals("operacion") && requestUrl.equals("/api/usuarios/getAllAsesores")){
+        if(role.equals("Operación") && requestUrl.equals("/api/usuarios/getAllAsesores")){
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray usuariosResult = usuariosRepository.findAllObjects();

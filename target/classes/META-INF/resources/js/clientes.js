@@ -1,4 +1,5 @@
 let clientesData = [];
+let rowsFiltered = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/clientes";
 let urlAsesores = "/api/usuarios/getAllAsesores";
@@ -261,7 +262,7 @@ function editeCliente(clienteString) {
   idCliente.value = cliente.idCliente;
   razonSocial.value = cliente.razonSocial;
   rfc.value = cliente.rfc;
-  if (cliente.estatusCliente == "activo") {
+  if (cliente.estatusCliente == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -339,12 +340,12 @@ function renderPagination(clientes, page) {
 }
 
 function showActiveClientes() {
-  const activos = clientesData.filter((u) => u.estatusCliente === "activo");
+  const activos = clientesData.filter((u) => u.estatusCliente === "Activo");
   createTable(activos);
 }
 
 function showInactiveClientes() {
-  const noActivos = clientesData.filter((u) => u.estatusCliente === "inactivo");
+  const noActivos = clientesData.filter((u) => u.estatusCliente === "Inactivo");
   createTable(noActivos);
 }
 
@@ -382,7 +383,7 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -428,6 +429,7 @@ function getAllClientes() {
     .then((result) => {
       if (result) {
         clientesData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...clientesData];
         createTable(clientesData);
         populateSecondDropdown();
       }
@@ -652,3 +654,16 @@ function updateCliente(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = clientesData.filter((cliente) =>
+    cliente.rfc.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

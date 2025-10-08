@@ -14,6 +14,7 @@
       type="module"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Poppins"
@@ -30,7 +31,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <link rel="stylesheet" href="../styles/clientes.css" />
+    <link rel="stylesheet" href="../styles/others.css" />
   </head>
   <body>
     <div id="loader">
@@ -112,7 +113,7 @@
           <div id="servicioForm">
             <div class="form-grid">
               <div>
-                <label for="idServicio">Id:</label><br />
+                <label for="idServicio">No.:</label><br />
                 <input type="text" id="idServicio" disabled /><br />
                 <br />
               </div>
@@ -218,11 +219,64 @@
           </div>
           <br /><br />
           <div class="table-container">
+            <div class="filter-container">
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllServicios()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Tipo servicio</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Preventivo"
+                        checked
+                      />
+                      Preventino </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Correctivo"
+                        checked
+                      />
+                      Correctivo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Llantas"
+                        checked
+                      />
+                      Llantas
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Razón social</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
+                </div>
+              </div>
+              <div>
+                <label for="searchInput" style="color: black"
+                  >Buscar por número de serie:</label
+                >
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Ej. 3N6AD33A3PK829001"
+                />
+              </div>
+            </div>
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead id="tableHeader">
                   <tr>
-                    <th>Id</th>
+                    <th>No.</th>
                     <th>Tipo de servicio</th>
                     <th>Kilometraje</th>
                     <th>Fecha de servicio</th>

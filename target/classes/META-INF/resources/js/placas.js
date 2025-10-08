@@ -1,4 +1,5 @@
 let placasData = [];
+let rowsFiltered = [];
 let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/placas";
@@ -330,7 +331,7 @@ function editePlaca(placaString) {
   costo.value = placa.costo;
   comision.value = placa.comision;
   anoRenovacion.value = placa.anoRenovacion;
-  if (placa.estatusPlaca == "activo") {
+  if (placa.estatusPlaca == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -417,12 +418,12 @@ function renderPagination(placas, page) {
 }
 
 function showActivePlacas() {
-  const activos = placasData.filter((u) => u.estatusPlaca === "activo");
+  const activos = placasData.filter((u) => u.estatusPlaca === "Activo");
   createTable(activos);
 }
 
 function showInactivePlacas() {
-  const noActivos = placasData.filter((u) => u.estatusPlaca === "inactivo");
+  const noActivos = placasData.filter((u) => u.estatusPlaca === "Inactivo");
   createTable(noActivos);
 }
 
@@ -460,12 +461,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const placaForm = document.getElementById("placaForm");
           if (placaForm) placaForm.remove();
           window.asesorMode = true;
@@ -524,6 +525,7 @@ function getAllPlacas() {
     .then((result) => {
       if (result) {
         placasData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...placasData];
         createTable(placasData);
         populateSecondDropdown();
       }
@@ -742,3 +744,16 @@ function updatePlaca(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = placasData.filter((placa) =>
+    placa.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

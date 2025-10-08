@@ -1,4 +1,5 @@
 let segurosData = [];
+let rowsFiltered = [];
 let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/seguros";
@@ -403,7 +404,7 @@ function editeSeguro(seguroString) {
   mensualidad.value = seguro.mensualidad;
   comision.value = seguro.comision;
   numeroMeses.value = seguro.numeroMeses;
-  if (seguro.estatusSeguro == "activo") {
+  if (seguro.estatusSeguro == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -492,12 +493,12 @@ function renderPagination(seguros, page) {
 }
 
 function showActiveSeguros() {
-  const activos = segurosData.filter((u) => u.estatusSeguro === "activo");
+  const activos = segurosData.filter((u) => u.estatusSeguro === "Activo");
   createTable(activos);
 }
 
 function showInactiveSeguros() {
-  const noActivos = segurosData.filter((u) => u.estatusSeguro === "inactivo");
+  const noActivos = segurosData.filter((u) => u.estatusSeguro === "Inactivo");
   createTable(noActivos);
 }
 
@@ -535,12 +536,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const seguroForm = document.getElementById("seguroForm");
           if (seguroForm) seguroForm.remove();
           window.asesorMode = true;
@@ -599,6 +600,7 @@ function getAllSeguros() {
     .then((result) => {
       if (result) {
         segurosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...segurosData];
         createTable(segurosData);
         populateSecondDropdown();
       }
@@ -817,3 +819,16 @@ function updateSeguro(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = segurosData.filter((seguro) =>
+    seguro.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

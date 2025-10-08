@@ -81,11 +81,11 @@ public class LoginController extends HttpServlet {
                             String role;
                             // Establecemos rol para el JWToken
                             if(registeredUsuario.getIdTipoUsuario()==1){
-                                role="administrador";
+                                role="Administrador";
                             }else if(registeredUsuario.getIdTipoUsuario()==2){
-                                role="operacion";
+                                role="Operación";
                             }else{
-                                role="asesor";
+                                role="Asesor";
                             }
                             // Generamos token
                            Token tokenGenerated = JwtGenerator.generateToken(registeredUsuario.getEmail(),role,

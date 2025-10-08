@@ -167,14 +167,14 @@ function validateLogin() {
           },
         ];
 
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           elementos.shift();
         }
-        if (usuario.role === "asesor") {
+        if (usuario.role === "Asesor") {
           elementos.shift();
           elementos.shift();
         }
-        if (usuario.role === "administrador") {
+        if (usuario.role === "Administrador") {
           elementos = [elementos[0]];
         }
 

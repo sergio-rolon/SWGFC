@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <link rel="stylesheet" href="../styles/clientes.css" />
+    <link rel="stylesheet" href="../styles/others.css" />
   </head>
   <body>
     <div id="loader">
@@ -113,7 +113,7 @@
           <div id="placaForm">
             <div class="form-grid">
               <div>
-                <label for="idPlaca">Id:</label><br />
+                <label for="idPlaca">No.:</label><br />
                 <input type="text" id="idPlaca" disabled /><br />
                 <br />
               </div>
@@ -227,43 +227,56 @@
           </div>
           <br /><br />
           <div class="table-container">
-            <div class="filter-button-group">
-              <button class="btn-no-filter" onclick="showAllPlacas()">
-                Sin filtro
-              </button>
-              <div class="dropdown">
-                <button class="btn-filter">Estatus</button>
-                <div class="dropdown-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="activo"
-                      checked
-                    />
-                    Activo </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="inactivo"
-                      checked
-                    />
-                    Inactivo
-                  </label>
+            <div class="filter-container">
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllPlacas()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Estatus</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Activo"
+                        checked
+                      />
+                      Activo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Inactivo"
+                        checked
+                      />
+                      Inactivo
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Año renovación</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button class="btn-filter">Año renovación</button>
-                <div class="dropdown-content" id="secondDropdown"></div>
+              <div>
+                <label for="searchInput" style="color: black"
+                  >Buscar por número de serie:</label
+                >
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Ej. 3N6AD33A3PK829001"
+                />
               </div>
             </div>
+            <div></div>
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead id="tableHeader">
                   <tr>
-                    <th>Id</th>
+                    <th>No.</th>
                     <th>Serie de placa</th>
                     <th>Estado</th>
                     <th>Costo</th>

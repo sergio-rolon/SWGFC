@@ -1,4 +1,5 @@
 let serviciosData = [];
+let rowsFiltered = [];
 let clientesData = [];
 let asignacionesData = [];
 let urlLogged = "/api/usuarios/logged";
@@ -537,12 +538,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const servicioForm = document.getElementById("servicioForm");
           if (servicioForm) servicioForm.remove();
           window.asesorMode = true;
@@ -601,6 +602,7 @@ function getAllServicios() {
     .then((result) => {
       if (result) {
         serviciosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...serviciosData];
         createTable(serviciosData);
         populateSecondDropdown();
       }
@@ -873,3 +875,16 @@ function updateServicio(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = serviciosData.filter((servicio) =>
+    servicio.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

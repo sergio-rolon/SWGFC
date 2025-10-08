@@ -92,13 +92,13 @@ header {
 }
 
 .sidebar a:hover {
-  background-color: #ffbe4a;
+  background-color: #ffa000;
   color: #000000;
   font-size: 20px;
 }
 
 .sidebar .active {
-  background-color: #ffbe4a;
+  background-color: #ffa000;
   color: #000000;
 }
 
@@ -171,7 +171,7 @@ h1 {
 /* Footer*/
 .pre-footer {
   text-align: center;
-  background-color: #ffbe4a;
+  background-color: #ffa000;
   font-family: "Poppins";
   font-size: 25px;
   margin: 0px 0px;

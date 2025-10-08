@@ -30,14 +30,14 @@ public class VehiculosController extends HttpServlet {
         String email = (String) request.getAttribute("email");
         String role = (String) request.getAttribute("role");
         String pathInfo=request.getPathInfo() !=null ? request.getPathInfo():"";
-        boolean isAsesor = role.equals("asesor");
+        boolean isAsesor = role.equals("Asesor");
         String emailAsesor="";
         Util.logInfo("Se ejecutó DoGet", clase);
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion") && pathInfo.isEmpty() || isAsesor && pathInfo.isEmpty()) {
+        if(role.equals("Operación") && pathInfo.isEmpty() || isAsesor && pathInfo.isEmpty()) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -62,7 +62,7 @@ public class VehiculosController extends HttpServlet {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
         }
-        if(role.equals("operacion") && !pathInfo.isEmpty()){
+        if(role.equals("Operación") && !pathInfo.isEmpty()){
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray vehiculosResult = vehiculosRepository.findAllObjects(pathInfo);
@@ -99,7 +99,7 @@ public class VehiculosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -168,7 +168,7 @@ public class VehiculosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -240,7 +240,7 @@ public class VehiculosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("operacion")) {
+        if(role.equals("Operación")) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {

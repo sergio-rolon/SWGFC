@@ -1,4 +1,5 @@
 let vehiculosData = [];
+let rowsFiltered = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/vehiculos";
 let urlClientes = "/api/clientes/getAllClientes";
@@ -299,7 +300,7 @@ function editeVehiculo(vehiculoString) {
   tipo.value = vehiculo.tipo;
   modelo.value = vehiculo.modelo;
   accesorios.value = vehiculo.accesorios;
-  if (vehiculo.estatusVehiculo == "activo") {
+  if (vehiculo.estatusVehiculo == "Activo") {
     idTipoEstatus.value = 1;
   } else {
     idTipoEstatus.value = 2;
@@ -382,13 +383,13 @@ function renderPagination(vehiculos, page) {
 }
 
 function showActiveVehiculos() {
-  const activos = vehiculosData.filter((u) => u.estatusVehiculo === "activo");
+  const activos = vehiculosData.filter((u) => u.estatusVehiculo === "Activo");
   createTable(activos);
 }
 
 function showInactiveVehiculos() {
   const noActivos = vehiculosData.filter(
-    (u) => u.estatusVehiculo === "inactivo"
+    (u) => u.estatusVehiculo === "Inactivo"
   );
   createTable(noActivos);
 }
@@ -427,12 +428,12 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "operacion") {
+        if (usuario.role === "Operación") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
-        } else if (usuario.role === "asesor") {
+        } else if (usuario.role === "Asesor") {
           const vehiculoForm = document.getElementById("vehiculoForm");
           if (vehiculoForm) vehiculoForm.remove();
           window.asesorMode = true;
@@ -491,6 +492,7 @@ function getAllVehiculos() {
     .then((result) => {
       if (result) {
         vehiculosData = result.myArrayList.map((item) => item.map);
+        rowsFiltered = [...vehiculosData];
         createTable(vehiculosData);
         populateSecondDropdown();
       }
@@ -712,3 +714,16 @@ function updateVehiculo(raw) {
       let errorMsg = error;
     });
 }
+
+const searchInput = document.getElementById("searchInput");
+const tableBody = document.getElementById("tableBody");
+
+searchInput.addEventListener("input", function () {
+  const searchedValue = this.value.toLowerCase().trim();
+
+  rowsFiltered = vehiculosData.filter((vehiculo) =>
+    vehiculo.numeroSerie.toLowerCase().includes(searchedValue)
+  );
+
+  createTable(rowsFiltered, 1);
+});

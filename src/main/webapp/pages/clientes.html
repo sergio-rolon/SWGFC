@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/commons.css" />
-    <link rel="stylesheet" href="../styles/clientes.css" />
+    <link rel="stylesheet" href="../styles/others.css" />
   </head>
   <body>
     <div id="loader">
@@ -113,7 +113,7 @@
           <div id="clientForm">
             <div class="form-grid">
               <div>
-                <label for="idCliente">Id:</label><br />
+                <label for="idCliente">No.:</label><br />
                 <input type="text" id="idCliente" disabled /><br />
                 <br />
               </div>
@@ -177,43 +177,55 @@
           </div>
           <br /><br />
           <div class="table-container">
-            <div class="filter-button-group">
-              <button class="btn-no-filter" onclick="showAllClientes()">
-                Sin filtro
-              </button>
-              <div class="dropdown">
-                <button class="btn-filter">Estatus</button>
-                <div class="dropdown-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="activo"
-                      checked
-                    />
-                    Activo </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="inactivo"
-                      checked
-                    />
-                    Inactivo
-                  </label>
+            <div class="filter-container">
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllClientes()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Estatus</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Activo"
+                        checked
+                      />
+                      Activo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Inactivo"
+                        checked
+                      />
+                      Inactivo
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Asesor</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button class="btn-filter">Asesor</button>
-                <div class="dropdown-content" id="secondDropdown"></div>
+              <div>
+                <label for="searchInput" style="color: black"
+                  >Buscar por RFC:</label
+                >
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Ej. TRS240404DF3"
+                />
               </div>
             </div>
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead>
                   <tr>
-                    <th>Id</th>
+                    <th>No.</th>
                     <th>Razón social</th>
                     <th>RFC</th>
                     <th>Estatus cliente</th>
