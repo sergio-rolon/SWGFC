@@ -509,6 +509,12 @@ function showInactiveArrendamientos() {
 }
 
 function showAllArrendamientos() {
+  const checkboxes1 = document.querySelectorAll(".estatus-filter");
+  checkboxes1.forEach((chk) => (chk.checked = true));
+
+  const checkboxes2 = document.querySelectorAll(".second-filter");
+  checkboxes2.forEach((chk) => (chk.checked = true));
+
   createTable(arrendamientosData);
   populateSecondDropdown();
 }
