@@ -375,7 +375,7 @@ function editeIncidente(incidenteString) {
       `${asignacion.numeroSerie} - ${asignacion.numeroTrabajador} `
   );
 
-  idTipoIncidente.selectedIndex = incidente.idTipoIncidente;
+  idTipoIncidente.value = incidente.idTipoIncidente;
   fechaIncidente.value = formatDateForCalendar(incidente.fechaIncidente);
   idAsignacionSelect.value = incidente.idAsignacion;
   actualizarButtonIsActive = true;
@@ -554,6 +554,7 @@ function getAllIncidentes() {
         rowsFiltered = [...incidentesData];
         createTable(incidentesData);
         populateSecondDropdown();
+        populateGraph(incidentesData);
       }
     })
     .catch((error) => {
@@ -844,4 +845,66 @@ function showAllIncidentes() {
 
   createTable(incidentesData);
   populateSecondDropdown();
+}
+
+function populateGraph(incidentesData) {
+  const tipoIncidenteCount = {};
+  incidentesData.forEach((incidente) => {
+    tipoIncidenteCount[incidente.tipoIncidente] =
+      (tipoIncidenteCount[incidente.tipoIncidente] || 0) + 1;
+  });
+
+  const labelsPie = Object.keys(tipoIncidenteCount);
+  const valuesPie = Object.values(tipoIncidenteCount);
+
+  const marcaCount = {};
+  incidentesData.forEach((incidente) => {
+    if (!marcaCount[incidente.marca])
+      marcaCount[incidente.marca] = { Menor: 0, Mayor: 0 };
+    marcaCount[incidente.marca][incidente.tipoIncidente]++;
+  });
+
+  const marcas = Object.keys(marcaCount);
+  const menorValues = marcas.map((marca) => marcaCount[marca].Menor || 0);
+  const mayorValues = marcas.map((marca) => marcaCount[marca].Mayor || 0);
+
+  const pieData = [
+    {
+      labels: labelsPie,
+      values: valuesPie,
+      type: "pie",
+      textinfo: "label+percent",
+      insidetextorientation: "radial",
+    },
+  ];
+
+  const pieLayout = {
+    height: 400,
+  };
+
+  Plotly.newPlot("pieChart", pieData, pieLayout);
+
+  const barData = [
+    {
+      x: marcas,
+      y: menorValues,
+      name: "Menor",
+      type: "bar",
+    },
+    {
+      x: marcas,
+      y: mayorValues,
+      name: "Mayor",
+      type: "bar",
+    },
+  ];
+
+  const barLayout = {
+    barmode: "group",
+    xaxis: { title: "Marca" },
+    yaxis: { title: "No. de Incidentes" },
+    height: 400,
+  };
+
+  Plotly.newPlot("barChart", barData, barLayout);
 }

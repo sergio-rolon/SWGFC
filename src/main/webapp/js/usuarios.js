@@ -678,7 +678,7 @@ searchInput.addEventListener("input", function () {
   const searchedValue = this.value.toLowerCase().trim();
 
   rowsFiltered = usuariosData.filter((usuario) =>
-    usuario.numeroSerie.toLowerCase().includes(searchedValue)
+    usuario.numeroTrabajador.toLowerCase().includes(searchedValue)
   );
 
   createTable(rowsFiltered, 1);

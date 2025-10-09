@@ -15,7 +15,10 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+      src="https://cdn.plot.ly/plotly-3.1.0.min.js"
+      charset="utf-8"
+    ></script>
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Poppins"
@@ -187,51 +190,51 @@
             </div>
           </div>
           <br /><br />
-          <div class="table-container">
-            <div class="filter-container">
-              <div class="filter-button-group">
-                <button class="btn-no-filter" onclick="showAllIncidentes()">
-                  Sin filtro
-                </button>
-                <div class="dropdown">
-                  <button class="btn-filter">Tipo incidente</button>
-                  <div class="dropdown-content">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="estatus-filter"
-                        value="Menor"
-                        checked
-                      />
-                      Menor</label
-                    ><br />
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="estatus-filter"
-                        value="Mayor"
-                        checked
-                      />
-                      Mayor
-                    </label>
-                  </div>
-                </div>
-                <div class="dropdown">
-                  <button class="btn-filter">Razón social</button>
-                  <div class="dropdown-content" id="secondDropdown"></div>
+          <div class="filter-container">
+            <div class="filter-button-group">
+              <button class="btn-no-filter" onclick="showAllIncidentes()">
+                Sin filtro
+              </button>
+              <div class="dropdown">
+                <button class="btn-filter">Tipo incidente</button>
+                <div class="dropdown-content">
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="Menor"
+                      checked
+                    />
+                    Menor</label
+                  ><br />
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="Mayor"
+                      checked
+                    />
+                    Mayor
+                  </label>
                 </div>
               </div>
-              <div>
-                <label for="searchInput" style="color: black"
-                  >Buscar por número de serie:</label
-                >
-                <input
-                  type="text"
-                  id="searchInput"
-                  placeholder="Ej. 3N6AD33A3PK829001"
-                />
+              <div class="dropdown">
+                <button class="btn-filter">Razón social</button>
+                <div class="dropdown-content" id="secondDropdown"></div>
               </div>
             </div>
+            <div>
+              <label for="searchInput" style="color: black"
+                >Buscar por número de serie:</label
+              >
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Ej. 3N6AD33A3PK829001"
+              />
+            </div>
+          </div>
+          <div class="table-container">
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead id="tableHeader">
@@ -264,6 +267,35 @@
           <button class="btn-export" onclick="exportToXlsx()">
             Exportar a excel
           </button>
+          <br /><br />
+          <div style="display: flex; gap: 20px">
+            <div style="width: 50%">
+              <div
+                style="
+                  text-align: center;
+                  font-weight: bold;
+                  font-size: 16px;
+                  font-family: 'Poppins', sans-serif;
+                "
+              >
+                Porcentaje por tipo de incidente
+              </div>
+              <div id="pieChart"></div>
+            </div>
+            <div style="width: 50%">
+              <div
+                style="
+                  text-align: center;
+                  font-weight: bold;
+                  font-size: 16px;
+                  font-family: 'Poppins', sans-serif;
+                "
+              >
+                Número de incidentes por tipo y marca
+              </div>
+              <div id="barChart"></div>
+            </div>
+          </div>
         </main>
       </div>
       <script>

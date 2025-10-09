@@ -176,51 +176,51 @@
             </div>
           </div>
           <br /><br />
-          <div class="table-container">
-            <div class="filter-container">
-              <div class="filter-button-group">
-                <button class="btn-no-filter" onclick="showAllClientes()">
-                  Sin filtro
-                </button>
-                <div class="dropdown">
-                  <button class="btn-filter">Estatus</button>
-                  <div class="dropdown-content">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="estatus-filter"
-                        value="Activo"
-                        checked
-                      />
-                      Activo </label
-                    ><br />
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="estatus-filter"
-                        value="Inactivo"
-                        checked
-                      />
-                      Inactivo
-                    </label>
-                  </div>
-                </div>
-                <div class="dropdown">
-                  <button class="btn-filter">Asesor</button>
-                  <div class="dropdown-content" id="secondDropdown"></div>
+          <div class="filter-container">
+            <div class="filter-button-group">
+              <button class="btn-no-filter" onclick="showAllClientes()">
+                Sin filtro
+              </button>
+              <div class="dropdown">
+                <button class="btn-filter">Estatus</button>
+                <div class="dropdown-content">
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="Activo"
+                      checked
+                    />
+                    Activo </label
+                  ><br />
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="estatus-filter"
+                      value="Inactivo"
+                      checked
+                    />
+                    Inactivo
+                  </label>
                 </div>
               </div>
-              <div>
-                <label for="searchInput" style="color: black"
-                  >Buscar por RFC:</label
-                >
-                <input
-                  type="text"
-                  id="searchInput"
-                  placeholder="Ej. TRS240404DF3"
-                />
+              <div class="dropdown">
+                <button class="btn-filter">Asesor</button>
+                <div class="dropdown-content" id="secondDropdown"></div>
               </div>
             </div>
+            <div>
+              <label for="searchInput" style="color: black"
+                >Buscar por RFC:</label
+              >
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Ej. TRS240404DF3"
+              />
+            </div>
+          </div>
+          <div class="table-container">
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead>
