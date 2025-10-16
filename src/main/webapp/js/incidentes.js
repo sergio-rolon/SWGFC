@@ -324,7 +324,7 @@ function sidebar() {
     flag = true;
   }
 }
-//========AQUI VAMOS
+
 function setErrorMsgs(result) {
   if (result["IdTipoIncidente"] && result.IdTipoIncidente != "success") {
     idTipoIncidenteError.textContent = result.IdTipoIncidente;

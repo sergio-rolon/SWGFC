@@ -356,7 +356,7 @@ function sidebar() {
     flag = true;
   }
 }
-//========AQUI VAMOS
+
 function setErrorMsgs(result) {
   if (result["IdTipoServicio"] && result.IdTipoServicio != "success") {
     idTipoServicioError.textContent = result.IdTipoServicio;

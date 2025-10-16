@@ -102,8 +102,7 @@ document
     clearAll();
     actualizarButtonIsActive = false;
   });
-//fechaInicioElement.addEventListener("change", dateValidation);
-//fechaTerminoElement.addEventListener("change", dateValidation);
+
 //************************************** Functions
 function populateVehiculoSelect() {
   idVehiculoSelect.innerHTML = "";

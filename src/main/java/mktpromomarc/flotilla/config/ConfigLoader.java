@@ -17,6 +17,7 @@ import java.util.Properties;
             properties = new Properties();
             //for ubuntu
 //            try (InputStream input = new FileInputStream("/tmp/config.properties")) {
+            //try (InputStream input = new FileInputStream("/home/ubuntu/config.properties")) {
            try (InputStream input = new FileInputStream("C:\\Users\\Nro. 3SX3LP2\\Desktop\\config.properties")) {
                if (input == null) {
                    Util.logInfo("Config.properties not found, using prod config", clase);
