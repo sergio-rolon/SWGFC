@@ -94,7 +94,7 @@ document
 
 function exportToXlsx() {
   const headers = [
-    "Id Cliente",
+    "No.",
     "Razón Social",
     "RFC",
     "Estatus Cliente",

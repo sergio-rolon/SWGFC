@@ -98,7 +98,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Asignación",
+    "No.",
     "Estatus asignación",
     "Número de serie",
     "Marca",

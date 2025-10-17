@@ -115,7 +115,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Servicio",
+    "No.",
     "Tipo servicio",
     "Kilometraje",
     "Fecha de servicio",

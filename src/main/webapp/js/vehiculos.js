@@ -105,7 +105,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Vehículo",
+    "No.",
     "Número de serie",
     "Marca",
     "Tipo",

@@ -109,7 +109,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Incidente",
+    "No.",
     "Tipo incidente",
     "Descripción",
     "Fecha de incidente",

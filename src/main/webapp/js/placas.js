@@ -115,7 +115,7 @@ function populateVehiculoSelect() {
 }
 function exportToXlsx() {
   const headers = [
-    "Id Placa",
+    "No.",
     "Serie de placa",
     "Estado",
     "Costo",
