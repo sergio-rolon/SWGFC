@@ -186,7 +186,7 @@ function filterSelection() {
 
   createTable(filteredSelection);
 }
-
+//.
 document.addEventListener("change", (event) => {
   if (
     event.target.classList.contains("estatus-filter") ||
