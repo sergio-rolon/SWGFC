@@ -417,7 +417,7 @@ function renderPagination(asignaciones, page) {
     const nextButton = document.createElement("button");
     nextButton.textContent = "Siguiente";
     nextButton.addEventListener("click", () => {
-      createTable(vehiculos, page + 1);
+      createTable(asignaciones, page + 1);
     });
     paginationContainer.appendChild(nextButton);
   }
