@@ -109,7 +109,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Incidente",
+    "No.",
     "Tipo incidente",
     "Descripción",
     "Fecha de incidente",
@@ -324,7 +324,7 @@ function sidebar() {
     flag = true;
   }
 }
-//========AQUI VAMOS
+
 function setErrorMsgs(result) {
   if (result["IdTipoIncidente"] && result.IdTipoIncidente != "success") {
     idTipoIncidenteError.textContent = result.IdTipoIncidente;

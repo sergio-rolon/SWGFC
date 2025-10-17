@@ -9,7 +9,7 @@ const btnLogIn = document.getElementById("btnLogIn");
 const loader = document.getElementById("loader");
 
 // Events
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();
   }
@@ -18,10 +18,9 @@ document.getElementById("btnLogIn").addEventListener("click", function (event) {
   event.preventDefault();
   cleanError();
   if (!validateNull()) {
-    // Oculta el botón y muestra el mensaje de validación
     btnLogIn.style.display = "none";
     loader.style.display = "block";
-    // Asegúrate de que grecaptcha se ha cargado antes de ejecutarlo
+
     if (typeof grecaptcha !== "undefined") {
       grecaptcha.ready(function () {
         grecaptcha
@@ -29,7 +28,6 @@ document.getElementById("btnLogIn").addEventListener("click", function (event) {
             action: "submit",
           })
           .then(function (token) {
-            // Aquí podrías enviar el token al backend
             let email = correoInput.value;
             let contrasena = contrasenaInput.value;
             sendDataLogin(token, email, contrasena);
@@ -37,7 +35,7 @@ document.getElementById("btnLogIn").addEventListener("click", function (event) {
       });
     } else {
       loginError.textContent = "reCAPTCHA no está cargado correctamente.";
-      // Si hay un error, volvemos a mostrar el botón
+
       btnLogIn.style.display = "block";
       loader.style.display = "none";
     }

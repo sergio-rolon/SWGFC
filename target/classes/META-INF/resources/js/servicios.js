@@ -115,7 +115,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id Servicio",
+    "No.",
     "Tipo servicio",
     "Kilometraje",
     "Fecha de servicio",
@@ -356,7 +356,7 @@ function sidebar() {
     flag = true;
   }
 }
-//========AQUI VAMOS
+
 function setErrorMsgs(result) {
   if (result["IdTipoServicio"] && result.IdTipoServicio != "success") {
     idTipoServicioError.textContent = result.IdTipoServicio;

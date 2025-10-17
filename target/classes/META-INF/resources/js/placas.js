@@ -102,8 +102,7 @@ document
     clearAll();
     actualizarButtonIsActive = false;
   });
-//fechaInicioElement.addEventListener("change", dateValidation);
-//fechaTerminoElement.addEventListener("change", dateValidation);
+
 //************************************** Functions
 function populateVehiculoSelect() {
   idVehiculoSelect.innerHTML = "";
@@ -116,7 +115,7 @@ function populateVehiculoSelect() {
 }
 function exportToXlsx() {
   const headers = [
-    "Id Placa",
+    "No.",
     "Serie de placa",
     "Estado",
     "Costo",

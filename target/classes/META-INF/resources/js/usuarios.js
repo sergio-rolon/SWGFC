@@ -107,7 +107,7 @@ document
 
 function exportToXlsx() {
   const headers = [
-    "Id Usuario",
+    "No.",
     "Email",
     "Nombre",
     "Apellido paterno",

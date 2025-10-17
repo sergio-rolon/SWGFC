@@ -41,6 +41,6 @@ import java.util.Properties;
             return properties.getProperty(key);
         }
         public boolean isEmpty() {
-            return properties.isEmpty();  // Retorna true si no hay propiedades cargadas
+            return properties.isEmpty();
         }
     }

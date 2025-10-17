@@ -600,7 +600,7 @@ function getAllClientes() {
 function registerEmpleado(raw) {
   const myHeaders = new Headers();
 
-  myHeaders.append("Content-Type", "application/json;charset=UTF-8");
+  myHeaders.append("Content-Type", "application/json");
   myHeaders.append(
     "Authorization",
     `Bearer: ${sessionStorage.getItem("token")}`

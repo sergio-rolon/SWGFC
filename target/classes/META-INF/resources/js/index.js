@@ -93,11 +93,10 @@ function validateLogin() {
   fetch(urlLogged, requestOptions)
     .then((response) => {
       if (response.ok) {
-        return response.json(); // Si la respuesta es exitosa, manejamos los datos
+        return response.json();
       } else if (response.status === 401 || response.status === 403) {
-        // Si el servidor nos dice que no estamos autorizados, redirigimos al login
         window.location.href = "/pages/login.html";
-        return; // Salir del flujo para evitar otros procesamientos
+        return;
       } else {
         throw new Error("Algo salió mal con la respuesta del servidor");
       }
@@ -106,14 +105,11 @@ function validateLogin() {
       if (usuario) {
         const mainContenedor = document.getElementById("mainContenedor");
 
-        // Eliminar contenido existente
         mainContenedor.innerHTML = "";
 
-        // Crear el nuevo contenedor
         const gridContainer = document.createElement("div");
         gridContainer.className = "grid-container";
 
-        // Lista de elementos
         let elementos = [
           {
             src: "https://res.cloudinary.com/dseuvfwyj/image/upload/v1743360169/index/jya9xdjmykyrs1hlf7g5.svg",
@@ -178,7 +174,6 @@ function validateLogin() {
           elementos = [elementos[0]];
         }
 
-        // Generar las cards dinámicamente
         elementos.forEach((element) => {
           const card = document.createElement("div");
           card.className = "card";
@@ -191,11 +186,11 @@ function validateLogin() {
           img.alt = element.alt;
 
           const link = document.createElement("a");
-          link.href = element.url; // URL de destino
+          link.href = element.url;
 
           const button = document.createElement("button");
           button.textContent = "Acceder";
-          // Agregar botón dentro del enlace
+
           link.appendChild(button);
 
           card.appendChild(title);
@@ -205,11 +200,10 @@ function validateLogin() {
           gridContainer.appendChild(card);
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
-          document.getElementById("loader").style.display = "none"; // Oculta el loader
+          document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         });
 
-        // Añadir el nuevo contenido al contenedor principal
         mainContenedor.appendChild(gridContainer);
       }
     })

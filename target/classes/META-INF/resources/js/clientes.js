@@ -91,19 +91,10 @@ document
   });
 
 //************************************** Functions
-/* function exportPageToXlsx() {
-  const table = document.querySelector(".responsive-table");
-  const workBook = XLSX.utils.book_new();
 
-  const workSheet = XLSX.utils.table_to_sheet(table);
-
-  XLSX.utils.book_append_sheet(workBook, workSheet, "Clientes ");
-
-  XLSX.writeFile(workBook, "clientes_reporte.xlsx");
-} */
 function exportToXlsx() {
   const headers = [
-    "Id Cliente",
+    "No.",
     "Razón Social",
     "RFC",
     "Estatus Cliente",

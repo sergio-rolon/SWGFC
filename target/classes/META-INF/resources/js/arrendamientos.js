@@ -135,7 +135,7 @@ function populateVehiculoSelect() {
 }
 function exportToXlsx() {
   const headers = [
-    "Id Arrendamiento",
+    "No.",
     "Número de contrato",
     "Arrendadora",
     "Fecha de inicio",

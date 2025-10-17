@@ -136,7 +136,7 @@ function populateVehiculoSelect() {
 
 function exportToXlsx() {
   const headers = [
-    "Id Seguro",
+    "No.",
     "Número de póliza",
     "Aseguradora",
     "Fecha de inicio",

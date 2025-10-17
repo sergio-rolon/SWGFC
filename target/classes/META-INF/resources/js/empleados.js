@@ -115,7 +115,7 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "Id empleado",
+    "No.",
     "Número de trabajador",
     "Nombre",
     "Apellido paterno",
