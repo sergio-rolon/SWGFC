@@ -136,7 +136,7 @@ function exportToXlsx() {
   ];
 
   const rows = serviciosData.map((servicio) => [
-    servicio.idTipoServicio,
+    tipoServicioMap[servicio.idTipoServicio],
     servicio.kilometraje,
     servicio.fechaServicio,
     servicio.costo,
@@ -547,6 +547,7 @@ function validateLogin() {
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else if (usuario.role === "Asesor") {
+          btnAbrirModal.style.display = "none";
           const servicioForm = document.getElementById("servicioForm");
           if (servicioForm) servicioForm.remove();
           window.asesorMode = true;
@@ -559,6 +560,7 @@ function validateLogin() {
           const menuLinks = document.querySelectorAll("#mySidebar a");
           if (menuLinks.length > 0) {
             menuLinks[0].remove();
+            menuLinks[1].remove();
           }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
@@ -906,3 +908,8 @@ document.getElementById("btnAbrirModal").addEventListener("click", () => {
   document.getElementById("modal-title").textContent = "Registrar";
   bsModal.show();
 });
+const tipoServicioMap = {
+  1: "Preventivo",
+  2: "Correctivo",
+  3: "Llantas",
+};

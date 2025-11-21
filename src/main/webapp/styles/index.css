@@ -64,6 +64,18 @@
     max-width: 200px;
   }
 }
+@media (max-width: 1229px) {
+  #sidebarIndex {
+    display: block !important;
+  }
+  .sidePanel {
+    display: none !important;
+  }
+
+  #contenidoIndex {
+    margin-bottom: 480px;
+  }
+}
 .sidePanel {
   width: 240px;
   background-color: #064995;
@@ -93,4 +105,16 @@
 .sidePanel a img {
   width: 30px;
   height: 30px;
+}
+@media (max-width: 768px) {
+  .contenedor-graficas {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .contenedor-graficas .grafica {
+    margin-right: 0 !important;
+    margin-bottom: 15px;
+    width: 95% !important; /* Más responsivo */
+  }
 }

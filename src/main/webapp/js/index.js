@@ -75,6 +75,8 @@ const arrendamientosCount = document.getElementById("arrendamientosCount");
 const placasCount = document.getElementById("placasCount");
 const segurosCount = document.getElementById("segurosCount");
 const asignacionesCount = document.getElementById("asignacionesCount");
+let graficaServiciosDy;
+let graficaIncidentesDy;
 
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
@@ -179,7 +181,9 @@ function validateLogin() {
         //      if (usuario.role === "Administrador") {
         //          elementos = [elementos[0]];
         //        }
-
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
         elementos.forEach((element) => {
           const anchor = document.createElement("a");
           anchor.href = element.url;
@@ -240,7 +244,7 @@ function validateLogin() {
             return [new Date(year, month, day), item.totalservicios];
           });
 
-          new Dygraph(
+          graficaServiciosDy = new Dygraph(
             document.getElementById("graficaServicios"),
             serviciosDataFiltered,
             {
@@ -266,7 +270,7 @@ function validateLogin() {
             return [new Date(year, month, day), item.totalincidentes];
           });
 
-          new Dygraph(
+          graficaIncidentesDy = new Dygraph(
             document.getElementById("graficaIncidentes"),
             incidentesDataFiltered,
             {
@@ -409,7 +413,6 @@ function getServiciosCount() {
     .then((result) => {
       if (result) {
         serviciosCountData = result.myArrayList.map((item) => item.map);
-        console.log(serviciosCountData);
       }
     })
     .catch((error) => {
@@ -448,7 +451,6 @@ function getIncidentesCount() {
     .then((result) => {
       if (result) {
         incidentesCountData = result.myArrayList.map((item) => item.map);
-        console.log(incidentesCountData);
       }
     })
     .catch((error) => {
@@ -477,3 +479,18 @@ function createSpan(text) {
   span.style.fontWeight = "bold";
   return span;
 }
+function sidebar() {
+  if (flag) {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+    flag = false;
+  } else {
+    document.getElementById("mySidebar").style.width = "200px";
+    document.getElementById("main").style.marginLeft = "200px";
+    flag = true;
+  }
+}
+window.addEventListener("resize", () => {
+  if (graficaServiciosDy) graficaServiciosDy.resize();
+  if (graficaIncidentesDy) graficaIncidentesDy.resize();
+});

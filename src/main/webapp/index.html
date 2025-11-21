@@ -86,15 +86,25 @@
       <header>
         <nav class="navbar">
           <div class="left-side-navbar">
+            <button
+              id="sidebarIndex"
+              class="openbtn"
+              onclick="sidebar()"
+              style="display: none"
+            >
+              ☰
+            </button>
             <div class="logo">
-              <img
-                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
-                alt="Logo"
-                class="logo-img"
-              />
+              <a href="../index.html" title="Ir a menú principal">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                  alt="Logo"
+                  class="logo-img"
+              /></a>
             </div>
             <div class="logo">
               <img
+                id="userLogged"
                 src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
                 alt="user logged"
                 class="logo-img"
@@ -121,7 +131,21 @@
           </div>
         </nav>
       </header>
-      <main style="flex: none; padding: 0">
+      <div id="mySidebar" class="sidebar">
+        <a href="/pages/usuarios.html" id="usuariosMenu" style="display: none"
+          >Usuarios</a
+        >
+        <a href="./pages/clientes.html">Clientes</a>
+        <a href="./pages/empleados.html">Empleados</a>
+        <a href="./pages/vehiculos.html">Vehículos</a>
+        <a href="./pages/arrendamientos.html">Arrendamientos</a>
+        <a href="./pages/seguros.html">Seguros</a>
+        <a href="./pages/placas.html">Placas</a>
+        <a href="./pages/asignaciones.html">Asignaciones</a>
+        <a href="./pages/servicios.html">Servicios</a>
+        <a href="./pages/incidentes.html">Incidentes</a>
+      </div>
+      <main id="main" style="flex: none; padding: 0">
         <div id="mainContenedor" style="margin-bottom: 0px">
           <div class="contenedor" id="contenedor">
             <div class="cuadro">
@@ -209,11 +233,16 @@
               <h1 style="padding: 40px 0px">
                 SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR
               </h1>
-              <div style="display: flex; justify-content: center">
+              <div
+                class="contenedor-graficas"
+                style="display: flex; justify-content: center"
+              >
                 <div
                   id="graficaServicios"
+                  class="grafica"
                   style="
-                    width: 500px;
+                    width: 100%;
+                    max-width: 500px;
                     height: 200px;
                     border: 1px solid black;
                     border-radius: 10px;
@@ -223,8 +252,10 @@
                 ></div>
                 <div
                   id="graficaIncidentes"
+                  class="grafica"
                   style="
-                    width: 500px;
+                    width: 100%;
+                    max-width: 500px;
                     height: 200px;
                     border: 1px solid black;
                     border-radius: 10px;
@@ -239,8 +270,11 @@
                   display: flex;
                   text-align: center;
                   justify-content: space-evenly;
-                  padding-top: 70px;
+                  padding-top: 60px;
+                  flex-wrap: wrap;
+                  gap: 5px;
                 "
+                class="cards-container"
               >
                 <div
                   style="
@@ -338,3 +372,8 @@
     validateLogin();
   </script>
 </html>
+<script>
+  flag = false;
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft = "0";
+</script>

@@ -291,6 +291,7 @@ input[type="date"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-family: Arial, Helvetica, sans-serif;
+  height: 44px;
 }
 .pagination-container {
   margin-top: 10px;
