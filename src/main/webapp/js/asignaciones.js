@@ -98,7 +98,6 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Estatus asignación",
     "Número de serie",
     "Marca",
@@ -112,7 +111,6 @@ function exportToXlsx() {
   ];
 
   const rows = asignacionesData.map((asignacion) => [
-    asignacion.idAsignacion,
     asignacion.estatusAsignacion,
     asignacion.numeroSerie,
     asignacion.marca,
@@ -196,7 +194,6 @@ function clearErrors() {
   idTipoEstatus.classList.remove("borde-rojo");
 }
 function clearForm() {
-  idAsignacion.value = "";
   idEmpleadoSelect.innerHTML = "";
   idVehiculoSelect.innerHTML = "";
   idClientesSelect.selectedIndex = 0;
@@ -301,6 +298,10 @@ function setErrorMsgs(result) {
 }*/
 
 function editeAsignacion(asignacionString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -361,7 +362,6 @@ function createTable(asignaciones, page = 1) {
     const row = document.createElement("tr");
     const asignacionString = JSON.stringify(asignacion).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${asignacion.idAsignacion}</td>
           <td>${asignacion.estatusAsignacion}</td>
           <td>${asignacion.numeroSerie}</td>
           <td>${asignacion.marca}</td>  
@@ -375,8 +375,12 @@ function createTable(asignaciones, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeAsignacion('${asignacionString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteAsignacion('${asignacion.idAsignacion}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeAsignacion('${asignacionString}')">
+                        <img src="/images/edit-button.png" alt="Editar" class="edite-icon">
+                        </button></td>
+                       <td><button class="delete-btn" onclick="deleteAsignacion('${asignacion.idAsignacion}')">
+                      <img src="/images/delete.png" alt="Eliminar" class="delete-icon">
+                      </button></td>`
                 }
               `;
 
@@ -452,7 +456,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -848,4 +855,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

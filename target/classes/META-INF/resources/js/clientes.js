@@ -94,7 +94,6 @@ document
 
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Razón Social",
     "RFC",
     "Estatus Cliente",
@@ -106,7 +105,6 @@ function exportToXlsx() {
   ];
 
   const rows = clientesData.map((cliente) => [
-    cliente.idCliente,
     cliente.razonSocial,
     cliente.rfc,
     cliente.estatusCliente,
@@ -221,7 +219,6 @@ function clearForm() {
   rfc.value = "";
   idTipoEstatus.value = "1";
   idUsuarioSelect.value = "7";
-  idCliente.value = "";
   actualizarButtonIsActive = false;
 }
 
@@ -241,6 +238,10 @@ function setErrorMsgs(result) {
 }
 
 function editeCliente(clienteString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -274,7 +275,6 @@ function createTable(clientes, page = 1) {
     const row = document.createElement("tr");
     const clienteString = JSON.stringify(cliente).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${cliente.idCliente}</td>
           <td>${cliente.razonSocial}</td>
           <td>${cliente.rfc}</td>
           <td>${cliente.estatusCliente}</td>
@@ -283,8 +283,8 @@ function createTable(clientes, page = 1) {
           <td>${cliente.apellidoPaterno}</td>
           <td>${cliente.apellidoMaterno}</td>
           <td>${cliente.estatusUsuario}</td>
-          <td><button class="edit-btn" onclick="editeCliente('${clienteString}')">Editar</button></td>
-          <td><button class="delete-btn" onclick="deleteCliente('${cliente.rfc}')">Eliminar</button></td>
+          <td><button class="edit-btn" onclick="editeCliente('${clienteString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+          <td><button class="delete-btn" onclick="deleteCliente('${cliente.rfc}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>
           `;
 
     tbody.appendChild(row);
@@ -380,7 +380,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -663,4 +666,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

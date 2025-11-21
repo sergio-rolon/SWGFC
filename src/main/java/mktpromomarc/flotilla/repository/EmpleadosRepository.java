@@ -74,7 +74,34 @@ public class EmpleadosRepository implements ICrudRepository<Empleados>{
 
     @Override
     public JSONArray findAllObjects() {
-        return null;
+        JSONArray allEmpleados = null;
+        Connection conn = Conexion.getConexion();
+        try{
+            PreparedStatement ps=null;
+
+                ps = conn.prepareStatement(
+                        "SELECT \"idEmpleado\", \"numeroTrabajador\", \"nombre\",\"apellidoPaterno\"," +
+                                "\"apellidoMaterno\",\"idCliente\" " +
+                                "FROM \"Empleados\" " +
+                                "ORDER BY \"idEmpleado\" ASC"
+                );
+
+            ResultSet rs = ps.executeQuery();
+            allEmpleados = new JSONArray();
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject empleado = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    empleado.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allEmpleados.put(empleado);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allEmpleados;
     }
     public JSONArray findAllObjects(String pathInfo) {
         JSONArray allEmpleados = null;

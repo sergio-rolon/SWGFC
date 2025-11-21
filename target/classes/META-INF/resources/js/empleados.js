@@ -115,7 +115,6 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Número de trabajador",
     "Nombre",
     "Apellido paterno",
@@ -130,7 +129,6 @@ function exportToXlsx() {
   ];
 
   const rows = empleadosData.map((empleado) => [
-    empleado.idEmpleado,
     empleado.numeroTrabajador,
     empleado.nombre,
     empleado.apellidoPaterno,
@@ -289,7 +287,6 @@ function clearForm() {
   if (idClienteSelect.options.length > 0) {
     idClienteSelect.selectedIndex = 0;
   }
-  idEmpleado.value = "";
   actualizarButtonIsActive = false;
 }
 
@@ -324,6 +321,10 @@ function setErrorMsgs(result) {
 }
 
 function editeEmpleado(empleadoString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -362,7 +363,6 @@ function createTable(empleados, page = 1) {
     const row = document.createElement("tr");
     const empleadoString = JSON.stringify(empleado).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${empleado.idEmpleado}</td>
           <td>${empleado.numeroTrabajador}</td>
           <td>${empleado.nombre}</td>
           <td>${empleado.apellidoPaterno}</td>
@@ -377,8 +377,8 @@ function createTable(empleados, page = 1) {
                 ${
                   window.operacionMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeEmpleado('${empleadoString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteEmpleado('${empleado.numeroTrabajador}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeEmpleado('${empleadoString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deleteEmpleado('${empleado.numeroTrabajador}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -477,7 +477,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Asesor") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Asesor" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -487,6 +490,7 @@ function validateLogin() {
             menuLinks[0].remove();
           }
         } else if (usuario.role === "Operación") {
+          document.getElementById("btnAbrirModal").style.display = "none";
           const empleadoForm = document.getElementById("empleadoForm");
           if (empleadoForm) empleadoForm.remove();
           window.operacionMode = true;
@@ -776,4 +780,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

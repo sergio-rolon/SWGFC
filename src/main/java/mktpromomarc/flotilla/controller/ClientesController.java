@@ -36,7 +36,7 @@ public class ClientesController extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
        boolean isAsesor=role.equals("Asesor");
        String emailAsesor="";
-        if((role.equals("Operación") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
+        if((role.equals("Operación")  || role.equals("Administrador") || isAsesor) && requestUrl.equals("/api/clientes/getAllClientes")){
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -62,7 +62,7 @@ public class ClientesController extends HttpServlet {
 
         }
 
-        if(role.equals("Operación")) {
+        if(role.equals("Operación") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray clientesResult = clientesService.getAll();

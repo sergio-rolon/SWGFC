@@ -15,6 +15,11 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Poppins"
@@ -69,6 +74,7 @@
             </div>
             <div class="logo">
               <img
+                id="userLogged"
                 src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
                 alt="user logged"
                 class="logo-img"
@@ -79,6 +85,52 @@
             </div>
           </div>
           <div class="right-side-navbar">
+            <div class="logo position-relative">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1827/1827272.png"
+                alt="notificaciones"
+                id="notificationBell"
+                style="width: 28px; cursor: pointer"
+              />
+
+              <!-- Burbuja con número -->
+              <span
+                id="notificationCount"
+                style="
+                  position: absolute;
+                  top: -5px;
+                  right: -5px;
+                  background-color: red;
+                  color: white;
+                  border-radius: 50%;
+                  padding: 2px 6px;
+                  font-size: 12px;
+                  display: none;
+                "
+              >
+              </span>
+            </div>
+
+            <!-- Dropdown de notificaciones -->
+            <div
+              id="notificationList"
+              style="
+                display: none;
+                position: absolute;
+                right: 10px;
+                top: 60px;
+                background: white;
+                border: 1px solid #ccc;
+                padding: 10px;
+                width: 260px;
+                max-height: 300px;
+                overflow-y: auto;
+                border-radius: 8px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+                z-index: 2000;
+              "
+            ></div>
+
             <div class="logo">
               <span class="text-logout" id="textToLogOut">Cerrar sesión</span>
             </div>
@@ -96,6 +148,9 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
+        <a href="./usuarios.html" id="usuariosMenu" style="display: none"
+          >Usuarios</a
+        >
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
@@ -107,159 +162,192 @@
         <a href="./incidentes.html">Incidentes</a>
       </div>
 
-      <div class="container" id="main">
+      <div id="main">
         <main>
           <h1>Gestión de placas</h1>
-          <div id="placaForm">
-            <div class="form-grid">
-              <div>
-                <label for="idPlaca">No.:</label><br />
-                <input type="text" id="idPlaca" disabled /><br />
-                <br />
-              </div>
-              <div>
-                <label for="seriePlaca">Serie de placa:</label><br />
-                <input
-                  type="text"
-                  id="seriePlaca"
-                  placeholder="Ej. JP16656"
-                  required
-                /><br />
-                <label
-                  for="seriePlacaError"
-                  id="seriePlacaError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="estado">Estado:</label><br />
-                <input
-                  type="text"
-                  id="estado"
-                  placeholder="Ej. Jalisco"
-                  required
-                /><br />
-                <label
-                  for="estadoError"
-                  id="estadoError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
+          <div
+            class="modal fade"
+            id="formModal"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modal-title"></h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div id="placaForm">
+                    <div class="form-grid">
+                      <input
+                        type="hidden"
+                        id="idPlaca"
+                        name="idPlaca"
+                        value=""
+                      />
+                      <div>
+                        <label for="seriePlaca">Serie de placa:</label><br />
+                        <input
+                          type="text"
+                          id="seriePlaca"
+                          placeholder="Ej. JP16656"
+                          required
+                        /><br />
+                        <label
+                          for="seriePlacaError"
+                          id="seriePlacaError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="estado">Estado:</label><br />
+                        <input
+                          type="text"
+                          id="estado"
+                          placeholder="Ej. Jalisco"
+                          required
+                        /><br />
+                        <label
+                          for="estadoError"
+                          id="estadoError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
 
-              <div>
-                <label for="costo">Costo:</label><br />
-                <input
-                  type="number"
-                  id="costo"
-                  placeholder="Ej. 25000"
-                  required
-                /><br />
-                <label
-                  for="costoError"
-                  id="costoError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="comision">Comisión:</label><br />
-                <input
-                  type="number"
-                  id="comision"
-                  placeholder="Ej. 4.5"
-                  required
-                /><br />
-                <label
-                  for="comisionError"
-                  id="comisionError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="anoRenovacion">Año de renovación:</label><br />
-                <input
-                  type="number"
-                  id="anoRenovacion"
-                  placeholder="Ej. 2025"
-                  required
-                /><br />
-                <label
-                  for="anoRenovacionError"
-                  id="anoRenovacionError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="idTipoEstatus">Selecciona estatus:</label><br />
-                <select id="idTipoEstatus">
-                  <option value="1">Activo</option>
-                  <option value="2">Inactivo</option>
-                </select>
-                <label
-                  for="idTipoEstatusError"
-                  id="idTipoEstatusError"
-                  class="label-error"
-                ></label>
-                <br />
-              </div>
-              <div>
-                <label for="idVehiculoSelect">Selecciona vehículo:</label><br />
-                <select id="idVehiculoSelect"></select>
-                <label
-                  for="idVehiculoError"
-                  id="idVehiculoError"
-                  class="label-error"
-                ></label>
-                <br />
-              </div>
-              <div></div>
-              <div></div>
-              <div class="button-group">
-                <button id="btnRegistrar">Registrar</button>
-                <button id="btnActualizar">Actualizar</button>
-                <button id="btnLimpiar">Limpiar</button>
+                      <div>
+                        <label for="costo">Costo:</label><br />
+                        <input
+                          type="number"
+                          id="costo"
+                          placeholder="Ej. 25000"
+                          required
+                        /><br />
+                        <label
+                          for="costoError"
+                          id="costoError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="comision">Comisión:</label><br />
+                        <input
+                          type="number"
+                          id="comision"
+                          placeholder="Ej. 4.5"
+                          required
+                        /><br />
+                        <label
+                          for="comisionError"
+                          id="comisionError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="anoRenovacion">Año de renovación:</label
+                        ><br />
+                        <input
+                          type="number"
+                          id="anoRenovacion"
+                          placeholder="Ej. 2025"
+                          required
+                        /><br />
+                        <label
+                          for="anoRenovacionError"
+                          id="anoRenovacionError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="idTipoEstatus">Selecciona estatus:</label
+                        ><br />
+                        <select id="idTipoEstatus">
+                          <option value="1">Activo</option>
+                          <option value="2">Inactivo</option>
+                        </select>
+                        <label
+                          for="idTipoEstatusError"
+                          id="idTipoEstatusError"
+                          class="label-error"
+                        ></label>
+                        <br />
+                      </div>
+                      <div></div>
+                      <div>
+                        <label for="idVehiculoSelect"
+                          >Selecciona vehículo:</label
+                        ><br />
+                        <select id="idVehiculoSelect"></select>
+                        <label
+                          for="idVehiculoError"
+                          id="idVehiculoError"
+                          class="label-error"
+                        ></label>
+                        <br />
+                      </div>
+                      <div></div>
+                      <div></div>
+                      <div class="button-group">
+                        <button id="btnRegistrar">Registrar</button>
+                        <button id="btnActualizar">Actualizar</button>
+                        <button id="btnLimpiar">Limpiar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <br /><br />
+          <br />
           <div class="filter-container">
-            <div class="filter-button-group">
-              <button class="btn-no-filter" onclick="showAllPlacas()">
-                Sin filtro
+            <div style="display: flex">
+              <button id="btnAbrirModal" class="btn btn-primary">
+                <img src="/images/plus.png" alt="Registrar" class="add-icon" />
               </button>
-              <div class="dropdown">
-                <button class="btn-filter">Estatus</button>
-                <div class="dropdown-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="Activo"
-                      checked
-                    />
-                    Activo </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="Inactivo"
-                      checked
-                    />
-                    Inactivo
-                  </label>
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllPlacas()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Estatus</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Activo"
+                        checked
+                      />
+                      Activo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Inactivo"
+                        checked
+                      />
+                      Inactivo
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Año renovación</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button class="btn-filter">Año renovación</button>
-                <div class="dropdown-content" id="secondDropdown"></div>
-              </div>
             </div>
-            <div>
+            <div style="padding-left: 20px">
               <label for="searchInput" style="color: black"
                 >Buscar por número de serie:</label
               >
@@ -276,7 +364,6 @@
               <table class="responsive-table">
                 <thead id="tableHeader">
                   <tr>
-                    <th>No.</th>
                     <th>Serie de placa</th>
                     <th>Estado</th>
                     <th>Costo</th>

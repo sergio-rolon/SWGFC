@@ -69,7 +69,36 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
     }
     @Override
     public JSONArray findAllObjects() {
-        return null;
+
+        JSONArray allVehiculosCount = null;
+        Connection conn = Conexion.getConexion();
+        String sql = """
+SELECT
+    (SELECT COUNT(*) FROM "Vehiculos"      WHERE "idTipoEstatus" = 1) AS totalVehiculos,
+    (SELECT COUNT(*) FROM "Arrendamientos" WHERE "idTipoEstatus" = 1) AS totalArrendamientos,
+    (SELECT COUNT(*) FROM "Placas"         WHERE "idTipoEstatus" = 1) AS totalPlacas,
+    (SELECT COUNT(*) FROM "Seguros"        WHERE "idTipoEstatus" = 1) AS totalSeguros,
+    (SELECT COUNT(*) FROM "Asignaciones"   WHERE "idTipoEstatus" = 1) AS totalAsignaciones
+""";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            allVehiculosCount = new JSONArray();
+
+        while (rs.next()) {
+            int totalColumns = rs.getMetaData().getColumnCount();
+            JSONObject field = new JSONObject();
+            for(int i=0; i<totalColumns;i++){
+                field.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+            }
+            allVehiculosCount.put(field);
+        }
+        Conexion.endConexion(conn);
+         } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+         }
+        return allVehiculosCount;
     }
     public JSONArray findAllObjects(String pathInfo) {
         JSONArray allVehiculos = null;
@@ -285,5 +314,103 @@ public class VehiculosRepository implements ICrudRepository<Vehiculos>{
             Conexion.endConexion(conn);
         }
         return vehiculo;
+    }
+
+    public JSONArray findAllIncidentes() {
+
+        JSONArray allIncidentesCount = null;
+        Connection conn = Conexion.getConexion();
+        String sql = """
+                WITH fechas AS (
+                    SELECT generate_series(
+                        CURRENT_DATE - INTERVAL '1 week',
+                        CURRENT_DATE,
+                        INTERVAL '1 day'
+                    )::date AS fecha
+                ),
+                incidentes AS (
+                    SELECT
+                        TO_DATE("fechaIncidente", 'YYYYMMDD') AS fecha,
+                        COUNT(*) AS total
+                    FROM "Incidentes"
+                    WHERE TO_DATE("fechaIncidente", 'YYYYMMDD') >= (CURRENT_DATE - INTERVAL '1 week')
+                    GROUP BY fecha
+                )
+                SELECT\s
+                    f.fecha,
+                    COALESCE(i.total, 0) AS totalIncidentes
+                FROM fechas f
+                LEFT JOIN incidentes i ON i.fecha = f.fecha
+                ORDER BY f.fecha;
+                
+""";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            allIncidentesCount = new JSONArray();
+
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject field = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    field.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allIncidentesCount.put(field);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allIncidentesCount;
+    }
+
+    public JSONArray findAllServicios() {
+
+        JSONArray allServiciosCount = null;
+        Connection conn = Conexion.getConexion();
+        String sql = """
+                WITH fechas AS (
+                    SELECT generate_series(
+                        CURRENT_DATE - INTERVAL '1 week',
+                        CURRENT_DATE,
+                        INTERVAL '1 day'
+                    )::date AS fecha
+                ),
+                servicios AS (
+                    SELECT
+                        TO_DATE("fechaServicio", 'YYYYMMDD') AS fecha,
+                        COUNT(*) AS total
+                    FROM "Servicios"
+                    WHERE TO_DATE("fechaServicio", 'YYYYMMDD') >= (CURRENT_DATE - INTERVAL '1 week')
+                    GROUP BY fecha
+                )
+                SELECT\s
+                    f.fecha,
+                    COALESCE(s.total, 0) AS totalServicios
+                FROM fechas f
+                LEFT JOIN servicios s ON s.fecha = f.fecha
+                ORDER BY f.fecha;
+                
+""";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            allServiciosCount = new JSONArray();
+
+            while (rs.next()) {
+                int totalColumns = rs.getMetaData().getColumnCount();
+                JSONObject field = new JSONObject();
+                for(int i=0; i<totalColumns;i++){
+                    field.put(rs.getMetaData().getColumnLabel(i+1),rs.getObject(i+1));
+                }
+                allServiciosCount.put(field);
+            }
+            Conexion.endConexion(conn);
+        } catch (Exception e) {
+            System.out.println(e);
+            Conexion.endConexion(conn);
+        }
+        return allServiciosCount;
     }
 }

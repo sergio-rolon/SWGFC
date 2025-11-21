@@ -198,7 +198,7 @@ h1 {
 }
 @media (max-width: 768px) {
   #textToLogOut {
-    visibility: hidden;
+    display: none;
   }
   .text-logout {
     word-break: break-word;

@@ -115,7 +115,6 @@ function populateVehiculoSelect() {
 }
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Serie de placa",
     "Estado",
     "Costo",
@@ -129,7 +128,6 @@ function exportToXlsx() {
   ];
 
   const rows = placasData.map((placa) => [
-    placa.idPlaca,
     placa.seriePlaca,
     placa.estado,
     placa.costo,
@@ -284,7 +282,6 @@ function clearForm() {
   comision.value = "";
   anoRenovacion.value = "";
   idTipoEstatus.value = "1";
-  idPlaca.value = "";
   actualizarButtonIsActive = false;
   populateVehiculoSelect();
 }
@@ -315,6 +312,10 @@ function setErrorMsgs(result) {
 }
 
 function editePlaca(placaString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -355,7 +356,6 @@ function createTable(placas, page = 1) {
     const row = document.createElement("tr");
     const placaString = JSON.stringify(placa).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${placa.idPlaca}</td>
           <td>${placa.seriePlaca}</td>
           <td>${placa.estado}</td>
           <td>${placa.costo}</td>
@@ -369,8 +369,8 @@ function createTable(placas, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editePlaca('${placaString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deletePlaca('${placa.seriePlaca}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editePlaca('${placaString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deletePlaca('${placa.seriePlaca}')"> <img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -466,7 +466,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -531,6 +534,7 @@ function getAllPlacas() {
       if (result) {
         placasData = result.myArrayList.map((item) => item.map);
         rowsFiltered = [...placasData];
+        calcularNotificaciones(placasData);
         createTable(placasData);
         populateSecondDropdown();
       }
@@ -761,4 +765,76 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
+});
+
+// new code
+function calcularNotificaciones(placas) {
+  const hoy = new Date();
+  const mes = hoy.getMonth() + 1; // 1-12
+  const anio = hoy.getFullYear();
+
+  const esOctubreEnAdelante = mes >= 10;
+
+  let proximas = [];
+
+  placas.forEach((p) => {
+    // Validamos si aplica la notificación
+    if (esOctubreEnAdelante && p.anoRenovacion == anio + 1) {
+      proximas.push(p);
+    }
+  });
+
+  renderizarNotificaciones(proximas);
+}
+
+function renderizarNotificaciones(lista) {
+  const badge = document.getElementById("notificationCount");
+  const panel = document.getElementById("notificationList");
+
+  if (lista.length === 0) {
+    badge.style.display = "none";
+    panel.style.display = "none";
+    return;
+  }
+
+  // Mostrar número
+  badge.innerText = lista.length;
+  badge.style.display = "inline-block";
+
+  // Construir listado
+  panel.innerHTML = `
+    <h6>Placas próximas a renovación</h6>
+    <ul style="padding-left: 15px;">
+      ${lista
+        .map(
+          (item) => `
+        <li>
+          <strong>${item.seriePlaca}</strong><br>
+          ${item.numeroSerie} <br>
+          Renovación: ${item.anoRenovacion}
+        </li>
+        <hr>
+      `
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
+// Mostrar/ocultar dropdown al hacer click en la campanita
+document.getElementById("notificationBell").addEventListener("click", () => {
+  const panel = document.getElementById("notificationList");
+  panel.style.display =
+    panel.style.display === "none" || panel.style.display === ""
+      ? "block"
+      : "none";
 });

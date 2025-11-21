@@ -109,7 +109,6 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Tipo incidente",
     "Descripción",
     "Fecha de incidente",
@@ -127,7 +126,6 @@ function exportToXlsx() {
   ];
 
   const rows = incidentesData.map((incidente) => [
-    incidente.idIncidente,
     incidente.tipoIncidente,
     incidente.descripcion,
     incidente.fechaIncidente,
@@ -244,7 +242,6 @@ function clearErrors() {
   idClientesSelect.classList.remove("borde-rojo");
 }
 function clearForm() {
-  idIncidente.value = "";
   idTipoIncidente.selectedIndex = 1;
   descripcion.value = "";
   fechaIncidente.value = "";
@@ -341,6 +338,10 @@ function setErrorMsgs(result) {
 }
 
 function editeIncidente(incidenteString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -392,7 +393,6 @@ function createTable(incidentes, page = 1) {
     const row = document.createElement("tr");
     const incidenteString = JSON.stringify(incidente).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${incidente.idIncidente}</td>
           <td>${incidente.tipoIncidente}</td>
           <td>${incidente.descripcion}</td>
           <td>${formatDateForTable(incidente.fechaIncidente)}</td>
@@ -410,8 +410,8 @@ function createTable(incidentes, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeIncidente('${incidenteString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteIncidente('${incidente.idIncidente}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeIncidente('${incidenteString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deleteIncidente('${incidente.idIncidente}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -487,7 +487,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -908,3 +911,12 @@ function populateGraph(incidentesData) {
 
   Plotly.newPlot("barChart", barData, barLayout);
 }
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
+});

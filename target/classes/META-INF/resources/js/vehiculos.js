@@ -9,6 +9,15 @@ const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
 
+const tiposMarca = {
+  Toyota: ["Hilux", "Tacoma", "Tundra"],
+  Ford: ["Ranger", "Lobo", "Maverick"],
+  Volkswagen: ["Saveiro", "Amarok"],
+  Mitsubishi: ["L200"],
+  Dodge: ["Ram 700", "Ram 1500"],
+  Nissan: ["Frontier", "NP300"],
+};
+
 const numeroSerieError = document.getElementById("numeroSerieError");
 const marcaError = document.getElementById("marcaError");
 const tipoError = document.getElementById("tipoError");
@@ -102,10 +111,24 @@ document
     actualizarButtonIsActive = false;
   });
 
+marca.addEventListener("change", function () {
+  const marcaSelected = this.value;
+
+  tipo.innerHTML = "";
+
+  if (marcaSelected && tiposMarca[marcaSelected]) {
+    tiposMarca[marcaSelected].forEach((modelo) => {
+      const option = document.createElement("option");
+      option.value = modelo;
+      option.textContent = modelo;
+      tipo.appendChild(option);
+    });
+  }
+});
+
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Número de serie",
     "Marca",
     "Tipo",
@@ -118,7 +141,6 @@ function exportToXlsx() {
   ];
 
   const rows = vehiculosData.map((vehiculo) => [
-    vehiculo.idVehiculo,
     vehiculo.numeroSerie,
     vehiculo.marca,
     vehiculo.tipo,
@@ -248,15 +270,15 @@ function validateNull() {
 
 function clearForm() {
   numeroSerie.value = "";
-  marca.value = "";
-  tipo.value = "";
+  marca.selectedIndex = 0;
+  marca.dispatchEvent(new Event("change"));
+  //tipo.value = "";
   modelo.value = "";
   accesorios.value = "";
   idTipoEstatus.value = "1";
   if (idClienteSelect.options.length > 0) {
     idClienteSelect.selectedIndex = 0;
   }
-  idVehiculo.value = "";
   actualizarButtonIsActive = false;
 }
 
@@ -285,6 +307,10 @@ function setErrorMsgs(result) {
 }
 
 function editeVehiculo(vehiculoString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -297,6 +323,7 @@ function editeVehiculo(vehiculoString) {
   idVehiculo.value = vehiculo.idVehiculo;
   numeroSerie.value = vehiculo.numeroSerie;
   marca.value = vehiculo.marca;
+  marca.dispatchEvent(new Event("change"));
   tipo.value = vehiculo.tipo;
   modelo.value = vehiculo.modelo;
   accesorios.value = vehiculo.accesorios;
@@ -321,7 +348,6 @@ function createTable(vehiculos, page = 1) {
     const row = document.createElement("tr");
     const vehiculoString = JSON.stringify(vehiculo).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${vehiculo.idVehiculo}</td>
           <td>${vehiculo.numeroSerie}</td>
           <td>${vehiculo.marca}</td>
           <td>${vehiculo.tipo}</td>
@@ -334,8 +360,8 @@ function createTable(vehiculos, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeVehiculo('${vehiculoString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteVehiculo('${vehiculo.numeroSerie}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeVehiculo('${vehiculoString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deleteVehiculo('${vehiculo.numeroSerie}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -434,7 +460,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -732,4 +761,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

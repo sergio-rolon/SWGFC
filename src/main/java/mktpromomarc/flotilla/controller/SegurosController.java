@@ -36,7 +36,7 @@ public class SegurosController extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
         boolean isAsesor=role.equals("Asesor");
         String emailAsesor="";
-        if(role.equals("Operación") || isAsesor) {
+        if(role.equals("Operación") || role.equals("Administrador")  || isAsesor) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -74,7 +74,7 @@ public class SegurosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Operación")) {
+        if(role.equals("Operación") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -152,7 +152,7 @@ public class SegurosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Operación")) {
+        if(role.equals("Operación") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -225,7 +225,7 @@ public class SegurosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Operación")) {
+        if(role.equals("Operación") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {

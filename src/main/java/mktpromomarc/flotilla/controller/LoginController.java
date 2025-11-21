@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import mktpromomarc.flotilla.config.Util;
 import mktpromomarc.flotilla.dto.Credentials;
 import mktpromomarc.flotilla.repository.UsuariosRepository;
+import mktpromomarc.flotilla.repository.VehiculosRepository;
 import mktpromomarc.flotilla.security.Encoder;
 import mktpromomarc.flotilla.security.Validator;
 import mktpromomarc.flotilla.service.UsuariosService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,11 +23,12 @@ import mktpromomarc.flotilla.modelo.Usuarios;
 import mktpromomarc.flotilla.security.JwtGenerator;
 import mktpromomarc.flotilla.security.RecaptchaVerifier;
 
-@WebServlet(name = "Login", urlPatterns = {"/login"})
+@WebServlet(name = "Login", urlPatterns = {"/login/*"})
 public class LoginController extends HttpServlet {
     private Gson gson = new Gson();
     UsuariosRepository usuariosRepository = new UsuariosRepository();
     UsuariosService usuariosService = new UsuariosService(usuariosRepository);
+    VehiculosRepository vehiculosRepository = new VehiculosRepository();
     String clase = getClass().getSimpleName();
 
     @Override
@@ -133,4 +136,95 @@ public class LoginController extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = (String) request.getAttribute("email");
+        String role = (String) request.getAttribute("role");
+        String pathInfo=request.getPathInfo() !=null ? request.getPathInfo():"";
+        String requestUrl = request.getRequestURI();
+        Util.logInfo("Se ejecutó DoGet", clase);
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+
+        if(pathInfo.equals("/vehiculosCount") ){
+
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray countResult = vehiculosRepository.findAllObjects();
+
+                if (countResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(countResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All vehiculos counts recovered for "+ role + " role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay información registrada\"}";
+                out.print(errorResponse);
+                Util.logInfo("None info recovered for " + role + " role and sent in response", clase);
+                out.flush();
+
+            } catch (IOException e){
+                response.sendError(javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Error en el servidor");
+            }//try
+
+        }
+
+        if(pathInfo.equals("/incidentesCount")){
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray vehiculosResult = vehiculosRepository.findAllIncidentes();
+
+                if (vehiculosResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(vehiculosResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All vehiculos recovered for "+role+" role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay vehículos registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None vehiculos recovered for "+role+" role and sent in response", clase);
+                out.flush();
+                return;
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
+        }
+
+        if(pathInfo.equals("/serviciosCount")){
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray vehiculosResult = vehiculosRepository.findAllServicios();
+
+                if (vehiculosResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(vehiculosResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All vehiculos recovered for "+role+" role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay vehículos registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None vehiculos recovered for "+role+" role and sent in response", clase);
+                out.flush();
+                return;
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
+        }
+
+
+        Util.logInfo("Access denied for user "+email+" with role "+role+" ", clase);
+        response.sendRedirect("/index.html");
+    }//doGet
 }

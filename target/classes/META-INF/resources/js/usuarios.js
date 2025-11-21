@@ -107,7 +107,6 @@ document
 
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Email",
     "Nombre",
     "Apellido paterno",
@@ -118,7 +117,6 @@ function exportToXlsx() {
   ];
 
   const rows = usuariosData.map((usuario) => [
-    usuario.idUsuario,
     usuario.email,
     usuario.nombre,
     usuario.apellidoPaterno,
@@ -268,7 +266,7 @@ function clearForm() {
   contrasena.value = "";
   idTipoEstatus.value = "1";
   idTipoUsuario.value = "1";
-  idUsuario.value = "";
+
   actualizarButtonIsActive = false;
 }
 
@@ -343,7 +341,6 @@ function createTable(usuarios, page = 1) {
     const row = document.createElement("tr");
     const usuarioString = JSON.stringify(usuario).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${usuario.idUsuario}</td>
           <td>${usuario.email}</td>
           <td>${usuario.nombre}</td>
           <td>${usuario.apellidoPaterno}</td>
@@ -352,8 +349,8 @@ function createTable(usuarios, page = 1) {
           <td>${usuario.contrasena}</td>
           <td>${usuario.estatus}</td>
           <td>${usuario.tipoUsuario}</td>
-          <td><button class="edit-btn" onclick="editeUsuario('${usuarioString}')">Editar</button></td>
-          <td><button class="delete-btn" onclick="deleteUsuario('${usuario.email}')">Eliminar</button></td>
+          <td><button class="edit-btn" onclick="editeUsuario('${usuarioString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+          <td><button class="delete-btn" onclick="deleteUsuario('${usuario.email}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>
           `;
 
     tbody.appendChild(row);

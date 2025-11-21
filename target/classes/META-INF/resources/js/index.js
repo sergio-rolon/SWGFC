@@ -69,6 +69,12 @@ if (window.location.hostname === "3.149.10.58") {
 }
 
 const contenedor = document.getElementById("contenedor");
+const sidePanel = document.getElementById("sidePanel");
+const vehiculosCount = document.getElementById("vehiculosCount");
+const arrendamientosCount = document.getElementById("arrendamientosCount");
+const placasCount = document.getElementById("placasCount");
+const segurosCount = document.getElementById("segurosCount");
+const asignacionesCount = document.getElementById("asignacionesCount");
 
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
@@ -107,8 +113,8 @@ function validateLogin() {
 
         mainContenedor.innerHTML = "";
 
-        const gridContainer = document.createElement("div");
-        gridContainer.className = "grid-container";
+        //const gridContainer = document.createElement("div");
+        //gridContainer.className = "grid-container";
 
         let elementos = [
           {
@@ -170,41 +176,111 @@ function validateLogin() {
           elementos.shift();
           elementos.shift();
         }
-        if (usuario.role === "Administrador") {
-          elementos = [elementos[0]];
-        }
+        //      if (usuario.role === "Administrador") {
+        //          elementos = [elementos[0]];
+        //        }
 
         elementos.forEach((element) => {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          const title = document.createElement("h3");
-          title.textContent = element.alt;
+          const anchor = document.createElement("a");
+          anchor.href = element.url;
+          const divFlex = document.createElement("div");
+          divFlex.style.display = "flex";
+          divFlex.style.alignItems = "center";
 
           const img = document.createElement("img");
           img.src = element.src;
           img.alt = element.alt;
+          divFlex.appendChild(img);
 
-          const link = document.createElement("a");
-          link.href = element.url;
+          const title = document.createElement("span");
+          title.textContent = element.alt;
+          title.style.marginLeft = "15px";
+          divFlex.appendChild(title);
 
-          const button = document.createElement("button");
-          button.textContent = "Acceder";
+          anchor.appendChild(divFlex);
 
-          link.appendChild(button);
-
-          card.appendChild(title);
-          card.appendChild(img);
-          card.appendChild(link);
-
-          gridContainer.appendChild(card);
+          sidePanel.appendChild(anchor);
+          //gridContainer.appendChild(card);
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
+          sidePanel.style.display = "block";
         });
 
-        mainContenedor.appendChild(gridContainer);
+        //sidePanel.appendChild(gridContainer);
+
+        getVehiculosCount();
+        getServiciosCount();
+        getIncidentesCount();
+        setTimeout(() => {
+          const months = {
+            jan: 0,
+            feb: 1,
+            mar: 2,
+            apr: 3,
+            may: 4,
+            jun: 5,
+            jul: 6,
+            aug: 7,
+            sep: 8,
+            oct: 9,
+            nov: 10,
+            dec: 11,
+          };
+
+          const serviciosDataFiltered = serviciosCountData.map((item) => {
+            const clean = item.fecha.replace(",", "").split(" ");
+
+            const month = months[clean[0].toLowerCase()];
+            const day = parseInt(clean[1]);
+            const year = parseInt(clean[2]);
+
+            return [new Date(year, month, day), item.totalservicios];
+          });
+
+          new Dygraph(
+            document.getElementById("graficaServicios"),
+            serviciosDataFiltered,
+            {
+              labels: ["Fecha", "Servicios"],
+              title: "Servicios última semana",
+              ylabel: "Total",
+              xlabel: "Fecha",
+              fillGraph: true,
+              strokeWidth: 2,
+              drawPoints: true,
+              pointSize: 3,
+              axisLabelFontFamily: "Arial",
+            }
+          );
+
+          const incidentesDataFiltered = incidentesCountData.map((item) => {
+            const clean = item.fecha.replace(",", "").split(" ");
+
+            const month = months[clean[0].toLowerCase()];
+            const day = parseInt(clean[1]);
+            const year = parseInt(clean[2]);
+
+            return [new Date(year, month, day), item.totalincidentes];
+          });
+
+          new Dygraph(
+            document.getElementById("graficaIncidentes"),
+            incidentesDataFiltered,
+            {
+              labels: ["Fecha", "Incidentes"],
+              title: "Incidentes última semana",
+              ylabel: "Total",
+              fillGraph: true,
+              xlabel: "Fecha",
+              strokeWidth: 2,
+              drawPoints: true,
+              pointSize: 3,
+              axisLabelFontFamily: "Arial",
+            }
+          );
+        }, 2000);
       }
     })
     .catch((error) => {
@@ -219,3 +295,184 @@ document
     sessionStorage.removeItem("token");
     window.location.href = "/pages/login.html";
   });
+
+function getVehiculosCount() {
+  const myHeaders = new Headers();
+
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  fetch(urlVehiculosCount, requestOptions)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status === 403) {
+        window.location.href = "/index.html";
+        return;
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/pages/login.html";
+      } else {
+        throw new Error("Algo salió mal con la respuesta del servidor");
+      }
+    })
+    .then((result) => {
+      if (result) {
+        vehiculosCountData = result.myArrayList.map((item) => item.map);
+        // Vehículos
+        vehiculosCount.appendChild(
+          createSpan(vehiculosCountData[0].totalvehiculos)
+        );
+
+        // Asignaciones
+        asignacionesCount.appendChild(
+          createSpan(vehiculosCountData[0].totalasignaciones)
+        );
+
+        // Arrendamientos
+        const arrImg =
+          vehiculosCountData[0].totalarrendamientos !=
+          vehiculosCountData[0].totalvehiculos
+            ? createIcon("/images/uncheck.png")
+            : createIcon("/images/check.png");
+
+        arrendamientosCount.appendChild(arrImg);
+        arrendamientosCount.appendChild(
+          createSpan(vehiculosCountData[0].totalarrendamientos)
+        );
+
+        // Placas
+        const plaImg =
+          vehiculosCountData[0].totalplacas !=
+          vehiculosCountData[0].totalvehiculos
+            ? createIcon("/images/uncheck.png")
+            : createIcon("/images/check.png");
+
+        placasCount.appendChild(plaImg);
+        placasCount.appendChild(createSpan(vehiculosCountData[0].totalplacas));
+
+        // Seguros
+        const segImg =
+          vehiculosCountData[0].totalseguros !=
+          vehiculosCountData[0].totalvehiculos
+            ? createIcon("/images/uncheck.png")
+            : createIcon("/images/check.png");
+
+        segurosCount.appendChild(segImg);
+        segurosCount.appendChild(
+          createSpan(vehiculosCountData[0].totalseguros)
+        );
+      }
+    })
+    .catch((error) => {
+      let errorMsg = error;
+    });
+}
+
+function getServiciosCount() {
+  const myHeaders = new Headers();
+
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  fetch(urlServiciosCount, requestOptions)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status === 403) {
+        window.location.href = "/index.html";
+        return;
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/pages/login.html";
+      } else {
+        throw new Error("Algo salió mal con la respuesta del servidor");
+      }
+    })
+    .then((result) => {
+      if (result) {
+        serviciosCountData = result.myArrayList.map((item) => item.map);
+        console.log(serviciosCountData);
+      }
+    })
+    .catch((error) => {
+      let errorMsg = error;
+    });
+}
+
+function getIncidentesCount() {
+  const myHeaders = new Headers();
+
+  myHeaders.append(
+    "Authorization",
+    `Bearer: ${sessionStorage.getItem("token")}`
+  );
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  fetch(urlIncidentesCount, requestOptions)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status === 403) {
+        window.location.href = "/index.html";
+        return;
+      } else if (response.status === 401) {
+        sessionStorage.removeItem("token");
+        window.location.href = "/pages/login.html";
+      } else {
+        throw new Error("Algo salió mal con la respuesta del servidor");
+      }
+    })
+    .then((result) => {
+      if (result) {
+        incidentesCountData = result.myArrayList.map((item) => item.map);
+        console.log(incidentesCountData);
+      }
+    })
+    .catch((error) => {
+      let errorMsg = error;
+    });
+}
+let urlVehiculosCount = "/api/login/vehiculosCount";
+let vehiculosCountData = [];
+let urlIncidentesCount = "/api/login/incidentesCount";
+let incidentesCountData = [];
+let urlServiciosCount = "/api/login/serviciosCount";
+let serviciosCountData = [];
+
+function createIcon(src) {
+  const img = document.createElement("img");
+  img.src = src;
+  img.style.width = "30px";
+  img.style.height = "30px";
+  return img;
+}
+
+function createSpan(text) {
+  const span = document.createElement("span");
+  span.textContent = text;
+  span.style.fontSize = "40px";
+  span.style.fontWeight = "bold";
+  return span;
+}

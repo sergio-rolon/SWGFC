@@ -15,6 +15,11 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Poppins"
@@ -69,6 +74,7 @@
             </div>
             <div class="logo">
               <img
+                id="userLogged"
                 src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
                 alt="user logged"
                 class="logo-img"
@@ -96,6 +102,9 @@
         </nav>
       </header>
       <div id="mySidebar" class="sidebar">
+        <a href="./usuarios.html" id="usuariosMenu" style="display: none"
+          >Usuarios</a
+        >
         <a href="./clientes.html">Clientes</a>
         <a href="./empleados.html">Empleados</a>
         <a href="./vehiculos.html">Vehículos</a>
@@ -107,160 +116,193 @@
         <a href="./incidentes.html">Incidentes</a>
       </div>
 
-      <div class="container" id="main">
+      <div id="main">
         <main>
           <h1>Gestión de servicios</h1>
-          <div id="servicioForm">
-            <div class="form-grid">
-              <div>
-                <label for="idServicio">No.:</label><br />
-                <input type="text" id="idServicio" disabled /><br />
-                <br />
-              </div>
-              <div>
-                <label for="idTipoServicio">Selecciona tipo servicio:</label
-                ><br />
-                <select id="idTipoServicio">
-                  <option value="1">Preventivo</option>
-                  <option value="2">Correctivo</option>
-                  <option value="3">Llantas</option>
-                </select>
-                <label
-                  for="idTipoServicioError"
-                  id="idTipoServicioError"
-                  class="label-error"
-                ></label>
-                <br />
-              </div>
-              <div>
-                <label for="kilometraje">Kilometraje:</label><br />
-                <input
-                  type="number"
-                  id="kilometraje"
-                  placeholder="Ej. 20000"
-                  required
-                /><br />
-                <label
-                  for="kilometrajeError"
-                  id="kilometrajeError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="fechaServicio">Fecha de servicio:</label><br />
-                <input type="date" id="fechaServicio" required /><br />
-                <label
-                  for="fechaServicioError"
-                  id="fechaServicioError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="costo">Costo:</label><br />
-                <input
-                  type="number"
-                  id="costo"
-                  placeholder="Ej. 5000"
-                  required
-                /><br />
-                <label
-                  for="costoError"
-                  id="costoError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="comision">Comisión:</label><br />
-                <input
-                  type="number"
-                  id="comision"
-                  placeholder="Ej. 4.5"
-                  required
-                /><br />
-                <label
-                  for="comisionError"
-                  id="comisionError"
-                  class="label-error"
-                ></label
-                ><br />
-              </div>
-              <div>
-                <label for="idClientesSelect">Selecciona cliente:</label><br />
-                <select id="idClientesSelect"></select>
-                <label
-                  for="idClienteError"
-                  id="idClienteError"
-                  class="label-error"
-                ></label>
-                <br />
-              </div>
-              <div>
-                <label for="idAsignacionSelect">Selecciona asignación:</label
-                ><br />
-                <select id="idAsignacionSelect"></select>
-                <label
-                  for="idAsignacionError"
-                  id="idAsignacionError"
-                  class="label-error"
-                ></label>
-                <br />
-              </div>
-              <div></div>
-              <div></div>
-              <div class="button-group">
-                <button id="btnRegistrar">Registrar</button>
-                <button id="btnActualizar">Actualizar</button>
-                <button id="btnLimpiar">Limpiar</button>
+          <div
+            class="modal fade"
+            id="formModal"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modal-title"></h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div id="servicioForm">
+                    <div class="form-grid">
+                      <input
+                        type="hidden"
+                        id="idServicio"
+                        name="idServicio"
+                        value=""
+                      />
+                      <div>
+                        <label for="idTipoServicio"
+                          >Selecciona tipo servicio:</label
+                        ><br />
+                        <select id="idTipoServicio">
+                          <option value="1">Preventivo</option>
+                          <option value="2">Correctivo</option>
+                          <option value="3">Llantas</option>
+                        </select>
+                        <label
+                          for="idTipoServicioError"
+                          id="idTipoServicioError"
+                          class="label-error"
+                        ></label>
+                        <br />
+                      </div>
+                      <div>
+                        <label for="kilometraje">Kilometraje:</label><br />
+                        <input
+                          type="number"
+                          id="kilometraje"
+                          placeholder="Ej. 20000"
+                          required
+                        /><br />
+                        <label
+                          for="kilometrajeError"
+                          id="kilometrajeError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="fechaServicio">Fecha de servicio:</label
+                        ><br />
+                        <input type="date" id="fechaServicio" required /><br />
+                        <label
+                          for="fechaServicioError"
+                          id="fechaServicioError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="costo">Costo:</label><br />
+                        <input
+                          type="number"
+                          id="costo"
+                          placeholder="Ej. 5000"
+                          required
+                        /><br />
+                        <label
+                          for="costoError"
+                          id="costoError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="comision">Comisión:</label><br />
+                        <input
+                          type="number"
+                          id="comision"
+                          placeholder="Ej. 4.5"
+                          required
+                        /><br />
+                        <label
+                          for="comisionError"
+                          id="comisionError"
+                          class="label-error"
+                        ></label
+                        ><br />
+                      </div>
+                      <div>
+                        <label for="idClientesSelect">Selecciona cliente:</label
+                        ><br />
+                        <select id="idClientesSelect"></select>
+                        <label
+                          for="idClienteError"
+                          id="idClienteError"
+                          class="label-error"
+                        ></label>
+                        <br />
+                      </div>
+                      <div></div>
+                      <div>
+                        <label for="idAsignacionSelect"
+                          >Selecciona asignación:</label
+                        ><br />
+                        <select id="idAsignacionSelect"></select>
+                        <label
+                          for="idAsignacionError"
+                          id="idAsignacionError"
+                          class="label-error"
+                        ></label>
+                        <br />
+                      </div>
+                      <div></div>
+                      <div></div>
+                      <div class="button-group">
+                        <button id="btnRegistrar">Registrar</button>
+                        <button id="btnActualizar">Actualizar</button>
+                        <button id="btnLimpiar">Limpiar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <br /><br />
+          <br />
           <div class="filter-container">
-            <div class="filter-button-group">
-              <button class="btn-no-filter" onclick="showAllServicios()">
-                Sin filtro
+            <div style="display: flex">
+              <button id="btnAbrirModal" class="btn btn-primary">
+                <img src="/images/plus.png" alt="Registrar" class="add-icon" />
               </button>
-              <div class="dropdown">
-                <button class="btn-filter">Tipo servicio</button>
-                <div class="dropdown-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="Preventivo"
-                      checked
-                    />
-                    Preventino </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="Correctivo"
-                      checked
-                    />
-                    Correctivo </label
-                  ><br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="estatus-filter"
-                      value="Llantas"
-                      checked
-                    />
-                    Llantas
-                  </label>
+              <div class="filter-button-group">
+                <button class="btn-no-filter" onclick="showAllServicios()">
+                  Sin filtro
+                </button>
+                <div class="dropdown">
+                  <button class="btn-filter">Tipo servicio</button>
+                  <div class="dropdown-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Preventivo"
+                        checked
+                      />
+                      Preventino </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Correctivo"
+                        checked
+                      />
+                      Correctivo </label
+                    ><br />
+                    <label>
+                      <input
+                        type="checkbox"
+                        class="estatus-filter"
+                        value="Llantas"
+                        checked
+                      />
+                      Llantas
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn-filter">Razón social</button>
+                  <div class="dropdown-content" id="secondDropdown"></div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button class="btn-filter">Razón social</button>
-                <div class="dropdown-content" id="secondDropdown"></div>
-              </div>
             </div>
-            <div>
+            <div style="padding-left: 20px">
               <label for="searchInput" style="color: black"
                 >Buscar por número de serie:</label
               >
@@ -271,12 +313,12 @@
               />
             </div>
           </div>
+
           <div class="table-container">
             <div class="table-wrapper">
               <table class="responsive-table">
                 <thead id="tableHeader">
                   <tr>
-                    <th>No.</th>
                     <th>Tipo de servicio</th>
                     <th>Kilometraje</th>
                     <th>Fecha de servicio</th>

@@ -9,6 +9,12 @@ const btnLogIn = document.getElementById("btnLogIn");
 const loader = document.getElementById("loader");
 
 // Events
+document.addEventListener("DOMContentLoaded", () => {
+  if (sessionStorage.getItem("token")) {
+    sessionStorage.removeItem("token");
+  }
+});
+
 window.addEventListener("pageshow", function (event) {
   if (event.persisted) {
     window.location.reload();

@@ -115,7 +115,6 @@ document
 //************************************** Functions
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Tipo servicio",
     "Kilometraje",
     "Fecha de servicio",
@@ -137,7 +136,6 @@ function exportToXlsx() {
   ];
 
   const rows = serviciosData.map((servicio) => [
-    servicio.idServicio,
     servicio.idTipoServicio,
     servicio.kilometraje,
     servicio.fechaServicio,
@@ -264,7 +262,6 @@ function clearErrors() {
   idClientesSelect.classList.remove("borde-rojo");
 }
 function clearForm() {
-  idServicio.value = "";
   idTipoServicio.selectedIndex = 1;
   kilometraje.value = "";
   fechaServicio.value = "";
@@ -387,6 +384,10 @@ function setErrorMsgs(result) {
 }*/
 
 function editeServicio(servicioString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -440,7 +441,6 @@ function createTable(servicios, page = 1) {
     const row = document.createElement("tr");
     const servicioString = JSON.stringify(servicio).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${servicio.idServicio}</td>
           <td>${servicio.tipoServicio}</td>
           <td>${servicio.kilometraje}</td>
           <td>${formatDateForTable(servicio.fechaServicio)}</td>
@@ -462,8 +462,8 @@ function createTable(servicios, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeServicio('${servicioString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteServicio('${servicio.idServicio}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeServicio('${servicioString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deleteServicio('${servicio.idServicio}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -538,7 +538,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -893,4 +896,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

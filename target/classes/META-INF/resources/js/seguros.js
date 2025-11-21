@@ -136,7 +136,6 @@ function populateVehiculoSelect() {
 
 function exportToXlsx() {
   const headers = [
-    "No.",
     "Número de póliza",
     "Aseguradora",
     "Fecha de inicio",
@@ -152,7 +151,6 @@ function exportToXlsx() {
   ];
 
   const rows = segurosData.map((seguro) => [
-    seguro.idSeguro,
     seguro.numeroPoliza,
     seguro.aseguradora,
     formatDateForTable(seguro.fechaInicio),
@@ -351,7 +349,6 @@ function clearForm() {
   comision.value = "";
   numeroMeses.value = "";
   idTipoEstatus.value = "1";
-  idSeguro.value = "";
   actualizarButtonIsActive = false;
   populateVehiculoSelect();
 }
@@ -387,6 +384,10 @@ function setErrorMsgs(result) {
 }
 
 function editeSeguro(seguroString) {
+  document.getElementById("btnRegistrar").style.display = "none";
+  document.getElementById("btnActualizar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Actualizar";
+  bsModal.show();
   const elementTop =
     document.getElementById("main").getBoundingClientRect().top +
     window.scrollY;
@@ -429,7 +430,6 @@ function createTable(seguros, page = 1) {
     const row = document.createElement("tr");
     const seguroString = JSON.stringify(seguro).replace(/"/g, "&quot;");
     row.innerHTML = `
-          <td>${seguro.idSeguro}</td>
           <td>${seguro.numeroPoliza}</td>
           <td>${seguro.aseguradora}</td>
           <td>${formatDateForTable(seguro.fechaInicio)}</td>
@@ -445,8 +445,8 @@ function createTable(seguros, page = 1) {
                 ${
                   window.asesorMode
                     ? ""
-                    : `<td><button class="edit-btn" onclick="editeSeguro('${seguroString}')">Editar</button></td>
-                       <td><button class="delete-btn" onclick="deleteSeguro('${seguro.numeroPoliza}')">Eliminar</button></td>`
+                    : `<td><button class="edit-btn" onclick="editeSeguro('${seguroString}')"><img src="/images/edit-button.png" alt="Editar" class="edite-icon"></button></td>
+                       <td><button class="delete-btn" onclick="deleteSeguro('${seguro.numeroPoliza}')"><img src="/images/delete.png" alt="Eliminar" class="delete-icon"></button></td>`
                 }
               `;
 
@@ -542,7 +542,10 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Operación") {
+        if (usuario.role === "Administrador") {
+          document.getElementById("usuariosMenu").style.display = "block";
+        }
+        if (usuario.role === "Operación" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
@@ -837,4 +840,13 @@ searchInput.addEventListener("input", function () {
   );
 
   createTable(rowsFiltered, 1);
+});
+const modalEl = document.getElementById("formModal");
+const bsModal = new bootstrap.Modal(modalEl);
+
+document.getElementById("btnAbrirModal").addEventListener("click", () => {
+  document.getElementById("btnActualizar").style.display = "none";
+  document.getElementById("btnRegistrar").style.display = "block";
+  document.getElementById("modal-title").textContent = "Registrar";
+  bsModal.show();
 });

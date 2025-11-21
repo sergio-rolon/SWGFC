@@ -65,10 +65,33 @@ public class EmpleadosController extends HttpServlet {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
         }
-        if(role.equals("Operación") && !pathInfo.isEmpty()){
+        if(role.equals("Operación") || role.equals("Administrador") && !pathInfo.isEmpty()){
             try (PrintWriter out = response.getWriter()) {
 
-                JSONArray empleadosResult = empleadosRepository.findAllObjects(pathInfo);
+                JSONArray empleadosResult = empleadosService.getAll(isAsesor,emailAsesor);
+
+                if (empleadosResult != null) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    String successResponse = new Gson().toJson(empleadosResult);
+                    out.print(successResponse);
+                    out.flush();
+                    Util.logInfo("All empleados recovered for "+role+" role and sent in response", clase);
+                    return;
+                }
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                String errorResponse = "{\"error\": \"No hay empleados registrados\"}";
+                out.print(errorResponse);
+                Util.logInfo("None users recovered for "+role+" role and sent in response", clase);
+                out.flush();
+                return;
+            } catch (IOException ex) {
+                request.setAttribute("message", "There was an error: " + ex.getMessage());
+            }
+        }
+        if(role.equals("Administrador") && pathInfo.isEmpty()){
+            try (PrintWriter out = response.getWriter()) {
+
+                JSONArray empleadosResult = empleadosService.getAll(isAsesor,emailAsesor);
 
                 if (empleadosResult != null) {
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -102,7 +125,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Asesor")) {
+        if(role.equals("Asesor") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -173,7 +196,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Asesor")) {
+        if(role.equals("Asesor") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
@@ -248,7 +271,7 @@ public class EmpleadosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Asesor")) {
+        if(role.equals("Asesor") || role.equals("Administrador") ) {
             try (PrintWriter out = response.getWriter()) {
                 String contentType = request.getContentType();
                 if (!("application/json".equals(contentType))) {
