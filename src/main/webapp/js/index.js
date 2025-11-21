@@ -204,7 +204,8 @@ function validateLogin() {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
-          document.getElementById("contenido").style.visibility = "visible";
+          document.getElementById("contenidoIndex").style.visibility =
+            "visible";
           sidePanel.style.display = "block";
         });
 

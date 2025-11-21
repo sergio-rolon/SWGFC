@@ -812,15 +812,14 @@ function renderizarNotificaciones(lista) {
 
   // Construir listado
   panel.innerHTML = `
-    <h6>Placas próximas a renovación</h6>
+    <h6>Placas a renovarse en ${item.anoRenovacion}</h6>
     <ul style="padding-left: 15px;">
       ${lista
         .map(
           (item) => `
         <li>
           <strong>${item.seriePlaca}</strong><br>
-          ${item.numeroSerie} <br>
-          Renovación: ${item.anoRenovacion}
+          No. serie: ${item.numeroSerie} <br>
         </li>
         <hr>
       `

@@ -66,11 +66,12 @@
           <div class="left-side-navbar">
             <button class="openbtn" onclick="sidebar()">☰</button>
             <div class="logo">
-              <img
-                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
-                alt="Logo"
-                class="logo-img"
-              />
+              <a href="../index.html" title="Ir a menú principal">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                  alt="Logo"
+                  class="logo-img"
+              /></a>
             </div>
             <div class="logo">
               <img
@@ -85,25 +86,24 @@
             </div>
           </div>
           <div class="right-side-navbar">
-            <div class="logo position-relative">
+            <div class="logo position-relative" style="margin-right: 10px">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/1827/1827272.png"
                 alt="notificaciones"
                 id="notificationBell"
-                style="width: 28px; cursor: pointer"
+                style="width: 26px; height: 26px; cursor: pointer"
               />
 
-              <!-- Burbuja con número -->
               <span
                 id="notificationCount"
                 style="
                   position: absolute;
-                  top: -5px;
-                  right: -5px;
+                  top: -3px;
+                  right: -4px;
                   background-color: red;
                   color: white;
                   border-radius: 50%;
-                  padding: 2px 6px;
+                  padding: 0px 6px;
                   font-size: 12px;
                   display: none;
                 "
@@ -111,7 +111,6 @@
               </span>
             </div>
 
-            <!-- Dropdown de notificaciones -->
             <div
               id="notificationList"
               style="

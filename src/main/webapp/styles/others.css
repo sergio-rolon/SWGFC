@@ -117,8 +117,12 @@ td {
   #userLogged {
     display: none;
   }
+
+  .btn-export {
+    padding-top: 10px !important;
+  }
   #searchInput {
-    padding-top: 10px;
+    margin-top: 10px !important;
   }
 }
 .table-container {
@@ -374,4 +378,30 @@ input[type="date"] {
 #btnAbrirModal {
   background-color: white;
   border: none;
+}
+.charts-container {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+}
+
+.chart-box {
+  width: 35%;
+}
+
+.chart-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 1269px) {
+  .charts-container {
+    flex-direction: column;
+  }
+
+  .chart-box {
+    width: 100%;
+  }
 }

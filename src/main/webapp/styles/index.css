@@ -65,14 +65,10 @@
   }
 }
 .sidePanel {
-  width: 200px;
-  position: fixed;
-  top: 0;
-  left: 0;
+  width: 240px;
   background-color: #064995;
   overflow-x: hidden;
   transition: 0.5s;
-  padding-top: 50px;
 }
 
 .sidePanel a {

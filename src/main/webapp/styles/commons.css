@@ -16,6 +16,11 @@ body {
   min-height: 85vh;
   visibility: hidden;
 }
+#contenidoIndex {
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+}
 
 main {
   flex: 1;
