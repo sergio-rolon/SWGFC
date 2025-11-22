@@ -110,7 +110,7 @@ SELECT
                         "SELECT * FROM \"Vehiculos\" v " +
                                 "WHERE NOT EXISTS (" +
                                 "SELECT 1 FROM \"Arrendamientos\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
-                                ") AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                                " AND a.\"idTipoEstatus\" = 1 ) AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
                 );
             }else if(pathInfo.equals("/getVehiculosActivos")){
                 ps = conn.prepareStatement(
@@ -135,6 +135,20 @@ SELECT
                         "ORDER BY c.\"idVehiculo\" ASC"
                 );
                 ps.setInt(1,1);
+            }if(pathInfo.equals("/getVehiculosSinPlaca")) {
+                ps = conn.prepareStatement(
+                        "SELECT * FROM \"Vehiculos\" v " +
+                                "WHERE NOT EXISTS (" +
+                                "SELECT 1 FROM \"Placas\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+                                " AND a.\"idTipoEstatus\" = 1 ) AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                );
+            }if(pathInfo.equals("/getVehiculosSinSeguro")) {
+                ps = conn.prepareStatement(
+                        "SELECT * FROM \"Vehiculos\" v " +
+                                "WHERE NOT EXISTS (" +
+                                "SELECT 1 FROM \"Seguros\" a WHERE a.\"idVehiculo\" = v.\"idVehiculo\"" +
+                                " AND a.\"idTipoEstatus\" = 1 ) AND v.\"idTipoEstatus\"=1 ORDER BY v.\"idVehiculo\" ASC"
+                );
             }
 
             ResultSet rs = ps.executeQuery();

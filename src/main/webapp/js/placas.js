@@ -3,13 +3,12 @@ let rowsFiltered = [];
 let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/placas";
-let urlVehiculos = "/api/vehiculos/getVehiculosActivos";
+let urlVehiculos = "/api/vehiculos/getVehiculosSinPlaca";
 let actualizarButtonIsActive = false;
 let currentPage = 1;
 const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
-
 const seriePlacaError = document.getElementById("seriePlacaError");
 const estadoError = document.getElementById("estadoError");
 const costoError = document.getElementById("costoError");
@@ -17,7 +16,6 @@ const comisionError = document.getElementById("comisionError");
 const anoRenovacionError = document.getElementById("anoRenovacionError");
 const idTipoEstatusError = document.getElementById("idTipoEstatusError");
 const idVehiculoError = document.getElementById("idVehiculoError");
-
 const idPlaca = document.getElementById("idPlaca");
 const seriePlaca = document.getElementById("seriePlaca");
 const estado = document.getElementById("estado");

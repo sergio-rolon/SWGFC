@@ -477,17 +477,19 @@ function validateLogin() {
     })
     .then((usuario) => {
       if (usuario) {
-        if (usuario.role === "Administrador") {
-          document.getElementById("usuariosMenu").style.display = "block";
-        }
         if (usuario.role === "Asesor" || usuario.role === "Administrador") {
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
           const menuLinks = document.querySelectorAll("#mySidebar a");
-          if (menuLinks.length > 0) {
+
+          if (menuLinks.length > 0 && usuario.role === "Asesor") {
             menuLinks[0].remove();
+            menuLinks[1].remove();
+          }
+          if (usuario.role === "Administrador") {
+            document.getElementById("usuariosMenu").style.display = "block";
           }
         } else if (usuario.role === "Operación") {
           document.getElementById("btnAbrirModal").style.display = "none";

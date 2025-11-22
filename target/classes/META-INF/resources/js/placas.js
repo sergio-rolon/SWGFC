@@ -3,13 +3,12 @@ let rowsFiltered = [];
 let vehiculosData = [];
 let urlLogged = "/api/usuarios/logged";
 let url = "/api/placas";
-let urlVehiculos = "/api/vehiculos/getVehiculosActivos";
+let urlVehiculos = "/api/vehiculos/getVehiculosSinPlaca";
 let actualizarButtonIsActive = false;
 let currentPage = 1;
 const rowsPerPage = 5;
 const contenedor = document.getElementById("contenedor");
 const tbody = document.getElementById("tableBody");
-
 const seriePlacaError = document.getElementById("seriePlacaError");
 const estadoError = document.getElementById("estadoError");
 const costoError = document.getElementById("costoError");
@@ -17,7 +16,6 @@ const comisionError = document.getElementById("comisionError");
 const anoRenovacionError = document.getElementById("anoRenovacionError");
 const idTipoEstatusError = document.getElementById("idTipoEstatusError");
 const idVehiculoError = document.getElementById("idVehiculoError");
-
 const idPlaca = document.getElementById("idPlaca");
 const seriePlaca = document.getElementById("seriePlaca");
 const estado = document.getElementById("estado");
@@ -475,6 +473,7 @@ function validateLogin() {
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else if (usuario.role === "Asesor") {
+          btnAbrirModal.style.display = "none";
           const placaForm = document.getElementById("placaForm");
           if (placaForm) placaForm.remove();
           window.asesorMode = true;
@@ -487,6 +486,7 @@ function validateLogin() {
           const menuLinks = document.querySelectorAll("#mySidebar a");
           if (menuLinks.length > 0) {
             menuLinks[0].remove();
+            menuLinks[1].remove();
           }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
@@ -812,15 +812,14 @@ function renderizarNotificaciones(lista) {
 
   // Construir listado
   panel.innerHTML = `
-    <h6>Placas próximas a renovación</h6>
+    <h6>Placas a renovarse en 2026</h6>
     <ul style="padding-left: 15px;">
       ${lista
         .map(
           (item) => `
         <li>
           <strong>${item.seriePlaca}</strong><br>
-          ${item.numeroSerie} <br>
-          Renovación: ${item.anoRenovacion}
+          No. serie: ${item.numeroSerie} <br>
         </li>
         <hr>
       `

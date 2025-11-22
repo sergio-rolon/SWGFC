@@ -37,7 +37,7 @@ public class VehiculosController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        if(role.equals("Operación")  || role.equals("Administrador") && pathInfo.isEmpty() || isAsesor && pathInfo.isEmpty()) {
+        if(role.equals("Operación")&& pathInfo.isEmpty()  || role.equals("Administrador") && pathInfo.isEmpty() || isAsesor && pathInfo.isEmpty()) {
             emailAsesor=isAsesor?email:"";
             try (PrintWriter out = response.getWriter()) {
 
@@ -62,7 +62,7 @@ public class VehiculosController extends HttpServlet {
                 request.setAttribute("message", "There was an error: " + ex.getMessage());
             }
         }
-        if(role.equals("Operación")  || role.equals("Administrador") && !pathInfo.isEmpty()){
+        if(role.equals("Operación")  && !pathInfo.isEmpty() || role.equals("Administrador") && !pathInfo.isEmpty()){
             try (PrintWriter out = response.getWriter()) {
 
                 JSONArray vehiculosResult = vehiculosRepository.findAllObjects(pathInfo);

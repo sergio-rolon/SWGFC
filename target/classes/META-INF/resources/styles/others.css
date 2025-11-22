@@ -113,10 +113,16 @@ td {
   }
   .filter-container {
     display: block !important;
-    padding-top: 10px;
   }
   #userLogged {
     display: none;
+  }
+
+  .btn-export {
+    padding-top: 10px !important;
+  }
+  #searchInput {
+    margin-top: 10px !important;
   }
 }
 .table-container {
@@ -285,6 +291,7 @@ input[type="date"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-family: Arial, Helvetica, sans-serif;
+  height: 44px;
 }
 .pagination-container {
   margin-top: 10px;
@@ -372,4 +379,30 @@ input[type="date"] {
 #btnAbrirModal {
   background-color: white;
   border: none;
+}
+.charts-container {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+}
+
+.chart-box {
+  width: 35%;
+}
+
+.chart-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 1269px) {
+  .charts-container {
+    flex-direction: column;
+  }
+
+  .chart-box {
+    width: 100%;
+  }
 }

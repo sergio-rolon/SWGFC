@@ -64,15 +64,23 @@
     max-width: 200px;
   }
 }
+@media (max-width: 1229px) {
+  #sidebarIndex {
+    display: block !important;
+  }
+  .sidePanel {
+    display: none !important;
+  }
+
+  #contenidoIndex {
+    margin-bottom: 480px;
+  }
+}
 .sidePanel {
-  width: 200px;
-  position: fixed;
-  top: 0;
-  left: 0;
+  width: 240px;
   background-color: #064995;
   overflow-x: hidden;
   transition: 0.5s;
-  padding-top: 50px;
 }
 
 .sidePanel a {
@@ -97,4 +105,16 @@
 .sidePanel a img {
   width: 30px;
   height: 30px;
+}
+@media (max-width: 1042px) {
+  .contenedor-graficas {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .contenedor-graficas .grafica {
+    margin-right: 0 !important;
+    margin-bottom: 15px;
+    width: 95% !important; /* Más responsivo */
+  }
 }

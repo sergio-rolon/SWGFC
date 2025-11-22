@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.2.1/dygraph.min.js"></script>
 
     <style>
-      #contenido {
+      #contenidoIndex {
         visibility: hidden;
       }
       #loader {
@@ -82,19 +82,29 @@
       >
       </dotlottie-player>
     </div>
-    <div id="contenido">
+    <div id="contenidoIndex">
       <header>
         <nav class="navbar">
           <div class="left-side-navbar">
+            <button
+              id="sidebarIndex"
+              class="openbtn"
+              onclick="sidebar()"
+              style="display: none"
+            >
+              ☰
+            </button>
             <div class="logo">
-              <img
-                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
-                alt="Logo"
-                class="logo-img"
-              />
+              <a href="../index.html" title="Ir a menú principal">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                  alt="Logo"
+                  class="logo-img"
+              /></a>
             </div>
             <div class="logo">
               <img
+                id="userLogged"
                 src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1743900597/ixhr3l3ywclqisvrfuq5.svg"
                 alt="user logged"
                 class="logo-img"
@@ -121,11 +131,22 @@
           </div>
         </nav>
       </header>
-      <main>
-        <h1 style="margin-left: 200px;">SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR</h1>
-<div id="sidePanel" class="sidePanel" style="display: none;width: 200px;"></div>
-        <div id="mainContenedor">
-        
+      <div id="mySidebar" class="sidebar">
+        <a href="/pages/usuarios.html" id="usuariosMenu" style="display: none"
+          >Usuarios</a
+        >
+        <a href="./pages/clientes.html">Clientes</a>
+        <a href="./pages/empleados.html">Empleados</a>
+        <a href="./pages/vehiculos.html">Vehículos</a>
+        <a href="./pages/arrendamientos.html">Arrendamientos</a>
+        <a href="./pages/seguros.html">Seguros</a>
+        <a href="./pages/placas.html">Placas</a>
+        <a href="./pages/asignaciones.html">Asignaciones</a>
+        <a href="./pages/servicios.html">Servicios</a>
+        <a href="./pages/incidentes.html">Incidentes</a>
+      </div>
+      <main id="main" style="flex: none; padding: 0">
+        <div id="mainContenedor" style="margin-bottom: 0px">
           <div class="contenedor" id="contenedor">
             <div class="cuadro">
               <div class="col-sm-7 derecha">
@@ -192,33 +213,143 @@
                 class="logo-main"
               />
             </div>
+            <div>
+              <p>
+                En caso de problemas al iniciar sesión, contacta a tu
+                administrador o recursos humanos.
+              </p>
+            </div>
           </div>
-          <div>
-            <p>
-              En caso de problemas al iniciar sesión, contacta a tu
-              administrador o recursos humanos.Saludos
-            </p>
-          </div>
         </div>
-      <div id="dashboardContainer">
-        <div style="display: flex; justify-content: center;margin-left: 200px;">
-          <div id="graficaServicios" style="width: 500px; height: 200px; border:1px solid black;border-radius: 10px;margin-right: 10px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>
-          <div id="graficaIncidentes" style="width: 500px; height: 200px; border:1px solid black;border-radius: 10px;margin-right: 10px;box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>
-        </div>
-<br><br>
-<div style="display: flex;margin-left: 200px; text-align: center;justify-content: space-evenly;">
-<div style="width: 150px; height: 125px; border:1px solid black;border-radius: 10px;margin-right: 5px;box-shadow: 0 0 10px rgba(0,0,0,0.3);
-background-color: #ccb3198a;" id="vehiculosCount"><h3>Vehículos</h3></div>
-<div style="width: 150px; height: 125px; border:1px solid black;border-radius: 10px;margin-right: 5px;box-shadow: 0 0 10px rgba(0,0,0,0.3);background-color: #d0d3d591;" id="arrendamientosCount"><h3>Arrendamientos</h3></div>
-<div style="width: 150px;box-shadow: 0 0 10px rgba(0,0,0,0.3); height: 125px; border:1px solid black;border-radius: 10px;margin-right: 5px;background-color: #d0d3d591;" id="placasCount"><h3>Placas</h3></div>
-<div style="width: 150px;box-shadow: 0 0 10px rgba(0,0,0,0.3); height: 125px; border:1px solid black;border-radius: 10px;margin-right: 5px;background-color: #d0d3d591;" id="segurosCount"><h3>Seguros</h3></div>
-<div style="width: 150px;box-shadow: 0 0 10px rgba(0,0,0,0.3); height: 125px; border:1px solid black;border-radius: 10px;margin-right: 5px;background-color: #ccb3198a;" id="asignacionesCount"><h3>Asignaciones</h3></div>
-</div>
-      </div>
-        </div>
-        <br /><br />
 
+        <div style="height: 100vh; display: flex">
+          <div
+            id="sidePanel"
+            class="sidePanel"
+            style="display: none; width: 250px"
+          ></div>
+          <div style="display: flex; justify-content: center; width: 100%">
+            <div id="dashboardContainer">
+              <h1 style="padding: 40px 0px">
+                SISTEMA WEB DE GESTIÓN DE FLOTILLA VEHICULAR
+              </h1>
+              <div
+                class="contenedor-graficas"
+                style="display: flex; justify-content: center"
+              >
+                <div
+                  id="graficaServicios"
+                  class="grafica"
+                  style="
+                    width: 100%;
+                    max-width: 500px;
+                    height: 200px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  "
+                ></div>
+                <div
+                  id="graficaIncidentes"
+                  class="grafica"
+                  style="
+                    width: 100%;
+                    max-width: 500px;
+                    height: 200px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  "
+                ></div>
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  text-align: center;
+                  justify-content: space-evenly;
+                  padding-top: 60px;
+                  flex-wrap: wrap;
+                  gap: 5px;
+                "
+                class="cards-container"
+              >
+                <div
+                  style="
+                    width: 150px;
+                    height: 125px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    background-color: #ccb3198a;
+                  "
+                  id="vehiculosCount"
+                >
+                  <h3>Vehículos</h3>
+                </div>
+                <div
+                  style="
+                    width: 150px;
+                    height: 125px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    background-color: #d0d3d591;
+                  "
+                  id="arrendamientosCount"
+                >
+                  <h3>Arrendamientos</h3>
+                </div>
+                <div
+                  style="
+                    width: 150px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    height: 125px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                    background-color: #d0d3d591;
+                  "
+                  id="placasCount"
+                >
+                  <h3>Placas</h3>
+                </div>
+                <div
+                  style="
+                    width: 150px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    height: 125px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                    background-color: #d0d3d591;
+                  "
+                  id="segurosCount"
+                >
+                  <h3>Seguros</h3>
+                </div>
+                <div
+                  style="
+                    width: 150px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    height: 125px;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                    background-color: #ccb3198a;
+                  "
+                  id="asignacionesCount"
+                >
+                  <h3>Asignaciones</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </body>
@@ -241,3 +372,8 @@ background-color: #ccb3198a;" id="vehiculosCount"><h3>Vehículos</h3></div>
     validateLogin();
   </script>
 </html>
+<script>
+  flag = false;
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft = "0";
+</script>

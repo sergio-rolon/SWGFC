@@ -39,8 +39,8 @@ const mm = String(today.getMonth() + 1).padStart(2, "0");
 const dd = String(today.getDate()).padStart(2, "0");
 const dateToday = `${yyyy}-${mm}-${dd}`;
 
-fechaInicio.max = dateToday;
-fechaTermino.max = dateToday;
+fechaInicio.min = "2000-01-01";
+fechaTermino.max = "2040-01-01";
 
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {
@@ -557,6 +557,7 @@ function validateLogin() {
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else if (usuario.role === "Asesor") {
+          btnAbrirModal.style.display = "none";
           const arrendamientoForm =
             document.getElementById("arrendamientoForm");
           if (arrendamientoForm) arrendamientoForm.remove();
@@ -570,6 +571,7 @@ function validateLogin() {
           const menuLinks = document.querySelectorAll("#mySidebar a");
           if (menuLinks.length > 0) {
             menuLinks[0].remove();
+            menuLinks[1].remove();
           }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;

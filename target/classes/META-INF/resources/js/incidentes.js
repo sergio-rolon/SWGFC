@@ -496,6 +496,7 @@ function validateLogin() {
           document.getElementById("loader").style.display = "none";
           document.getElementById("contenido").style.visibility = "visible";
         } else if (usuario.role === "Asesor") {
+          btnAbrirModal.style.display = "none";
           const incidenteForm = document.getElementById("incidenteForm");
           if (incidenteForm) incidenteForm.remove();
           window.asesorMode = true;
@@ -508,6 +509,7 @@ function validateLogin() {
           const menuLinks = document.querySelectorAll("#mySidebar a");
           if (menuLinks.length > 0) {
             menuLinks[0].remove();
+            menuLinks[1].remove();
           }
           document.getElementById("emailUserLogged").textContent =
             usuario.email;
@@ -882,10 +884,19 @@ function populateGraph(incidentesData) {
   ];
 
   const pieLayout = {
-    height: 400,
+    height: 300,
+    title: {
+      text: "Porcentaje por tipo de incidente",
+      font: {
+        family: "Poppins, sans-serif",
+        size: 16,
+        weight: "bold",
+      },
+      x: 0.5,
+    },
   };
 
-  Plotly.newPlot("pieChart", pieData, pieLayout);
+  Plotly.newPlot("pieChart", pieData, pieLayout, { responsive: true });
 
   const barData = [
     {
@@ -906,10 +917,19 @@ function populateGraph(incidentesData) {
     barmode: "group",
     xaxis: { title: "Marca" },
     yaxis: { title: "No. de Incidentes" },
-    height: 400,
+    height: 300,
+    title: {
+      text: "Incidentes por tipo y marca",
+      font: {
+        family: "Poppins, sans-serif",
+        size: 16,
+        weight: "bold",
+      },
+      x: 0.5,
+    },
   };
 
-  Plotly.newPlot("barChart", barData, barLayout);
+  Plotly.newPlot("barChart", barData, barLayout, { responsive: true });
 }
 const modalEl = document.getElementById("formModal");
 const bsModal = new bootstrap.Modal(modalEl);
@@ -919,4 +939,13 @@ document.getElementById("btnAbrirModal").addEventListener("click", () => {
   document.getElementById("btnRegistrar").style.display = "block";
   document.getElementById("modal-title").textContent = "Registrar";
   bsModal.show();
+});
+window.addEventListener("load", function () {
+  Plotly.Plots.resize("pieChart");
+  Plotly.Plots.resize("barChart");
+});
+
+window.addEventListener("resize", function () {
+  Plotly.Plots.resize("pieChart");
+  Plotly.Plots.resize("barChart");
 });

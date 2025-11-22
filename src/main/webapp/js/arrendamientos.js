@@ -39,8 +39,8 @@ const mm = String(today.getMonth() + 1).padStart(2, "0");
 const dd = String(today.getDate()).padStart(2, "0");
 const dateToday = `${yyyy}-${mm}-${dd}`;
 
-fechaInicio.max = dateToday;
-fechaTermino.max = dateToday;
+fechaInicio.min = "2000-01-01";
+fechaTermino.max = "2040-01-01";
 
 // *********************Execution at start
 window.addEventListener("pageshow", function (event) {

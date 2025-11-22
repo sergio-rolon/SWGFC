@@ -70,11 +70,12 @@
           <div class="left-side-navbar">
             <button class="openbtn" onclick="sidebar()">☰</button>
             <div class="logo">
-              <img
-                src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
-                alt="Logo"
-                class="logo-img"
-              />
+              <a href="../index.html" title="Ir a menú principal">
+                <img
+                  src="https://res.cloudinary.com/dseuvfwyj/image/upload/v1742439788/dsqsfik3wj4e6ya7ajko.png"
+                  alt="Logo"
+                  class="logo-img"
+              /></a>
             </div>
             <div class="logo">
               <img
@@ -310,32 +311,15 @@
             Exportar a excel
           </button>
           <br /><br />
-          <div style="display: flex; gap: 20px">
-            <div style="width: 50%">
-              <div
-                style="
-                  text-align: center;
-                  font-weight: bold;
-                  font-size: 16px;
-                  font-family: 'Poppins', sans-serif;
-                "
-              >
-                Porcentaje por tipo de incidente
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="charts-container">
+              <div class="chart-box">
+                <div id="pieChart"></div>
               </div>
-              <div id="pieChart"></div>
-            </div>
-            <div style="width: 50%">
-              <div
-                style="
-                  text-align: center;
-                  font-weight: bold;
-                  font-size: 16px;
-                  font-family: 'Poppins', sans-serif;
-                "
-              >
-                Número de incidentes por tipo y marca
+
+              <div class="chart-box">
+                <div id="barChart"></div>
               </div>
-              <div id="barChart"></div>
             </div>
           </div>
         </main>

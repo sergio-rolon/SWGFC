@@ -106,7 +106,7 @@
   width: 30px;
   height: 30px;
 }
-@media (max-width: 768px) {
+@media (max-width: 1042px) {
   .contenedor-graficas {
     flex-direction: column !important;
     align-items: center !important;
